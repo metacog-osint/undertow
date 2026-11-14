@@ -1,0 +1,802 @@
+[
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-08-27T09:09:47Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-russia-cib-based-network.md",
+   "committer": {
+    "date": "2026-08-27T09:09:45Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-russia-cib-based-network-4.md",
+   "committer": {
+    "date": "2026-08-27T09:09:42Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-russia-cib-based-network-3.md",
+   "committer": {
+    "date": "2026-08-27T09:09:39Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-france-and-spain-cib-based-network.md",
+   "committer": {
+    "date": "2026-08-27T09:09:36Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-iran-cib-based-network-2.md",
+   "committer": {
+    "date": "2026-08-27T09:09:33Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-iran-cib-based-network-3.md",
+   "committer": {
+    "date": "2026-08-27T09:09:31Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-iran-cib-based-network.md",
+   "committer": {
+    "date": "2026-08-27T09:09:27Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-israel-cib-based-network.md",
+   "committer": {
+    "date": "2026-08-27T09:09:24Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2026-russia-cib-based-network-2.md",
+   "committer": {
+    "date": "2026-08-27T09:09:22Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-08-26T23:18:57Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: h2-2026-ukraine-and-bulgaria-cib-based-network.md",
+   "committer": {
+    "date": "2026-08-26T23:18:54Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update README.md",
+   "committer": {
+    "date": "2026-05-19T14:26:28Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-05-19T14:25:01Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T14:24:58Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T14:24:55Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T14:24:53Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-china-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:50Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-pakistan-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:47Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T14:24:44Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-iran-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:42Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T14:24:39Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-belarus-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:36Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-poland-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:34Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-india-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:31Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-moldova-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T14:24:28Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-05-19T13:37:12Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T13:37:10Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T13:37:07Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-05-19T13:23:25Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T13:23:22Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T13:23:20Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h2-2025-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T12:01:25Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h2-2025-poland-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T12:01:12Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h2-2025-moldova-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T12:01:02Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h2-2025-iran-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T12:00:50Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h2-2025-india-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T12:00:35Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h2-2025-belarus-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T12:00:21Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update README.md",
+   "committer": {
+    "date": "2026-05-19T11:58:52Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-05-19T11:52:45Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-iran-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:52:44Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T11:52:43Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-belarus-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:52:41Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-poland-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:52:40Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-india-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:52:39Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h2-2025-moldova-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:52:38Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/test.md",
+   "committer": {
+    "date": "2026-05-19T11:30:13Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T11:28:55Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T11:28:39Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-pakistan-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:28:10Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-iran-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T11:27:54Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T11:27:36Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-china-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:27:19Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-05-19T11:24:58Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T11:24:57Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-19T11:24:56Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T11:24:54Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-china-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:24:53Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-pakistan-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-19T11:24:51Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-19T11:24:50Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/meta-h1-2026-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-18T15:18:42Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-18T15:18:35Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/meta-h1-2026-pakistan-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-18T15:18:27Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/meta-h1-2026-iran-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-18T15:18:19Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-18T15:18:12Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete indicators/meta-h1-2026-china-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-18T15:18:05Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update README.md",
+   "committer": {
+    "date": "2026-05-18T15:17:39Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add new threat indicator entries to Published Threat Indicators table",
+   "committer": {
+    "date": "2026-05-18T14:40:12Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-18T14:40:10Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-18T14:40:09Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-iran-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-18T14:40:07Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-china-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-18T14:40:06Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-pakistan-based-cib-network.md",
+   "committer": {
+    "date": "2026-05-18T14:40:04Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add threat indicators: meta-h1-2026-russia-based-cib-network-2.md",
+   "committer": {
+    "date": "2026-05-18T14:40:03Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Rename meta-h1-2026-russia-based-cib-network-1.md to test.md",
+   "committer": {
+    "date": "2026-05-18T14:35:13Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Delete googlebdceae5c0cda13cd.html",
+   "committer": {
+    "date": "2026-05-04T18:31:21Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add files via upload",
+   "committer": {
+    "date": "2026-05-04T18:22:18Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-04T18:04:34Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update README.md",
+   "committer": {
+    "date": "2026-05-04T18:03:35Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-04T14:13:53Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Update meta-h1-2026-russia-based-cib-network-1.md",
+   "committer": {
+    "date": "2026-05-04T14:13:22Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add files via upload",
+   "committer": {
+    "date": "2026-05-04T14:11:43Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add files via upload\n\nIndicators from H1 2026 ATR",
+   "committer": {
+    "date": "2026-03-11T12:58:04Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Add files via upload\n\nIndicators from the H1 2026 ATR",
+   "committer": {
+    "date": "2026-03-11T12:56:56Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q2-3_2025\n\nThreat indicators from the Q2-3 ATR",
+   "committer": {
+    "date": "2025-12-11T19:05:37Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q1_2025\n\nQ1_2025",
+   "committer": {
+    "date": "2025-06-03T14:40:15Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q4_2024 ATR",
+   "committer": {
+    "date": "2025-02-27T17:29:55Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q3_2024 update",
+   "committer": {
+    "date": "2024-12-03T15:03:59Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q3_2024\n\nQ3_2024",
+   "committer": {
+    "date": "2024-12-03T14:45:12Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q2_2024 Killchain-TTPs update",
+   "committer": {
+    "date": "2024-08-22T13:59:25Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "uploading full file for q2_2023",
+   "committer": {
+    "date": "2024-08-20T16:31:36Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q2_2024",
+   "committer": {
+    "date": "2024-08-15T15:25:27Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q2_2024",
+   "committer": {
+    "date": "2024-08-15T15:21:04Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Q1_2024 ATR",
+   "committer": {
+    "date": "2024-05-29T14:52:34Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "Feb_2024 update",
+   "committer": {
+    "date": "2024-02-14T16:01:59Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "updates_nov_2023",
+   "committer": {
+    "date": "2023-11-30T16:15:28Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "updates_nov_2023",
+   "committer": {
+    "date": "2023-11-30T16:10:10Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "updates_nov_2023",
+   "committer": {
+    "date": "2023-11-30T13:49:08Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "updates_nov_2023",
+   "committer": {
+    "date": "2023-11-30T13:36:44Z"
+   }
+  }
+ },
+ {
+  "commit": {
+   "message": "updates_nov_2023",
+   "committer": {
+    "date": "2023-11-30T13:26:50Z"
+   }
+  }
+ }
+]

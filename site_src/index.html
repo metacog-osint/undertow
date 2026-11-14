@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Undertow: influence operations</title>
+<meta name="description" content="Covert influence operations that Meta, Google, OpenAI, TikTok and the EEAS have publicly disrupted or named, at operation level, with DISARM techniques and a STIX 2.1 export. Origin is the publisher's judgment, never a finding of sponsorship.">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tic-time.css">
+<link rel="stylesheet" href="tic-nav.css">
+<script src="tic-time.js"></script>
+<script src="tic-nav.js" defer data-current="undertow"></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <div class="brand"><strong>Undertow</strong><span class="muted">The Intelligence Company</span></div>
+    <nav class="top-nav" aria-label="Data and method">
+      <a href="data/feed.geojson">Feed</a>
+      <a href="data/stix.json">STIX 2.1</a>
+      <a href="data/events.json">Calendar</a>
+      <a href="#method">Method</a>
+      <span id="time-settings"></span>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Influence operations, as the platforms and governments that took them down report them.</h1>
+    <p class="lede">Each row is a network or operation that Meta, Google, OpenAI, TikTok or the EEAS has publicly disrupted
+      or named. The origin is the publisher's judgment of where the operators worked. It is never read as who directed
+      them. Undertow keeps operations only: no account handles, links, domains or names of individuals.</p>
+    <p class="small muted" id="asof" aria-live="polite">Loading…</p>
+    <div class="tiles" id="tiles" aria-live="polite"></div>
+  </section>
+
+  <section class="card" aria-labelledby="tl-h">
+    <div class="card-head"><h2 id="tl-h">Disclosures over time</h2>
+      <p class="muted small">One mark per disclosure (a report, bulletin or announcement), sized by how many networks it lists.
+        Google's bulletins are monthly within each quarter.</p></div>
+    <div id="timeline" class="timeline"></div>
+  </section>
+
+  <section class="card" aria-labelledby="mx-h">
+    <div class="card-head"><h2 id="mx-h">Origin by target</h2>
+      <p class="muted small">Networks counted by the origin the publisher states (rows) and the target countries it names
+        (columns). Google and OpenAI name no targets, so they count under "none named". Regions such as "Sub-Saharan
+        Africa" are in the table below.</p></div>
+    <div class="scroll"><table id="matrix" class="matrix"></table></div>
+  </section>
+
+  <section class="card" aria-labelledby="ops-h">
+    <div class="card-head"><h2 id="ops-h">Named operations</h2>
+      <p class="muted small">Operations a publisher names (Doppelganger, Storm-1516, Spamouflage...). Our confidence is about
+        origin only and counts independent publishers that name the operation with the same origin: one is Low, two is
+        Moderate. Origin is easy to fake, so nothing here is High.</p></div>
+    <div id="ops"></div>
+  </section>
+
+  <section class="card" aria-labelledby="tb-h">
+    <div class="card-head"><h2 id="tb-h">All disclosed networks</h2></div>
+    <div class="filters">
+      <label>Publisher <select id="f-pub"><option value="">All</option></select></label>
+      <label>Search <input id="f-q" type="search" placeholder="country, operation, technique"></label>
+      <span class="small muted" id="f-count"></span>
+    </div>
+    <div id="rows"></div>
+    <button type="button" id="more" class="more-btn" hidden>Show more</button>
+  </section>
+
+  <section class="card" id="method" aria-labelledby="me-h">
+    <div class="card-head"><h2 id="me-h">Method and licences</h2></div>
+    <div class="prose">
+      <h3>Three questions, kept apart</h3>
+      <ol>
+        <li><strong>Did the takedown happen?</strong> The publisher reports its own action. Source grade A2: reliable on
+          its own enforcement, not confirmable from outside.</li>
+        <li><strong>Where were the operators?</strong> The publisher's judgment, quoted as written, with the publisher's
+          own level (high, moderate, none).</li>
+        <li><strong>Who directed it?</strong> Recorded only where a publisher names an operator. "Aligned with Russia",
+          which the EEAS writes of operations it calls non-attributed, is shown as alignment, never as origin.</li>
+      </ol>
+      <p>Our confidence follows the suite's rubric (tic-confidence-1.0): <a href="doctrine/confidence-mapping.md">confidence
+        mapping</a>, <a href="doctrine/method.md">method</a>.</p>
+      <h3>What is never kept</h3>
+      <p>Indicator values, account handles, URLs and domains, and the names of individuals. Meta's indicator tables are
+        read only to count their rows. Every sentence kept from a publisher is scrubbed: links become "[link withheld]"
+        and likely personal names "[name withheld]". The rule leans towards withholding. <span id="withheld-n"></span></p>
+      <h3>DISARM techniques</h3>
+      <p>DISARM Framework v<span id="disarm-v"></span> (DISARM Foundation, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>).
+        A technique is attached only when a rule below matches the publisher's own words. It is Undertow's reading
+        ("mapped"), not the publisher's claim. <strong id="rules-status"></strong></p>
+      <div class="scroll"><table id="rules" class="plain"></table></div>
+      <h3>Sources and their terms</h3>
+      <div class="scroll"><table class="plain">
+        <thead><tr><th scope="col">Publisher</th><th scope="col">Read how</th><th scope="col">Terms</th></tr></thead>
+        <tbody>
+          <tr><td>Meta</td><td>Threat-research repository on GitHub: README table and network files</td><td>MIT. Network summaries quoted with the notice: Copyright (c) Meta Platforms, Inc. and affiliates</td></tr>
+          <tr><td>Google</td><td>Influence Operations Bulletin pages, found from blog.google's security feed</td><td>Facts and counts only; no bulletin text republished</td></tr>
+          <tr><td>OpenAI</td><td>News RSS feed only. Report pages are not read: OpenAI's terms bar programmatic extraction</td><td>Title and one-line summary quoted with credit</td></tr>
+          <tr><td>TikTok</td><td>TikTok's reports to the EU Code of Conduct on Disinformation, from the Code's Transparency Centre. Never tiktok.com: TikTok's terms bar automated extraction</td><td>No terms of use stated by the Centre</td></tr>
+          <tr><td>EEAS</td><td>4th report on FIMI threats (March 2026), named operations entered once with page numbers</td><td>Reuse authorised with acknowledgement. Source: European External Action Service</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Collection</h3>
+      <div id="lanes"></div>
+      <p class="small muted">Expected next disclosures (dates only, on each publisher's past pattern; none is a published date):</p>
+      <ul id="events" class="small"></ul>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot small muted">
+  <p>Undertow, The Intelligence Company. Public information only, non-commercial. A STIX 2.1 bundle and a tic-feed/2 feed
+    are linked at the top. Not affiliated with any publisher named here.</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+"""STIX 2.1 export (site/data/stix.json): one bundle per build, deterministic ids.
+
+Mapping (plan section 3; STIX 2.1 OS, docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html):
+- the suite: identity (organization), one fixed id, created_by_ref on everything Undertow makes
+- a disclosure (one Meta report, one Google bulletin, one TikTok report, one OpenAI item, the EEAS report): report
+- a disclosed network or operation: campaign, with x_tic_* properties for grade, status class, counts and wording
+- origin country: location + relationship originates-from; target countries: location + relationship targets
+- a DISARM technique: DISARM's own attack-pattern object, id and content unchanged, with DISARM's CC BY-SA 4.0
+  marking, + relationship uses
+- a named persistent operation: intrusion-set + relationship attributed-to (campaign -> intrusion-set)
+- markings: TLP:CLEAR (TLP 2.0, copied from OASIS) plus a statement marking per source licence
+
+Never emitted: indicator, observed-data, any cyber-observable (user-account, url, domain-name), an identity for a
+person, or a threat-actor (second slice). Ids are UUIDv5 from NAMESPACE and a stable key, so a rerun on the same
+input gives the same ids. Timestamps come from the disclosure, not the build, so a rerun gives the same objects.
+"""
+from __future__ import annotations
+
+import json
+import uuid
+from pathlib import Path
+
+from . import disarm, text
+from .feed import SOURCES, item_id, summary
+
+ROOT = Path(__file__).resolve().parents[1]
+NAMESPACE = uuid.uuid5(uuid.NAMESPACE_DNS, "undertow.theintelligence.company")
+EPOCH = "2026-11-14T00:00:00.000Z"
+STIX_CONFIDENCE = {"low": 15, "moderate": 50, "high": 85}    # Appendix A, None/Low/Med/High scale
+SPEC_URL = "https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html"
+
+
+def sid(kind: str, key: str) -> str:
+    return f"{kind}--{uuid.uuid5(NAMESPACE, kind + ':' + key)}"
+
+
+def ts(s: str | None) -> str:
+    if not s:
+        return EPOCH
+    s = s.replace("+00:00", "Z")
+    if len(s) == 10:
+        s += "T00:00:00Z"
+    if s.endswith("Z") and "." not in s:
+        s = s[:-1] + ".000Z"
+    return s
+
+
+def tlp_clear() -> dict:
+    return json.loads((ROOT / "config" / "stix_markings.json").read_text(encoding="utf-8"))["tlp_clear"]
+
+
+SUITE = sid("identity", "the-intelligence-company")
+
+
+def build_bundle(records: list[dict], generated: str) -> dict:
+    tlp = tlp_clear()
+    objs: dict[str, dict] = {}
+
+    def add(o):
+        objs.setdefault(o["id"], o)
+
+    add({"type": "identity", "spec_version": "2.1", "id": SUITE, "created": EPOCH, "modified": EPOCH,
+         "name": "The Intelligence Company (Undertow)", "identity_class": "organization",
+         "description": "Undertow: attributed influence-operation takedowns at operation level. Public, non-commercial.",
+         "contact_information": "https://undertow.theintelligence.company"})
+    add(tlp)
+    statement = {}
+    for lane, s in SOURCES.items():
+        m = {"type": "marking-definition", "spec_version": "2.1", "id": sid("marking-definition", "licence:" + lane),
+             "created": EPOCH, "created_by_ref": SUITE, "name": f"Source terms: {s['publisher']}",
+             "definition_type": "statement", "definition": {"statement": s["licence"]}}
+        statement[lane] = m["id"]
+    add(disarm.identity())
+    add(disarm.marking())
+
+    by_disclosure: dict[str, list[str]] = {}
+    disclosures: dict[str, dict] = {}
+    used_lanes = set()
+    for r in records:
+        lane = r["publisher"]
+        used_lanes.add(lane)
+        marks = [tlp["id"], statement[lane]]
+        cid = sid("campaign", r["key"])
+        when = ts(r.get("disclosed_at"))
+        conf = (r.get("confidence") or {}).get("confidence")
+        camp = {"type": "campaign", "spec_version": "2.1", "id": cid, "created_by_ref": SUITE, "created": when,
+                "modified": when, "name": r.get("operation_name") or r["title"], "description": summary(r),
+                "external_references": [{"source_name": SOURCES[lane]["publisher"], "url": r["url"],
+                                         "description": r["disclosure"]["title"]},
+                                        {"source_name": "undertow", "external_id": item_id(r["key"]),
+                                         "url": f"https://undertow.theintelligence.company/#{item_id(r['key'])}"}],
+                "object_marking_refs": marks,
+                "x_tic_source_grade": "A2", "x_tic_status_class": "reported",
+                "x_tic_attribution_wording": r.get("origin_wording"),
+                "x_tic_origin_level_stated": r.get("origin_level"),
+                "x_tic_alignment": r.get("alignment") or [],
+                "x_tic_period": r.get("period"),
+                "x_tic_counts": r.get("counts") or {},
+                "x_tic_disarm_basis": {d["id"]: d["basis"] for d in r.get("disarm") or []}}
+        if conf:
+            camp["confidence"] = STIX_CONFIDENCE[conf]
+        camp = {k: v for k, v in camp.items() if v not in (None, [], {})}
+        add(camp)
+        refs = [cid]
+
+        def rel(kind, target, desc=None):
+            o = {"type": "relationship", "spec_version": "2.1", "id": sid("relationship", f"{cid}|{kind}|{target}"),
+                 "created_by_ref": SUITE, "created": when, "modified": when, "relationship_type": kind,
+                 "source_ref": cid, "target_ref": target, "object_marking_refs": marks}
+            if desc:
+                o["description"] = desc
+            add(o)
+            refs.append(o["id"])
+
+        for cc in r.get("origin") or []:
+            lid = _location(add, cc)
+            refs.append(lid)
+            rel("originates-from", lid, "Origin as the publisher states it; not a finding of sponsorship.")
+        for cc in r.get("targets") or []:
+            lid = _location(add, cc)
+            refs.append(lid)
+            rel("targets", lid)
+        for ap in disarm.attack_patterns([d["id"] for d in r.get("disarm") or []]):
+            add(ap)
+            refs.append(ap["id"])
+            rel("uses", ap["id"], "Mapped by Undertow from the publisher's description (DISARM rule table)")
+        for op in r.get("named_operations") or []:
+            o = next((x for x in text.operations() if x["id"] == op), None)
+            if not o:
+                continue
+            iid = sid("intrusion-set", op)
+            iset = {"type": "intrusion-set", "spec_version": "2.1", "id": iid, "created_by_ref": SUITE,
+                    "created": EPOCH, "modified": EPOCH, "name": o["name"], "object_marking_refs": [tlp["id"]]}
+            if o.get("aliases"):
+                iset["aliases"] = o["aliases"]
+            add(iset)
+            refs.append(iid)
+            rel("attributed-to", iid, "The publisher names this operation.")
+        d = r["disclosure"]
+        disclosures.setdefault(d["id"], {"d": d, "lane": lane, "published": when})
+        by_disclosure.setdefault(d["id"], []).extend(refs)
+
+    for did, info in disclosures.items():
+        d = info["d"]
+        add({"type": "report", "spec_version": "2.1", "id": sid("report", did), "created_by_ref": SUITE,
+             "created": info["published"], "modified": info["published"], "name": d["title"],
+             "report_types": ["threat-report"], "published": info["published"],
+             "object_refs": sorted(set(by_disclosure[did])),
+             "external_references": [{"source_name": SOURCES[info["lane"]]["publisher"], "url": d["url"]}],
+             "object_marking_refs": [tlp["id"], statement[info["lane"]]]})
+    for lane in used_lanes:
+        s = SOURCES[lane]
+        add({"type": "marking-definition", "spec_version": "2.1", "id": statement[lane], "created": EPOCH,
+             "created_by_ref": SUITE, "name": f"Source terms: {s['publisher']}", "definition_type": "statement",
+             "definition": {"statement": s["licence"]}})
+    ordered = sorted(objs.values(), key=lambda o: (o["type"], o["id"]))
+    bundle_id = f"bundle--{uuid.uuid5(NAMESPACE, 'bundle:' + '|'.join(o['id'] for o in ordered))}"
+    return {"type": "bundle", "id": bundle_id, "objects": ordered}
+
+
+def _location(add, cc: str) -> str:
+    from tic_doctrine import geo
+    lid = sid("location", cc)
+    add({"type": "location", "spec_version": "2.1", "id": lid, "created_by_ref": SUITE, "created": EPOCH,
+         "modified": EPOCH, "name": geo.name(cc) or cc, "country": cc})
+    return lid
+
+
+# --- a check against the spec's required properties (no external validator: standard library only) ---------
+
+REQUIRED = {
+    "identity": ["name"], "campaign": ["name"], "report": ["name", "published", "object_refs"],
+    "location": [], "relationship": ["relationship_type", "source_ref", "target_ref"], "intrusion-set": ["name"],
+    "attack-pattern": ["name"], "marking-definition": [],
+}
+SDO_COMMON = ["type", "spec_version", "id", "created", "modified"]
+FORBIDDEN = {"indicator", "observed-data", "user-account", "url", "domain-name", "ipv4-addr", "ipv6-addr",
+             "email-addr", "threat-actor", "sighting"}
+RELS = {("campaign", "originates-from", "location"), ("campaign", "targets", "location"),
+        ("campaign", "uses", "attack-pattern"), ("campaign", "attributed-to", "intrusion-set")}
+
+
+def validate(bundle: dict) -> list[str]:
+    import re
+    errs = []
+    idre = re.compile(r"^[a-z][a-z0-9-]+--[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+    tsre = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$")
+    if bundle.get("type") != "bundle" or not idre.match(bundle.get("id", "")):
+        errs.append("bundle: type or id invalid")
+    ids = {o.get("id") for o in bundle.get("objects", [])}
+    seen = set()
+    for o in bundle.get("objects", []):
+        t, oid = o.get("type"), o.get("id", "")
+        if oid in seen:
+            errs.append(f"{oid}: duplicate id")
+        seen.add(oid)
+        if t in FORBIDDEN:
+            errs.append(f"{oid}: type {t} is never emitted")
+            continue
+        if not idre.match(oid) or not oid.startswith(f"{t}--"):
+            errs.append(f"{oid}: id must be '{t}--' plus a UUID")
+        if t not in REQUIRED:
+            errs.append(f"{oid}: unexpected type {t}")
+            continue
+        common = ["type", "spec_version", "id", "created"] if t == "marking-definition" else SDO_COMMON
+        for k in common + REQUIRED[t]:
+            if k not in o:
+                errs.append(f"{oid}: missing {k}")
+        if o.get("spec_version") != "2.1":
+            errs.append(f"{oid}: spec_version must be 2.1")
+        for k in ("created", "modified", "published"):
+            if k in o and not tsre.match(o[k]):
+                errs.append(f"{oid}: {k} is not a STIX timestamp")
+        if t == "location" and not (o.get("country") or o.get("region") or ("latitude" in o and "longitude" in o)):
+            errs.append(f"{oid}: location needs country, region or latitude and longitude")
+        if t == "report" and not o.get("object_refs"):
+            errs.append(f"{oid}: report needs object_refs")
+        for k in ("created_by_ref",):
+            if k in o and o[k] not in ids:
+                errs.append(f"{oid}: {k} does not resolve")
+        for ref in o.get("object_refs", []) + o.get("object_marking_refs", []):
+            if ref not in ids:
+                errs.append(f"{oid}: reference {ref} does not resolve")
+        if t == "relationship":
+            src = o.get("source_ref", "").split("--")[0]
+            tgt = o.get("target_ref", "").split("--")[0]
+            if (src, o.get("relationship_type"), tgt) not in RELS:
+                errs.append(f"{oid}: relationship {src} {o.get('relationship_type')} {tgt} not in the mapping")
+            for k in ("source_ref", "target_ref"):
+                if o.get(k) not in ids:
+                    errs.append(f"{oid}: {k} does not resolve")
+        if "confidence" in o and not (isinstance(o["confidence"], int) and 0 <= o["confidence"] <= 100):
+            errs.append(f"{oid}: confidence must be an integer 0 to 100")
+        if t == "identity" and o.get("identity_class") == "individual":
+            errs.append(f"{oid}: no identity for a person")
+    return errs

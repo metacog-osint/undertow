@@ -1,0 +1,16 @@
+{
+  "note": "TLP 2.0 TLP:CLEAR marking definition, copied unchanged from OASIS cti-stix-common-objects (objects/marking-definition/marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487.json, main branch) on 14 Nov 2026.",
+  "tlp_clear": {
+    "type": "marking-definition",
+    "spec_version": "2.1",
+    "id": "marking-definition--94868c89-83c2-464b-929b-a1a8aa3c8487",
+    "created": "2022-10-01T00:00:00.000Z",
+    "name": "TLP:CLEAR",
+    "extensions": {
+      "extension-definition--60a3c5c5-0d10-413e-aab3-9e08dde9e88d": {
+        "extension_type": "property-extension",
+        "tlp_2_0": "clear"
+      }
+    }
+  }
+}

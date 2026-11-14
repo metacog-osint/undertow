@@ -1,0 +1,986 @@
+{
+ "note": "Cut of DISARM v1.6.1's STIX 2.1 bundle (DISARMFoundation/DISARMframeworks, tag v1.6.1, generated_files/DISARM_STIX/DISARM.json): the DISARM identity, its CC BY-SA 4.0 marking, and the attack-patterns the rules in config/disarm_rules.json name, unchanged. 'index' lists every technique id and name in the full bundle, so a test can check that an id exists in v1.6.1. Fetched 14 Nov 2026.",
+ "source_url": "https://raw.githubusercontent.com/DISARMFoundation/DISARMframeworks/v1.6.1/generated_files/DISARM_STIX/DISARM.json",
+ "source_sha256": "f372a5b70e540022c5ffae41d1e1bd04fb79dd6b94aa0ea2fcce4712d600bf3f",
+ "source_bytes": 855461,
+ "version": "1.6.1",
+ "licence": "CC BY-SA 4.0 (DISARM Foundation)",
+ "objects": [
+  {
+   "type": "identity",
+   "spec_version": "2.1",
+   "id": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.073632Z",
+   "modified": "2024-11-22T16:43:58.073632Z",
+   "name": "DISARM Foundation",
+   "description": "DISARM is a framework designed for describing and understanding disinformation incidents.",
+   "identity_class": "organization"
+  },
+  {
+   "type": "marking-definition",
+   "spec_version": "2.1",
+   "id": "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.073969Z",
+   "definition_type": "statement",
+   "name": "DISARM Foundation",
+   "definition": {
+    "statement": "CC-BY-SA-4.0 DISARM Foundation"
+   }
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--17cba995-a8ab-4aa0-85fe-2b87d38a8f03",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.10375Z",
+   "modified": "2024-11-22T16:43:58.10375Z",
+   "name": "Develop AI-Generated Text",
+   "description": "AI-generated texts refers to synthetic text composed by computers using text-generating AI technology. Autonomous generation refers to content created by a bot without human input, also known as bot-created content generation. Autonomous generation represents the next step in automation after language generation and may lead to automated journalism. An influence operation may use read fakes or autonomous generation to quickly develop and distribute content to the target audience.<br><br><b>Associated Techniques and Sub-techniques:</b><br><b>T0085.008: Machine Translated Text:</b> Use this sub-technique when AI has been used to generate a translation of a piece of text.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "develop-content"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0085.001.md",
+     "external_id": "T0085.001"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--7b6c328e-b050-4d76-8e11-ff3b3fe7dea3",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.10809Z",
+   "modified": "2024-11-22T16:43:58.10809Z",
+   "name": "Develop AI-Generated Images (Deepfakes)",
+   "description": "Deepfakes refer to AI-generated falsified photos, videos, or soundbites. An influence operation may use deepfakes to depict an inauthentic situation by synthetically recreating an individual’s face, body, voice, and physical gestures.<br><br> <b>Associated Techniques and Sub-techniques:</b><br> <b>T0145.002: AI-Generated Account Imagery:</b> Analysts should use this sub-technique to document use of AI generated imagery in accounts’ profile pictures or other account imagery.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "develop-content"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0086.002.md",
+     "external_id": "T0086.002"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--c4e7d976-071a-4973-833e-3badef32b8c5",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.110605Z",
+   "modified": "2024-11-22T16:43:58.110605Z",
+   "name": "Develop AI-Generated Videos (Deepfakes)",
+   "description": "Deepfakes refer to AI-generated falsified photos, videos, or soundbites. An influence operation may use deepfakes to depict an inauthentic situation by synthetically recreating an individual’s face, body, voice, and physical gestures.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "develop-content"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0087.001.md",
+     "external_id": "T0087.001"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--0cc5110d-f7a1-49f7-8667-ae454698f11d",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.132663Z",
+   "modified": "2024-11-22T16:43:58.132663Z",
+   "name": "Journalist Persona",
+   "description": "A person with a journalist persona presents themselves as a reporter or journalist delivering news, conducting interviews, investigations etc.<br><br>While presenting as a journalist is not an indication of inauthentic behaviour, an influence operation may have its narratives amplified by people presenting as journalists. Threat actors can fabricate journalists to give the appearance of legitimacy, justifying the actor’s requests for interviews, etc (T0143.002: Fabricated Persona, T0097.102: Journalist Persona).<br><br>People who have legitimately developed a persona as a journalist (T0143.001: Authentic Persona, T0097.102: Journalist Persona) can use it for malicious purposes, or be exploited by threat actors. For example, someone could take money for using their position as a trusted journalist to provide legitimacy to a false narrative or be tricked into doing so without the journalist’s knowledge.<br><br><b>Associated Techniques and Sub-techniques</b><br><b>T0097.202: News Organisation Persona:</b> People with a journalist persona may present as being part of a news organisation.<br><b>T0097.101: Local Persona:</b> People with a journalist persona may present themselves as local reporters.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0097.102.md",
+     "external_id": "T0097.102"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--5830600f-c9b2-430d-948e-76870131c475",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.138621Z",
+   "modified": "2024-11-22T16:43:58.138621Z",
+   "name": "Local Institution Persona",
+   "description": "Institutions which present themselves as operating in a particular geography, or as having local knowledge relevant to a narrative, are presenting a local institution persona.<br><br> While presenting as a local institution is not an indication of inauthentic behaviour, threat actors may present themselves as such (T0143.002: Fabricated Persona, T0097.201: Local Institution Persona) to add credibility to their narratives, or misrepresent the real opinions of locals in the area.<br><br> Legitimate local institutions could use their persona for malicious purposes, or be exploited by threat actors (T0143.001: Authentic Persona, T0097.201: Local Institution Persona). For example, a local institution could take money for using their position to provide legitimacy to a false narrative, or be tricked into doing so without their knowledge.<br><br> <b>Associated Techniques and Sub-techniques</b><br> <b>T0097.101: Local Persona:</b> Institutions presenting as local may also present locals working within the organisation.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0097.201.md",
+     "external_id": "T0097.201"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--54d8019d-4687-46f5-a4c9-1b9414b80d35",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.139245Z",
+   "modified": "2024-11-22T16:43:58.139245Z",
+   "name": "News Outlet Persona",
+   "description": "An institution with a news outlet persona presents itself as an organisation which delivers new information to its target audience.<br><br> While presenting as a news outlet is not an indication of inauthentic behaviour, an influence operation may have its narratives amplified by news organisations. Threat actors can fabricate news organisations (T0143.002: Fabricated Persona, T0097.202: News Outlet Persona), or they can impersonate existing news outlets (T0143.003: Impersonated Persona, T0097.202: News Outlet Persona).<br><br> Legitimate news organisations could use their persona for malicious purposes, or be exploited by threat actors (T0143.001: Authentic Persona, T0097.202: News Outlet Persona).<br><br> <b>Associated Techniques and Sub-techniques</b></br> <b>T0097.102: Journalist Persona:</b> Institutions presenting as news outlets may also present journalists working within the organisation.<br> <b>T0097.201: Local Institution Persona:</b> Institutions presenting as news outlets may present as being a local news outlet.<br> <b>T0097.203: Fact Checking Organisation Persona:</b> Institutions presenting as news outlets may also deliver a fact checking service (e.g. The UK’s BBC News has the fact checking service BBC Verify). When an actor presents as the fact checking arm of a news outlet, they are presenting both a News Outlet Persona and a Fact Checking Organisation Persona.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0097.202.md",
+     "external_id": "T0097.202"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--758f2786-68fa-4c9e-bce3-0b09ea00978f",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.140139Z",
+   "modified": "2024-11-22T16:43:58.140139Z",
+   "name": "Think Tank Persona",
+   "description": "An institution with a think tank persona presents itself as a think tank; an organisation that aims to conduct original research and propose new policies or solutions, especially for social and scientific problems.<br><br> While presenting as a think tank is not an indication of inauthentic behaviour, think tank personas are commonly used by threat actors as a front for their operational activity (T0143.002: Fabricated Persona, T0097.204: Think Tank Persona). They may be created to give legitimacy to narratives and allow them to suggest politically beneficial solutions to societal issues.<br><br> Legitimate think tanks could have a political bias that they may not be transparent about, they could use their persona for malicious purposes, or they could be exploited by threat actors (T0143.001: Authentic Persona, T0097.204: Think Tank Persona). For example, a think tank could take money for using their position to provide legitimacy to a false narrative, or be tricked into doing so without their knowledge.<br><br> <b>Associated Techniques and Sub-techniques</b><br> <b>T0097.107: Researcher Persona:</b> Institutions presenting as think tanks may also present researchers working within the organisation.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0097.204.md",
+     "external_id": "T0097.204"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--e0f07568-5a2b-429d-94b9-b1ff3c17adea",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.143152Z",
+   "modified": "2024-11-22T16:43:58.143152Z",
+   "name": "Create Inauthentic News Sites",
+   "description": "Create Inauthentic News Sites",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0098.001.md",
+     "external_id": "T0098.001"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--9b081fd3-0714-483e-bd7b-a30defc85cd2",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.145462Z",
+   "modified": "2024-11-22T16:43:58.145462Z",
+   "name": "Co-Opt Influencers",
+   "description": "Co-opt Influencers",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0100.003.md",
+     "external_id": "T0100.003"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--5251f6d0-6820-4617-afef-a0d8acafd3c1",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.158299Z",
+   "modified": "2024-11-22T16:43:58.158299Z",
+   "name": "Post Inauthentic Social Media Comment",
+   "description": "Use government-paid social media commenters, astroturfers, chat bots (programmed to reply to specific key words/hashtags) influence online conversations, product reviews, web-site comment forums.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "deliver-content"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0116.001.md",
+     "external_id": "T0116.001"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--03225a5c-f388-4453-a53c-f10be49bbcfe",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.161705Z",
+   "modified": "2024-11-22T16:43:58.161705Z",
+   "name": "Post across Platform",
+   "description": "An influence operation may post content across platforms to spread narratives and content to new communities within the target audiences or to new target audiences. Posting across platforms can also remove opposition and context, helping the narrative spread with less opposition on the cross-posted platform.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "maximise-exposure"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0119.002.md",
+     "external_id": "T0119.002"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--75d11cd8-2f92-4d73-97c5-27356c8a2758",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.220194Z",
+   "modified": "2024-11-22T16:43:58.220194Z",
+   "name": "Fabricated Persona",
+   "description": "An individual or institution pretending to have a persona without any legitimate claim to that persona is presenting a fabricated persona, such as a person who presents themselves as a member of a country’s military without having worked in any capacity with the military (T0143.002: Fabricated Persona, T0097.105: Military Personnel).<br><br> Sometimes real people can present entirely fabricated personas; they can use real names and photos on social media while also pretending to have credentials or traits they don’t have in real life.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0143.002.md",
+     "external_id": "T0143.002"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--2295615a-89ad-4f5b-b8ed-e70245a6d209",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.220405Z",
+   "modified": "2024-11-22T16:43:58.220405Z",
+   "name": "Impersonated Persona",
+   "description": "Threat actors may impersonate existing individuals or institutions to conceal their network identity, add legitimacy to content, or harm the impersonated target’s reputation. This Technique covers situations where an actor presents themselves as another existing individual or institution.<br><br> This Technique was previously called Prepare Assets Impersonating Legitimate Entities and used the ID T0099.<br><br> <b>Associated Techniques and Sub-techniques</b><br> <b>T0097: Presented Persona:</b> Analysts can use the sub-techniques of T0097: Presented Persona to categorise the type of impersonation. For example, a document developed by a threat actor which falsely presented as a letter from a government department could be documented using T0085.004: Develop Document, T0143.003: Impersonated Persona, and T0097.206: Government Institution Persona.<br> <b>T0145.001: Copy Account Imagery:</b> Actors may take existing accounts’ profile pictures as part of their impersonation efforts.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-legitimacy"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0143.003.md",
+     "external_id": "T0143.003"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--e6a5397a-9515-4ba6-80e5-8f1fe273b7a5",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.221781Z",
+   "modified": "2024-11-22T16:43:58.221781Z",
+   "name": "Copy Account Imagery",
+   "description": "Account imagery copied from an existing account.<br><br> Analysts may use reverse image search tools to try to identify previous uses of account imagery (e.g. a profile picture) by other accounts.<br><br> Threat Actors have been known to copy existing accounts’ imagery to impersonate said accounts, or to provide imagery for unrelated accounts which aren’t intended to impersonate the original assets’ owner.<br><br> <b>Associated Techniques and Sub-techniques</b><br> <b>T0143.003: Impersonated Persona:</b> Actors may copy existing accounts’ imagery in an attempt to impersonate them.<br> <b>T0143.004: Parody Persona:</b> Actors may copy existing accounts’ imagery as part of a parody of that account.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-assets"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0145.001.md",
+     "external_id": "T0145.001"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--f5ce482b-547c-4776-b8ec-acd96c2322d3",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.222087Z",
+   "modified": "2024-11-22T16:43:58.222087Z",
+   "name": "AI-Generated Account Imagery",
+   "description": "AI Generated images used in account imagery.<br><br> An influence operation might flesh out its account by uploading account imagery (e.g. a profile picture), increasing its perceived legitimacy. By using an AI-generated picture for this purpose, they are able to present themselves as a real person without compromising their own identity, or risking detection by taking a real person’s existing profile picture.<br><br> <b>Associated Techniques and Sub-techniques</b><br> <b>T0086.002: Develop AI-Generated Images (Deepfakes):</b> Analysts should use this sub-technique to document use of AI generated imagery used to support narratives.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-assets"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0145.002.md",
+     "external_id": "T0145.002"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--d6be7b47-6d49-4859-b741-e1547538c079",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.223208Z",
+   "modified": "2024-11-22T16:43:58.223208Z",
+   "name": "Stock Image Account Imagery",
+   "description": "Stock images used in account imagery.<br><br> Stock image websites produce photos of people in various situations. Threat Actors can purchase or appropriate these images for use in their account imagery, increasing perceived legitimacy while avoiding the risk of detection associated with stealing or AI-generating profile pictures (see T0145.001: Copy Account Imagery and T0145.002: AI-Generated Account Imagery). <br><br> Stock images tend to include physically attractive people, and this can benefit threat actors by increasing attention given to their posts.<br><br> This Technique is often used by Coordinated Inauthentic Behaviour accounts (CIBs). A collection of accounts displaying the same behaviour using similar account imagery can indicate the presence of CIB.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-assets"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0145.007.md",
+     "external_id": "T0145.007"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  },
+  {
+   "type": "attack-pattern",
+   "spec_version": "2.1",
+   "id": "attack-pattern--696cbb0b-74f4-4937-9758-3fe56e4b9535",
+   "created_by_ref": "identity--f1a0f560-2d9e-4c5d-bf47-7e96e805de82",
+   "created": "2024-11-22T16:43:58.239774Z",
+   "modified": "2024-11-22T16:43:58.239774Z",
+   "name": "Compromised Asset",
+   "description": "A Compromised Asset is an asset which was originally created or belonged to another person or organisation, but which an actor has gained access to without their consent.<br><br>See also MITRE ATT&CK T1708: Valid Accounts.",
+   "kill_chain_phases": [
+    {
+     "kill_chain_name": "mitre-attack",
+     "phase_name": "establish-assets"
+    }
+   ],
+   "external_references": [
+    {
+     "source_name": "mitre-attack",
+     "url": "https://github.com/DISARMFoundation/DISARMframeworks/blob/main/generated_pages/techniques/T0150.005.md",
+     "external_id": "T0150.005"
+    }
+   ],
+   "object_marking_refs": [
+    "marking-definition--f79f25d2-8b96-4580-b169-eb7b613a7c31"
+   ],
+   "x_mitre_is_subtechnique": true,
+   "x_mitre_platforms": [
+    "Windows",
+    "Linux",
+    "Mac"
+   ],
+   "x_mitre_version": "2.1"
+  }
+ ],
+ "index": {
+  "T0002": "Facilitate State Propaganda",
+  "T0003": "Leverage Existing Narratives",
+  "T0004": "Develop Competing Narratives",
+  "T0010": "Cultivate Ignorant Agents",
+  "T0014": "Prepare Fundraising Campaigns",
+  "T0014.001": "Raise Funds from Malign Actors",
+  "T0014.002": "Raise Funds from Ignorant Agents",
+  "T0015": "Create Hashtags and Search Artefacts",
+  "T0015.001": "Use Existing Hashtag",
+  "T0015.002": "Create New Hashtag",
+  "T0016": "Create Clickbait",
+  "T0017": "Conduct Fundraising",
+  "T0017.001": "Conduct Crowdfunding Campaigns",
+  "T0018": "Purchase Targeted Advertisements",
+  "T0020": "Trial Content",
+  "T0022": "Leverage Conspiracy Theory Narratives",
+  "T0022.001": "Amplify Existing Conspiracy Theory Narratives",
+  "T0022.002": "Develop Original Conspiracy Theory Narratives",
+  "T0023": "Distort Facts",
+  "T0023.001": "Reframe Context",
+  "T0023.002": "Edit Open-Source Content",
+  "T0029": "Online Polls",
+  "T0039": "Bait Influencer",
+  "T0040": "Demand Insurmountable Proof",
+  "T0042": "Seed Kernel of Truth",
+  "T0044": "Seed Distortions",
+  "T0045": "Use Fake Experts",
+  "T0046": "Use Search Engine Optimisation",
+  "T0047": "Censor Social Media as a Political Force",
+  "T0048": "Harass",
+  "T0048.001": "Boycott/\"Cancel\" Opponents",
+  "T0048.002": "Harass People Based on Identities",
+  "T0048.003": "Threaten to Dox",
+  "T0048.004": "Dox",
+  "T0049": "Flood Information Space",
+  "T0049.001": "Trolls Amplify and Manipulate",
+  "T0049.002": "Flood Existing Hashtag",
+  "T0049.003": "Bots Amplify via Automated Forwarding and Reposting",
+  "T0049.004": "Utilise Spamoflauge",
+  "T0049.005": "Conduct Swarming",
+  "T0049.006": "Conduct Keyword Squatting",
+  "T0049.007": "Inauthentic Sites Amplify News and Narratives",
+  "T0049.008": "Generate Information Pollution",
+  "T0057": "Organise Events",
+  "T0057.001": "Pay for Physical Action",
+  "T0057.002": "Conduct Symbolic Action",
+  "T0059": "Play the Long Game",
+  "T0060": "Continue to Amplify",
+  "T0061": "Sell Merchandise",
+  "T0065": "Prepare Physical Broadcast Capabilities",
+  "T0066": "Degrade Adversary",
+  "T0068": "Respond to Breaking News Event or Active Crisis",
+  "T0072": "Segment Audiences",
+  "T0072.001": "Geographic Segmentation",
+  "T0072.002": "Demographic Segmentation",
+  "T0072.003": "Economic Segmentation",
+  "T0072.004": "Psychographic Segmentation",
+  "T0072.005": "Political Segmentation",
+  "T0073": "Determine Target Audiences",
+  "T0074": "Determine Strategic Ends",
+  "T0074.001": "Geopolitical Advantage",
+  "T0074.002": "Domestic Political Advantage",
+  "T0074.003": "Economic Advantage",
+  "T0074.004": "Ideological Advantage",
+  "T0075": "Dismiss",
+  "T0075.001": "Discredit Credible Sources",
+  "T0076": "Distort",
+  "T0077": "Distract",
+  "T0078": "Dismay",
+  "T0079": "Divide",
+  "T0080": "Map Target Audience Information Environment",
+  "T0080.001": "Monitor Social Media Analytics",
+  "T0080.002": "Evaluate Media Surveys",
+  "T0080.003": "Identify Trending Topics/Hashtags",
+  "T0080.004": "Conduct Web Traffic Analysis",
+  "T0080.005": "Assess Degree/Type of Media Access",
+  "T0081": "Identify Social and Technical Vulnerabilities",
+  "T0081.001": "Find Echo Chambers",
+  "T0081.002": "Identify Data Voids",
+  "T0081.003": "Identify Existing Prejudices",
+  "T0081.004": "Identify Existing Fissures",
+  "T0081.005": "Identify Existing Conspiracy Narratives/Suspicions",
+  "T0081.006": "Identify Wedge Issues",
+  "T0081.007": "Identify Target Audience Adversaries",
+  "T0081.008": "Identify Media System Vulnerabilities",
+  "T0082": "Develop New Narratives",
+  "T0083": "Integrate Target Audience Vulnerabilities into Narrative",
+  "T0084": "Reuse Existing Content",
+  "T0084.001": "Use Copypasta",
+  "T0084.002": "Plagiarise Content",
+  "T0084.003": "Deceptively Labelled or Translated",
+  "T0084.004": "Appropriate Content",
+  "T0085": "Develop Text-Based Content",
+  "T0085.001": "Develop AI-Generated Text",
+  "T0085.003": "Develop Inauthentic News Articles",
+  "T0085.004": "Develop Document",
+  "T0085.005": "Develop Book",
+  "T0085.006": "Develop Opinion Article",
+  "T0085.007": "Create Fake Research",
+  "T0085.008": "Machine Translated Text",
+  "T0086": "Develop Image-Based Content",
+  "T0086.001": "Develop Memes",
+  "T0086.002": "Develop AI-Generated Images (Deepfakes)",
+  "T0086.003": "Deceptively Edit Images (Cheap Fakes)",
+  "T0086.004": "Aggregate Information into Evidence Collages",
+  "T0087": "Develop Video-Based Content",
+  "T0087.001": "Develop AI-Generated Videos (Deepfakes)",
+  "T0087.002": "Deceptively Edit Video (Cheap Fakes)",
+  "T0088": "Develop Audio-Based Content",
+  "T0088.001": "Develop AI-Generated Audio (Deepfakes)",
+  "T0088.002": "Deceptively Edit Audio (Cheap Fakes)",
+  "T0089": "Obtain Private Documents",
+  "T0089.001": "Obtain Authentic Documents",
+  "T0089.003": "Alter Authentic Documents",
+  "T0091": "Recruit Malign Actors",
+  "T0091.001": "Recruit Contractors",
+  "T0091.002": "Recruit Partisans",
+  "T0091.003": "Enlist Troll Accounts",
+  "T0092": "Build Network",
+  "T0092.001": "Create Organisations",
+  "T0092.002": "Use Follow Trains",
+  "T0092.003": "Create Community or Sub-Group",
+  "T0093": "Acquire/Recruit Network",
+  "T0093.001": "Fund Proxies",
+  "T0093.002": "Acquire Botnets",
+  "T0094": "Infiltrate Existing Networks",
+  "T0094.001": "Identify Susceptible Targets in Networks",
+  "T0094.002": "Utilise Butterfly Attacks",
+  "T0095": "Develop Owned Media Assets",
+  "T0096": "Leverage Content Farms",
+  "T0096.001": "Create Content Farms",
+  "T0096.002": "Outsource Content Creation to External Organisations",
+  "T0097": "Present Persona",
+  "T0097.100": "Individual Persona",
+  "T0097.101": "Local Persona",
+  "T0097.102": "Journalist Persona",
+  "T0097.103": "Activist Persona",
+  "T0097.104": "Hacktivist Persona",
+  "T0097.105": "Military Personnel Persona",
+  "T0097.106": "Recruiter Persona",
+  "T0097.107": "Researcher Persona",
+  "T0097.108": "Expert Persona",
+  "T0097.109": "Romantic Suitor Persona",
+  "T0097.110": "Party Official Persona",
+  "T0097.111": "Government Official Persona",
+  "T0097.112": "Government Employee Persona",
+  "T0097.200": "Institutional Persona",
+  "T0097.201": "Local Institution Persona",
+  "T0097.202": "News Outlet Persona",
+  "T0097.203": "Fact Checking Organisation Persona",
+  "T0097.204": "Think Tank Persona",
+  "T0097.205": "Business Persona",
+  "T0097.206": "Government Institution Persona",
+  "T0097.207": "NGO Persona",
+  "T0097.208": "Social Cause Persona",
+  "T0098": "Establish Inauthentic News Sites",
+  "T0098.001": "Create Inauthentic News Sites",
+  "T0098.002": "Leverage Existing Inauthentic News Sites",
+  "T0100": "Co-Opt Trusted Sources",
+  "T0100.001": "Co-Opt Trusted Individuals",
+  "T0100.002": "Co-Opt Grassroots Groups",
+  "T0100.003": "Co-Opt Influencers",
+  "T0101": "Create Localised Content",
+  "T0102": "Leverage Echo Chambers/Filter Bubbles",
+  "T0102.001": "Use Existing Echo Chambers/Filter Bubbles",
+  "T0102.002": "Create Echo Chambers/Filter Bubbles",
+  "T0102.003": "Exploit Data Voids",
+  "T0107": "Bookmarking and Content Curation",
+  "T0109": "Consumer Review Networks",
+  "T0110": "Formal Diplomatic Channels",
+  "T0111": "Traditional Media",
+  "T0111.001": "TV",
+  "T0111.002": "Newspaper",
+  "T0111.003": "Radio",
+  "T0113": "Employ Commercial Analytic Firms",
+  "T0114": "Deliver Ads",
+  "T0114.001": "Social Media",
+  "T0114.002": "Traditional Media",
+  "T0115": "Post Content",
+  "T0115.001": "Share Memes",
+  "T0115.002": "Post Violative Content to Provoke Takedown and Backlash",
+  "T0115.003": "One-Way Direct Posting",
+  "T0116": "Comment or Reply on Content",
+  "T0116.001": "Post Inauthentic Social Media Comment",
+  "T0117": "Attract Traditional Media",
+  "T0118": "Amplify Existing Narrative",
+  "T0119": "Cross-Posting",
+  "T0119.001": "Post across Groups",
+  "T0119.002": "Post across Platform",
+  "T0119.003": "Post across Disciplines",
+  "T0120": "Incentivize Sharing",
+  "T0120.001": "Use Affiliate Marketing Programmes",
+  "T0120.002": "Use Contests and Prizes",
+  "T0121": "Manipulate Platform Algorithm",
+  "T0121.001": "Bypass Content Blocking",
+  "T0122": "Direct Users to Alternative Platforms",
+  "T0123": "Control Information Environment through Offensive Cyberspace Operations",
+  "T0123.001": "Delete Opposing Content",
+  "T0123.002": "Block Content",
+  "T0123.003": "Destroy Information Generation Capabilities",
+  "T0123.004": "Conduct Server Redirect",
+  "T0124": "Suppress Opposition",
+  "T0124.001": "Report Non-Violative Opposing Content",
+  "T0124.002": "Goad People into Harmful Action (Stop Hitting Yourself)",
+  "T0124.003": "Exploit Platform TOS/Content Moderation",
+  "T0125": "Platform Filtering",
+  "T0126": "Encourage Attendance at Events",
+  "T0126.001": "Call to Action to Attend",
+  "T0126.002": "Facilitate Logistics or Support for Attendance",
+  "T0127": "Physical Violence",
+  "T0127.001": "Conduct Physical Violence",
+  "T0127.002": "Encourage Physical Violence",
+  "T0128": "Conceal Information Assets",
+  "T0128.001": "Use Pseudonyms",
+  "T0128.002": "Conceal Network Identity",
+  "T0128.003": "Distance Reputable Individuals from Operation",
+  "T0128.004": "Launder Information Assets",
+  "T0128.005": "Change Names of Information Assets",
+  "T0129": "Conceal Operational Activity",
+  "T0129.001": "Conceal Network Identity",
+  "T0129.002": "Generate Content Unrelated to Narrative",
+  "T0129.003": "Break Association with Content",
+  "T0129.004": "Delete URLs",
+  "T0129.005": "Coordinate on Encrypted/Closed Networks",
+  "T0129.006": "Deny Involvement",
+  "T0129.007": "Delete Accounts/Account Activity",
+  "T0129.009": "Remove Post Origins",
+  "T0129.010": "Misattribute Activity",
+  "T0130": "Conceal Infrastructure",
+  "T0130.001": "Conceal Sponsorship",
+  "T0130.002": "Utilise Bulletproof Hosting",
+  "T0130.003": "Use Shell Organisations",
+  "T0130.004": "Use Cryptocurrency",
+  "T0130.005": "Obfuscate Payment",
+  "T0131": "Exploit TOS/Content Moderation",
+  "T0131.001": "Legacy Web Content",
+  "T0131.002": "Post Borderline Content",
+  "T0132": "Measure Performance",
+  "T0132.001": "People Focused",
+  "T0132.002": "Content Focused",
+  "T0132.003": "View Focused",
+  "T0133": "Measure Effectiveness",
+  "T0133.001": "Behaviour Changes",
+  "T0133.002": "Content",
+  "T0133.003": "Awareness",
+  "T0133.004": "Knowledge",
+  "T0133.005": "Action/Attitude",
+  "T0134": "Measure Effectiveness Indicators (or KPIs)",
+  "T0134.001": "Message Reach",
+  "T0134.002": "Social Media Engagement",
+  "T0135": "Undermine",
+  "T0135.001": "Smear",
+  "T0135.002": "Thwart",
+  "T0135.003": "Subvert",
+  "T0135.004": "Polarise",
+  "T0136": "Cultivate Support",
+  "T0136.001": "Defend Reputaton",
+  "T0136.002": "Justify Action",
+  "T0136.003": "Energise Supporters",
+  "T0136.004": "Boost Reputation",
+  "T0136.005": "Cultvate Support for Initiative",
+  "T0136.006": "Cultivate Support for Ally",
+  "T0136.007": "Recruit Members",
+  "T0136.008": "Increase Prestige",
+  "T0137": "Make Money",
+  "T0137.001": "Generate Ad Revenue",
+  "T0137.002": "Scam",
+  "T0137.003": "Raise Funds",
+  "T0137.004": "Sell Items under False Pretences",
+  "T0137.005": "Extort",
+  "T0137.006": "Manipulate Stocks",
+  "T0138": "Motivate to Act",
+  "T0138.001": "Encourage",
+  "T0138.002": "Provoke",
+  "T0138.003": "Compel",
+  "T0139": "Dissuade from Acting",
+  "T0139.001": "Discourage",
+  "T0139.002": "Silence",
+  "T0139.003": "Deter",
+  "T0140": "Cause Harm",
+  "T0140.001": "Defame",
+  "T0140.002": "Intimidate",
+  "T0140.003": "Spread Hate",
+  "T0143": "Persona Legitimacy",
+  "T0143.001": "Authentic Persona",
+  "T0143.002": "Fabricated Persona",
+  "T0143.003": "Impersonated Persona",
+  "T0143.004": "Parody Persona",
+  "T0144": "Persona Legitimacy Evidence",
+  "T0144.001": "Present Persona across Platforms",
+  "T0144.002": "Persona Template",
+  "T0145": "Establish Account Imagery",
+  "T0145.001": "Copy Account Imagery",
+  "T0145.002": "AI-Generated Account Imagery",
+  "T0145.003": "Animal Account Imagery",
+  "T0145.004": "Scenery Account Imagery",
+  "T0145.005": "Illustrated Character Account Imagery",
+  "T0145.006": "Attractive Person Account Imagery",
+  "T0145.007": "Stock Image Account Imagery",
+  "T0146": "Account Asset",
+  "T0146.001": "Free Account Asset",
+  "T0146.002": "Paid Account Asset",
+  "T0146.003": "Verified Account Asset",
+  "T0146.004": "Administrator Account Asset",
+  "T0146.005": "Lookalike Account ID",
+  "T0146.006": "Open Access Platform",
+  "T0146.007": "Automated Account Asset",
+  "T0147": "Software Asset",
+  "T0147.001": "Game Asset",
+  "T0147.002": "Game Mod Asset",
+  "T0147.003": "Malware Asset",
+  "T0147.004": "Mobile App Asset",
+  "T0148": "Financial Instrument",
+  "T0148.001": "Online Banking Platform",
+  "T0148.002": "Bank Account Asset",
+  "T0148.003": "Payment Processing Platform",
+  "T0148.004": "Payment Processing Capability",
+  "T0148.005": "Subscription Processing Capability",
+  "T0148.006": "Crowdfunding Platform",
+  "T0148.007": "eCommerce Platform",
+  "T0148.008": "Cryptocurrency Exchange Platform",
+  "T0148.009": "Cryptocurrency Wallet",
+  "T0149": "Online Infrastructure",
+  "T0149.001": "Domain Asset",
+  "T0149.002": "Email Domain Asset",
+  "T0149.003": "Lookalike Domain",
+  "T0149.004": "Redirecting Domain Asset",
+  "T0149.005": "Server Asset",
+  "T0149.006": "IP Address Asset",
+  "T0149.007": "VPN Asset",
+  "T0149.008": "Proxy IP Address Asset",
+  "T0149.009": "Internet Connected Physical Asset",
+  "T0150": "Asset Origin",
+  "T0150.001": "Newly Created Asset",
+  "T0150.002": "Dormant Asset",
+  "T0150.003": "Pre-Existing Asset",
+  "T0150.004": "Repurposed Asset",
+  "T0150.005": "Compromised Asset",
+  "T0150.006": "Purchased Asset",
+  "T0150.007": "Rented Asset",
+  "T0150.008": "Bulk Created Asset",
+  "T0151": "Digital Community Hosting Asset",
+  "T0151.001": "Social Media Platform",
+  "T0151.002": "Online Community Group",
+  "T0151.003": "Online Community Page",
+  "T0151.004": "Chat Platform",
+  "T0151.005": "Chat Community Server",
+  "T0151.006": "Chat Room",
+  "T0151.007": "Chat Broadcast Group",
+  "T0151.008": "Microblogging Platform",
+  "T0151.009": "Legacy Online Forum Platform",
+  "T0151.010": "Community Forum Platform",
+  "T0151.011": "Community Sub-Forum",
+  "T0151.012": "Image Board Platform",
+  "T0151.013": "Question and Answer Platform",
+  "T0151.014": "Comments Section",
+  "T0151.015": "Online Game Platform",
+  "T0151.016": "Online Game Session",
+  "T0151.017": "Dating Platform",
+  "T0152": "Digital Content Hosting Asset",
+  "T0152.001": "Blogging Platform",
+  "T0152.002": "Blog Asset",
+  "T0152.003": "Website Hosting Platform",
+  "T0152.004": "Website Asset",
+  "T0152.005": "Paste Platform",
+  "T0152.006": "Video Platform",
+  "T0152.007": "Audio Platform",
+  "T0152.008": "Live Streaming Platform",
+  "T0152.009": "Software Delivery Platform",
+  "T0152.010": "File Hosting Platform",
+  "T0152.011": "Wiki Platform",
+  "T0152.012": "Subscription Service Platform",
+  "T0153": "Digital Content Delivery Asset",
+  "T0153.001": "Email Platform",
+  "T0153.002": "Link Shortening Platform",
+  "T0153.003": "Shortened Link Asset",
+  "T0153.004": "QR Code Asset",
+  "T0153.005": "Online Advertising Platform",
+  "T0153.006": "Content Recommendation Algorithm",
+  "T0153.007": "Direct Messaging",
+  "T0154": "Digital Content Creation Asset",
+  "T0154.001": "AI LLM Platform",
+  "T0154.002": "AI Media Platform",
+  "T0155": "Gated Asset",
+  "T0155.001": "Password Gated Asset",
+  "T0155.002": "Invite Gated Asset",
+  "T0155.003": "Approval Gated Asset",
+  "T0155.004": "Geoblocked Asset",
+  "T0155.005": "Paid Access Asset",
+  "T0155.006": "Subscription Access Asset",
+  "T0155.007": "Encrypted Communication Channel"
+ }
+}
