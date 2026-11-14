@@ -1,0 +1,18 @@
+{
+  "program": "undertow",
+  "version": "1.0",
+  "note": "No warning problem yet: there is no baseline of disclosures to measure against, so every item is tier routine (plan section 6). The indicators below are registered for when Tom writes one; no item carries an indicator_id.",
+  "warning_problems": [],
+  "indicators": [
+    {"id": "UT-IND-1",
+     "text": "A new disclosure names an operation already on file from a different independent publisher with the same origin.",
+     "series": "named_operation_corroboration",
+     "rule": "independent publishers naming the operation with the same origin rises from 1 to 2 or more",
+     "gentry": {"predictive": false, "diagnostic": true, "unambiguous": true, "collectable": true}},
+    {"id": "UT-IND-2",
+     "text": "Disclosed networks targeting one country in a quarter exceed that country's own past quarterly count (needs four quarters of history).",
+     "series": "target_country_quarterly_count",
+     "rule": "count > median + 3 x MAD of the country's previous quarters, with at least four quarters on file",
+     "gentry": {"predictive": true, "diagnostic": false, "unambiguous": false, "collectable": true}}
+  ]
+}

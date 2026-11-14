@@ -1,0 +1,78 @@
+name: update
+# DRAFT, 14 Nov 2026: written and not yet run. Modelled on Headwind's. It does nothing until it is on main in a
+# GitHub repository, and it deploys nothing until Tom creates the Cloudflare Pages project `undertow` and sets the
+# secrets below. None of those exists yet.
+#
+# Every 6 hours (meant to be started by the hub's tic-dispatch Worker, because GitHub fires schedules 4-9 h late;
+# its own cron is the fallback), on every push to main, and by hand: the tests, the last run's snapshot from this
+# repository's Actions cache, a live collection, the site build and check, then a deploy of site/ to Cloudflare
+# Pages. The publishers disclose twice a year to quarterly, so 6 hours is plenty.
+#
+# State: a failed lane keeps its last good copy, which needs the run before's data/snapshot.json. It is kept in the
+# Actions cache (private to the repository). The raw copies in data/raw/ hold the publishers' full pages, Meta's
+# indicator tables included, so they are never cached, committed or published.
+#
+# Secrets: CLOUDFLARE_PAGES_TOKEN (Cloudflare Pages: Edit) and the account ID as repo variable CLOUDFLARE_ACCOUNT_ID.
+# Without the Cloudflare pair everything runs except the deploy. GITHUB_TOKEN (provided by Actions) is passed to
+# the collect step only, for the one GitHub API call that reads when Meta added each indicator file (a higher rate
+# limit than an anonymous call); it is never recorded. No other key is needed: every source is keyless.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: update
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v7
+        with: { node-version: "22" }
+      - name: Tests (offline, recorded real replies)
+        run: python -m unittest discover -s tests
+      - name: Doctrine registers, and the vendored kit copy unedited
+        run: |
+          python doctrine/kit/tic.py registers doctrine
+          python doctrine/kit/tic.py kitcheck
+      - name: Last run's snapshot from the Actions cache (none on the first run)
+        id: state
+        uses: actions/cache/restore@v6
+        with:
+          path: data/snapshot.json
+          key: undertow-state-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: undertow-state-
+      - name: Say so when there was no state
+        if: steps.state.outputs.cache-matched-key == ''
+        run: echo "::warning::No snapshot in the Actions cache, so a lane that fails this run has no last good copy."
+      - name: Live collection (a failed lane keeps its last good copy and says so on the page)
+        run: python tools/undertow.py collect
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build site/
+        run: python tools/undertow.py build
+      - name: Check (registers, feed linter, STIX, leak scan)
+        run: python tools/undertow.py check
+      - name: Keep this run's snapshot for the next run
+        uses: actions/cache/save@v6
+        with:
+          path: data/snapshot.json
+          key: undertow-state-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Deploy site/ to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PAGES_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "Cloudflare secrets not set; skipping deploy"; exit 0
+          fi
+          npx --yes wrangler@4.151.3 pages deploy site --project-name undertow --branch main \
+            --commit-hash "$GITHUB_SHA" --commit-message "update $GITHUB_SHA" --commit-dirty=true

@@ -1,0 +1,222 @@
+{
+  "note": "Real replies recorded from the live collect of 14 Nov 2026 (data/raw), cut where stated.",
+  "files": {
+    "meta_readme.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/README.md",
+      "fetched_at": "2026-11-14T21:22:37Z",
+      "sha256_full": "0880914eb2dd01fafd054b655c4b7e74b32c0b87ed35ddfa77ae4c615e3b58f2",
+      "bytes_full": 8075,
+      "cut": null
+    },
+    "meta_meta-h2-2026-russia-cib-based-network-2.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network-2.md",
+      "fetched_at": "2026-11-14T21:22:37Z",
+      "sha256_full": "20a5c79b90c391676211ebab913e8afe26e30638109569d42497ef8e05767ced",
+      "bytes_full": 4249,
+      "cut": null
+    },
+    "meta_meta-h2-2026-israel-cib-based-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-israel-cib-based-network.md",
+      "fetched_at": "2026-11-14T21:22:37Z",
+      "sha256_full": "e294ab1fd85328bbb6dc3045a14ade2593e670c25b8a9baeb3752ff50f32c036",
+      "bytes_full": 3696,
+      "cut": null
+    },
+    "meta_meta-h2-2026-iran-cib-based-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-iran-cib-based-network.md",
+      "fetched_at": "2026-11-14T21:22:37Z",
+      "sha256_full": "a6c7e87b074d230887f01bc6984d3fe77cea95709290f23137cbcc3a68037035",
+      "bytes_full": 2145,
+      "cut": null
+    },
+    "meta_meta-h2-2026-iran-cib-based-network-3.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-iran-cib-based-network-3.md",
+      "fetched_at": "2026-11-14T21:22:37Z",
+      "sha256_full": "fce53624cc42198db18cb256be3949b38674795fbaf86a37e52f3d0546dfab80",
+      "bytes_full": 3011,
+      "cut": null
+    },
+    "meta_meta-h2-2026-iran-cib-based-network-2.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-iran-cib-based-network-2.md",
+      "fetched_at": "2026-11-14T21:22:38Z",
+      "sha256_full": "1c14931801e3041a0fd3437815d95159ccd527ab3903d8892012edc8451dbff4",
+      "bytes_full": 3216,
+      "cut": null
+    },
+    "meta_meta-h2-2026-france-and-spain-cib-based-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-france-and-spain-cib-based-network.md",
+      "fetched_at": "2026-11-14T21:22:38Z",
+      "sha256_full": "2b76ef652f0c2b579113c7385c9a8cc28f01f5702783a822b0161062e7afa6d9",
+      "bytes_full": 2793,
+      "cut": null
+    },
+    "meta_meta-h2-2026-russia-cib-based-network-3.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network-3.md",
+      "fetched_at": "2026-11-14T21:22:38Z",
+      "sha256_full": "8ee65f9e6905775ea3bdff0d2289132396bd41373cd5db6fe7dcdf66ec8cadd7",
+      "bytes_full": 2580,
+      "cut": null
+    },
+    "meta_meta-h2-2026-russia-cib-based-network-4.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network-4.md",
+      "fetched_at": "2026-11-14T21:22:38Z",
+      "sha256_full": "f9a316656bd63098cffc43af039f0d3dc61cec95293b7f78c8076a2d294a2a05",
+      "bytes_full": 9585,
+      "cut": null
+    },
+    "meta_meta-h2-2026-russia-cib-based-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network.md",
+      "fetched_at": "2026-11-14T21:22:39Z",
+      "sha256_full": "f3cbdcc2d1ce87d14a4dae255649018d258619d304dbcc2ac8f6f83d2b203b13",
+      "bytes_full": 3347,
+      "cut": null
+    },
+    "meta_h2-2026-ukraine-and-bulgaria-cib-based-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/h2-2026-ukraine-and-bulgaria-cib-based-network.md",
+      "fetched_at": "2026-11-14T21:22:39Z",
+      "sha256_full": "91c10633f60f09e3719c7159fc486a34ae1572b0a4d5d51788fdc192b61c8c28",
+      "bytes_full": 4025,
+      "cut": null
+    },
+    "meta_meta-h1-2026-russia-based-cib-network-2.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-russia-based-cib-network-2.md",
+      "fetched_at": "2026-11-14T21:22:39Z",
+      "sha256_full": "cc8b4562573dd787da8c29521181efdd425b620c6891d70977213f8b9300c627",
+      "bytes_full": 2286,
+      "cut": null
+    },
+    "meta_meta-h1-2026-pakistan-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-pakistan-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:39Z",
+      "sha256_full": "753c67e0891db4ed43ff737e220b76f069b4a4a110cc599a7b71254d63a38ba4",
+      "bytes_full": 5671,
+      "cut": null
+    },
+    "meta_meta-h1-2026-china-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-china-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:39Z",
+      "sha256_full": "23d76ac3320fb3ec01b3b3b5f3b30b4ee256cdd8a1747d895254a53a34a42320",
+      "bytes_full": 2332,
+      "cut": null
+    },
+    "meta_meta-h1-2026-iran-based-cib-network-2.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-iran-based-cib-network-2.md",
+      "fetched_at": "2026-11-14T21:22:40Z",
+      "sha256_full": "64cc1f1c416833e4da3407c7394185bc1f5adb9320bcc00e3aff8f45d712eefa",
+      "bytes_full": 2130,
+      "cut": null
+    },
+    "meta_meta-h1-2026-iran-based-cib-network-1.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-iran-based-cib-network-1.md",
+      "fetched_at": "2026-11-14T21:22:40Z",
+      "sha256_full": "43f63b41721a748688384218c0ecb393675e6eb72ef96de184aadfbf99c97a29",
+      "bytes_full": 8145,
+      "cut": null
+    },
+    "meta_meta-h1-2026-russia-based-cib-network-1.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-russia-based-cib-network-1.md",
+      "fetched_at": "2026-11-14T21:22:40Z",
+      "sha256_full": "cb0565551803f48a049ee3273a6356278d16fe71fbdec5f4bfa3b42699c1f3fa",
+      "bytes_full": 3610,
+      "cut": null
+    },
+    "meta_meta-h2-2025-moldova-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-moldova-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:40Z",
+      "sha256_full": "1de4d9745169715fc5bd186256fb63ba58ed029be07063a2b628c05edb034e0e",
+      "bytes_full": 2962,
+      "cut": null
+    },
+    "meta_meta-h2-2025-india-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-india-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:41Z",
+      "sha256_full": "acc9f310910b7f734f2dfffb78048d2c0e778a0e3e77a06f599dbb5fc63c7b01",
+      "bytes_full": 2268,
+      "cut": null
+    },
+    "meta_meta-h2-2025-poland-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-poland-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:41Z",
+      "sha256_full": "2f7660109340cf70923286ac1b6397efda2a5f22147a0e8ffd45bd3a9d02b4d9",
+      "bytes_full": 2911,
+      "cut": null
+    },
+    "meta_meta-h2-2025-belarus-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-belarus-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:41Z",
+      "sha256_full": "a95c30b4d0a7483f4a4346f9989f0a6e763ab61eb5c380815d9a15893ad926ff",
+      "bytes_full": 2718,
+      "cut": null
+    },
+    "meta_meta-h2-2025-russia-based-cib-network-2.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-russia-based-cib-network-2.md",
+      "fetched_at": "2026-11-14T21:22:41Z",
+      "sha256_full": "7e6b87fb52a82c45819b15d921a7cad4279b7fadaab8d6869cd77d27219d6fe9",
+      "bytes_full": 9385,
+      "cut": null
+    },
+    "meta_meta-h2-2025-iran-based-cib-network.md": {
+      "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-iran-based-cib-network.md",
+      "fetched_at": "2026-11-14T21:22:41Z",
+      "sha256_full": "3cc5418370df196bdafa11b133b1d313d260d91325bab98c043c972823b3991c",
+      "bytes_full": 6780,
+      "cut": null
+    },
+    "meta_commits.json": {
+      "url": "https://api.github.com/repos/meta/threat-research/commits?per_page=100",
+      "fetched_at": "2026-11-14T21:22:42Z",
+      "sha256_full": "25e59a9366d4e3f7ffdfed6a098833c50a5afdc11271692c624dada0cdeb8785",
+      "bytes_full": 393312,
+      "cut": "kept commit.message and commit.committer.date only (no author names or e-mail addresses)"
+    },
+    "google_q2_2026.html": {
+      "url": "https://blog.google/security/influence-operations-bulletin-q2-2026/",
+      "fetched_at": "2026-11-14T21:17:29Z",
+      "sha256_full": "7a31c99acf73c86e6c35f0a26cb540817f54a4ca76af60637b086512ab3f441a",
+      "bytes_full": 322674,
+      "cut": "the <article> element only"
+    },
+    "google_q3_2026.html": {
+      "url": "https://blog.google/security/influence-operations-bulletin-q3-2026/",
+      "fetched_at": "2026-11-14T21:17:30Z",
+      "sha256_full": "8c4224c138c1565dba3ccb88f9868e2abf2ab3e59518e66e47d381cd1862fefa",
+      "bytes_full": 286462,
+      "cut": "the <article> element only"
+    },
+    "google_rss.xml": {
+      "url": "https://blog.google/security/rss/",
+      "fetched_at": "2026-11-14T21:17:28Z",
+      "sha256_full": "7a51e4e2473b46188ac5b4cc3b04b7630a21f16acaf9dcdad72ef2593f0a8c29",
+      "bytes_full": 31488,
+      "cut": null
+    },
+    "openai_rss.xml": {
+      "url": "https://openai.com/news/rss.xml",
+      "fetched_at": "2026-11-14T21:20:02Z",
+      "sha256_full": "362a7375aadcb3a9093e59ec8d53e0c8a37d2f4b6fb3fda8479dae1c6dbde238",
+      "bytes_full": 844247,
+      "cut": "the influence items, the report round-ups and the first 15 other items"
+    },
+    "tiktok_report_8.json": {
+      "url": "https://disinfocode.eu/reports/tiktok/8/json",
+      "fetched_at": "2026-11-14T21:17:34Z",
+      "sha256_full": "9fec4f2d08ff9bcb8cc0d80637c084f0aa76ba11a533b2556ab2daa4942f6e0a",
+      "bytes_full": 954324,
+      "cut": "chapters 'Integrity of Services' and 'Crisis and Elections Response' only"
+    },
+    "tiktok_report_9.json": {
+      "url": "https://disinfocode.eu/reports/tiktok/9/json",
+      "fetched_at": "2026-11-14T21:17:37Z",
+      "sha256_full": "31e4e3725297e03d7dbc6d2b2796fc794bd938fd6eb2af822ebb31959d47c333",
+      "bytes_full": 1146903,
+      "cut": "chapters 'Integrity of Services' and 'Crisis and Elections Response' only"
+    },
+    "eeas_fimi_page.html": {
+      "url": "https://www.eeas.europa.eu/eeas/information-integrity-and-countering-foreign-information-manipulation-interference-fimi_en",
+      "fetched_at": "2026-11-14T21:17:38Z",
+      "sha256_full": "69c58a07a9ae840a7fbb39d46ebd2cb05911b7bdd69eeecb6c6c6e3cc04d4e7b",
+      "bytes_full": 170832,
+      "cut": null
+    }
+  }
+}

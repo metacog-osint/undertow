@@ -1,0 +1,24 @@
+{
+  "program": "undertow",
+  "version": "1.0",
+  "review_by": "2027-03-01",
+  "requirements": [
+    {"id": "UT-REQ-1", "type": "standing",
+     "question": "Which covert influence operations have platforms and governments publicly disrupted or named, where were the operators, whom did they target, and how?"},
+    {"id": "UT-PIR-1", "type": "pir", "parent": "UT-REQ-1",
+     "question": "Which influence operations did Meta, Google, OpenAI, TikTok or the EEAS disclose in their latest reports, and from which country does each publisher say the operators worked?",
+     "series": ["meta_threat_research", "google_iob", "openai_rss", "tiktok_disinfocode", "eeas_fimi"]},
+    {"id": "UT-PIR-2", "type": "pir", "parent": "UT-REQ-1",
+     "question": "Which countries and audiences do the disclosed operations target, and at what scale (accounts, channels, followers)?",
+     "series": ["meta_threat_research", "tiktok_disinfocode", "eeas_fimi"]},
+    {"id": "UT-PIR-3", "type": "pir", "parent": "UT-REQ-1",
+     "question": "Which named persistent operations (Doppelganger, Storm-1516, Spamouflage and others) does more than one independent publisher report, and do their stated origins agree?",
+     "series": ["eeas_fimi", "openai_rss", "meta_threat_research"]},
+    {"id": "UT-EEI-1", "type": "eei", "parent": "UT-PIR-2",
+     "question": "Which DISARM techniques do the publishers' own descriptions show (mapped by the published rule table)?",
+     "series": ["meta_threat_research", "tiktok_disinfocode", "eeas_fimi", "openai_rss"]},
+    {"id": "UT-EEI-2", "type": "eei", "parent": "UT-PIR-1",
+     "question": "When is each publisher's next disclosure due on its past pattern (for Verdict's calendar)?",
+     "series": ["google_iob", "meta_threat_research", "tiktok_disinfocode", "eeas_fimi"]}
+  ]
+}

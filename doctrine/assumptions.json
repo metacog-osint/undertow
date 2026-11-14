@@ -1,0 +1,22 @@
+{
+  "program": "undertow",
+  "version": "1.0",
+  "assumptions": [
+    {"id": "UT-ASM-1",
+     "assumption": "A platform's report of its own takedown is accurate about the takedown itself (source grade A2): the accounts and channels were removed as stated.",
+     "status": "untestable",
+     "test": "untestable from outside the platform; watch for corrections or retractions by the publisher"},
+    {"id": "UT-ASM-2",
+     "assumption": "A publisher's stated origin is its judgment of where the operators worked, not of who directed them. Origin can be faked (false flags), so origin is never read as sponsorship and our confidence in it is capped at Moderate.",
+     "status": "holds",
+     "test": "Each build compares stated origins for the same named operation across independent publishers; a disagreement is recorded as a contradiction in confidence_basis."},
+    {"id": "UT-ASM-3",
+     "assumption": "Each publisher's sentence templates stay stable enough to parse (Google's bulletin sentences, TikTok's 'Network Origin' blocks, Meta's README table).",
+     "status": "holds",
+     "test": "Every build counts unparsed Google entries and fails a lane that parses to too few rows; read the page's lane table after each publisher's new report."},
+    {"id": "UT-ASM-4",
+     "assumption": "The name filter in undertow/text.py withholds the names of individuals that publishers quote (politicians named as the subject of narratives).",
+     "status": "strained",
+     "test": "tests/test_undertow.py checks the known names in the recorded fixtures. A single surname with no title before it is not caught, so read new reports' withheld counts and texts after each disclosure."}
+  ]
+}

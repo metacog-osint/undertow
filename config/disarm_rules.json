@@ -1,0 +1,25 @@
+{
+  "note": "Phrase rules that map a publisher's own description of a behaviour to one DISARM v1.6.1 technique. A rule fires on a sentence the publisher wrote (after scrub); the matched phrase is kept with the id. A behaviour no rule matches stays as text and is not forced into an id. A technique from a rule has basis 'mapped': it is Undertow's reading of the publisher's words, not the publisher's claim. Ids and names checked against DISARM v1.6.1's STIX bundle (generated_files/DISARM_STIX/DISARM.json at tag v1.6.1) on 14 Nov 2026.",
+  "disarm_version": "1.6.1",
+  "review": {"status": "proposed", "reviewed_by": null, "reviewed_on": null,
+             "note": "Drafted 14 Nov 2026 from the candidate rules in _ideas/drafts/2026-11-14-influence-ops-step12.md section 2, plus six more. The plan says Tom reviews the table before use; until then every mapped technique says 'rules not yet reviewed'."},
+  "rules": [
+    {"id": "dr-01", "technique": "T0116.001", "pattern": "\\bcomment(s|ed|ing)?\\b|\\breplies\\b|\\breply\\b", "about": "posting comments or replies"},
+    {"id": "dr-02", "technique": "T0085.001", "pattern": "(AI|LLM|[Ll]arge [Ll]anguage [Mm]odel|ChatGPT|artificial intelligence)[\\w\\s,-]{0,40}\\b(generate|write|produce|create)\\w*\\b[\\w\\s,-]{0,40}\\b(articles?|posts?|comments?|text|content)\\b|AI-generated (articles?|text|posts?|comments?)", "about": "AI-generated text"},
+    {"id": "dr-03", "technique": "T0087.001", "pattern": "AI-generated videos?|AI-assisted impersonation videos?|(artificial intelligence|AI) tools to create videos|deepfake videos?", "about": "AI-generated video"},
+    {"id": "dr-04", "technique": "T0086.002", "pattern": "AI-generated (images?|cartoons?|pictures?|imagery|memes?)|AI-generated content", "about": "AI-generated images (also 'AI-generated content' where the medium is not named)"},
+    {"id": "dr-05", "technique": "T0145.002", "pattern": "profile (pictures|photos|images)[^.]{0,40}AI-generated|AI-generated profile (pictures|photos|images)|profile pictures, website logos", "about": "AI-generated account imagery"},
+    {"id": "dr-06", "technique": "T0145.007", "pattern": "stock (or unoriginal )?(imagery|images|photos|pictures)", "about": "stock images as profile pictures"},
+    {"id": "dr-07", "technique": "T0145.001", "pattern": "(copied|stolen|reused|unoriginal) (profile )?(imagery|images|photos|pictures)", "about": "copied account imagery"},
+    {"id": "dr-08", "technique": "T0097.202", "pattern": "present\\w* as news( accounts)?|pos\\w* as (news|media)|news Pages|impersonat\\w* (legitimate |established )?(media|news|outlets)|spoof\\w* (authentic )?media|typo-?squat", "about": "posing as a news outlet"},
+    {"id": "dr-09", "technique": "T0097.201", "pattern": "pos\\w* as local (entities|institutions|organisations|organizations|groups)", "about": "posing as a local institution"},
+    {"id": "dr-10", "technique": "T0098.001", "pattern": "(fabricated|fictional|fictitious|inauthentic|fake) news (sites|websites|outlets)|standalone websites|network of inauthentic news websites", "about": "inauthentic news sites"},
+    {"id": "dr-11", "technique": "T0150.005", "pattern": "(compromised|hijacked) (social media )?accounts", "about": "compromised accounts"},
+    {"id": "dr-12", "technique": "T0100.003", "pattern": "(contracted|co-?opted|paid|recruited) influencers|network of contracted influencers", "about": "co-opted influencers"},
+    {"id": "dr-13", "technique": "T0143.003", "pattern": "impersonat\\w* (dissidents|officials|individuals|politicians|journalists|real people)|impersonation videos", "about": "impersonating real people"},
+    {"id": "dr-14", "technique": "T0143.002", "pattern": "(fictitious|fake|fabricated) personas?|inauthentic personas?", "about": "fabricated personas"},
+    {"id": "dr-15", "technique": "T0097.102", "pattern": "(fake|false-front|fictitious) journalists?|fictitious bylines|fake journalist accounts", "about": "journalist persona"},
+    {"id": "dr-16", "technique": "T0097.204", "pattern": "(fake|false-front)[\\w\\s-]{0,30}think tank", "about": "think-tank persona"},
+    {"id": "dr-17", "technique": "T0119.002", "pattern": "cross-platform|across multiple (online )?platforms|across (websites and )?social (media )?platforms|across more than \\d+ platforms", "about": "posting across platforms"}
+  ]
+}

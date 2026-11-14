@@ -1,0 +1,64 @@
+# 🛡️Threat Research Indicators 
+
+  **Resources** | **The Online Operations Killchain** | **FAQ** | **License**
+
+Welcome to the Meta Threat Research Indicator Repository, a dedicated resource for the sharing of Indicators of Compromise (IOCs) and other threat indicators with the external research community
+
+## 📚 Resources
+- **Threat Reports:** For comprehensive threat analysis, [visit our Transparency Center]( https://transparency.fb.com/metasecurity/threat-reporting/)
+- **IOC & Threat Indicator Folders:** Access the repository of Indicators of Compromise and threat indicators [here](https://github.com/facebook/threat-research/tree/main/indicators)
+- **Index of tactics, techniques and procedures (TTPs) :** For an index of the current TTPs [here](https://github.com/facebook/threat-research/blob/main/Online_Operations_Killchain-TTPs.csv)
+
+## 🛠️ The Online Operations Killchain
+To help the broader research community to study and protect people across different internet services, we’ve collated and organized these indicators according to the Online Operations Kill Chain framework, which we use at Meta to analyze many sorts of malicious online operations, identify the earliest opportunities to disrupt them, and share information across investigative teams. The kill chain describes the sequence of steps that threat actors go through to establish a presence across the internet, disguise their operations, engage with potential audiences, and respond to takedowns. 
+
+This section includes the latest threat indicators and is not meant to provide a full cross-internet, historic view into these operations. It’s important to note that, in our assessment, the mere sharing of these operations’ links or engaging with them by online users would be insufficient to attribute accounts to a given campaign without corroborating evidence. 
+
+## 📋 Published Threat Indicators
+
+| Date | Report | Origin | Targets |
+|---|---|---|---|
+| H2 2026 | [Russia-Based Influence Operation Targeting Western Audiences](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-russia-cib-based-network-2.md) | Russia | Western Audiences |
+| H2 2026 | [Israel-Based Influence Operation Targeting France, the UK, Australia, and Africa](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-israel-cib-based-network.md) | Israel | France, the United Kingdom, Australia, Iran, Togo, Gabon, and Angola |
+| H2 2026 | [Iran-Based Influence Operation Targeting United States](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-iran-cib-based-network.md) | Iran | United States |
+| H2 2026 | [Iran-Based Influence Operation Targeting Sub-Saharan Africa](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-iran-cib-based-network-3.md) | Iran | Sub-Saharan Africa |
+| H2 2026 | [Iran-Based Influence Operation Targeting Azerbaijan](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-iran-cib-based-network-2.md) | Iran | Azerbaijan |
+| H2 2026 | [France and Spain-Based Influence Operation Targeting Sub-Saharan Africa](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-france-and-spain-cib-based-network.md) | France and Spain | France, Mali, Chad, DRC, Senegal, Cameroon, Burkina Faso, and Côte d’Ivoire |
+| H2 2026 | [Russia-Based Influence Operation Targeting Hungary](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-russia-cib-based-network-3.md) | Russia | Hungary |
+| H2 2026 | [Deep Dive: Beyond Brute Force—Doppelganger’s Changing Operations](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-russia-cib-based-network-4.md) | Russia | France, Germany, Hungary |
+| H2 2026 | [Russia-Based Influence Operation Targeting Europe, the Middle East, and Africa](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2026-russia-cib-based-network.md) | Russia | Europe, the Middle East, and Africa |
+| H2 2026 | [Ukraine and Bulgaria-Based Influence Operation Targeting United States, Germany, Italy, the United Kingdom, the Netherlands, France, Belgium, Latvia, Ukraine, and Moldova](https://github.com/facebook/threat-research/blob/main/indicators/h2-2026-ukraine-and-bulgaria-cib-based-network.md) | Ukraine and Bulgaria | United States, Germany, Italy, the United Kingdom, the Netherlands, France, Belgium, Latvia, Ukraine, and Moldova |
+| H1 2026 | [Russia-Based Influence Operation Network Targeting Eastern Europe](https://github.com/facebook/threat-research/blob/main/indicators/meta-h1-2026-russia-based-cib-network-2.md) | Russia | Eastern Europe |
+| H1 2026 | [Deep Dive: Domestic Pakistani Activity Displaying Wide Use of AI](https://github.com/facebook/threat-research/blob/main/indicators/meta-h1-2026-pakistan-based-cib-network.md) | Pakistan | Pakistan |
+| H1 2026 | [China-Based Influence Operation Network Targeting Taiwan](https://github.com/facebook/threat-research/blob/main/indicators/meta-h1-2026-china-based-cib-network.md) | China | Taiwan |
+| H1 2026 | [Iran-Based Influence Operation Network Targeting Azerbaijan](https://github.com/facebook/threat-research/blob/main/indicators/meta-h1-2026-iran-based-cib-network-2.md) | Iran | Azerbaijan |
+| H1 2026 | [Deep Dive: Dissecting the Kill Chain of an Early-Stage Iranian Influence Operation](https://github.com/facebook/threat-research/blob/main/indicators/meta-h1-2026-iran-based-cib-network-1.md) | Iran | United States, Iraq |
+| H1 2026 | [Russia-Based Influence Operation Network Targeting Sub-Saharan Africa](https://github.com/facebook/threat-research/blob/main/indicators/meta-h1-2026-russia-based-cib-network-1.md) | Russia | Sub-Saharan Africa |
+| H2 2025 | [Moldova-Based Influence Operation Network Targeting Moldova](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2025-moldova-based-cib-network.md) | Moldova | Moldova |
+| H2 2025 | [India-Based Influence Operation Network Targeting India](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2025-india-based-cib-network.md) | India | India |
+| H2 2025 | [Poland-Based Influence Operation Network Targeting Poland](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2025-poland-based-cib-network.md) | Poland | Poland |
+| H2 2025 | [Belarus, Russia-Based Influence Operation Network Targeting Poland](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2025-belarus-based-cib-network.md) | Belarus, Russia | Poland |
+| H2 2025 | [Russian Use of Authentic Operators in SSA](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2025-russia-based-cib-network-2.md) | Russia | Sub-Saharan Africa |
+| H2 2025 | [Updating Attribution of Persistent Iranian Influence Operation to “Endless Mayfly”](https://github.com/facebook/threat-research/blob/main/indicators/meta-h2-2025-iran-based-cib-network.md) | Iran | United States, France, Israel, United Kingdom |
+
+## ❓ FAQ
+
+**Why are you releasing this?**
+
+We’re sharing these threat indicators in this format to enable further research by the open-source community into any related activity across the web. Note that we’ve been sharing threat indicators in PDF format for years as part of our regular [threat reporting](https://transparency.fb.com/metasecurity/threat-reporting/ )
+
+
+**How were these indicators identified?**
+
+Meta employs a diverse array of techniques to identify malware and malicious activities. We do not typically disclose our exact methods publicly.
+
+**How often are the Indicators of Compromise (IOCs) updated?**
+
+We regularly update the IOCs as part of our broader threat reporting. For further threat analysis, visit our [Transparency Center](https://transparency.fb.com/metasecurity/threat-reporting/)
+
+
+## 📝 License
+All the data in this repository is provided under the MIT License. For the full license text, refer to the [LICENSE](https://github.com/facebook/threat-research/blob/main/LICENSE) file.
+
+
+
