@@ -31,7 +31,13 @@ is [`schema/feed-item-v2.schema.json`](../schema/feed-item-v2.schema.json); the 
 | `geometry` or `visual` | a place on the map, or `{type, url}` for a graphic | ICD 203 standard 9; visual-first rule |
 
 Optional on every item: `summary`, `evidence_hash` (`sha256:...`), `archive_url`, `requirement_ids[]`,
-`precision_class`, `product_category`, `actors[]` (below), and the tags below.
+`precision_class`, `product_category`, `data_as_of_precision`, `actors[]` (below), and the tags below.
+
+`data_as_of_precision` is for a source that gives no time. With `day`, `data_as_of` is midnight UTC on that date;
+with `month`, it is midnight UTC on the 1st. A page then shows the date ("30 Oct 2026") or the month ("June 2025"),
+read in UTC, and never a time or a zone; the kit's `asOfDateLabel()` does this. Without the field, `data_as_of` is a
+moment and is shown in the viewer's zone. Midnight UTC shown as a time reads as the evening before in the Americas
+(Tom, 15 Nov 2026).
 
 ## Actors and sides (`actors[]`)
 

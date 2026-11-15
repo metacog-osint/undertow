@@ -149,6 +149,8 @@ def feature(r: dict, generated: str) -> dict:
         "product_category": "current",
         "data_as_of": r.get("disclosed_at") or generated,
         "published_at": generated,
+        **({"data_as_of_precision": r["disclosed_precision"]}
+           if r.get("disclosed_at") and r.get("disclosed_precision") else {}),
         "countries": countries,
         "pmesii_pt": ["information", "political"],
         "ie_aspect": ["informational", "human"],

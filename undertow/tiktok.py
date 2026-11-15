@@ -184,6 +184,8 @@ def build_records(reports: list[dict]) -> list[dict]:
                 "removed_window": rep.get("window"),
                 "removed_month": e["month"],
                 "disclosed_at": pub,
+                # Report 8's publish_date is midnight with zeros (a date); report 9's carries a time.
+                "disclosed_precision": "day" if pub and pub.endswith("T00:00:00Z") else None,
                 "origin": origin, "origin_text": origin_name,
                 "origin_wording": wording or (f"Network Origin: {origin_name}" if origin_name else None),
                 "origin_level": "moderate" if origin else "none",

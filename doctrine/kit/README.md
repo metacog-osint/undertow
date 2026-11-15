@@ -50,7 +50,20 @@ python doctrine/kit/tic.py tips doctrine --feed <url>     # against one program'
 feed just built with the last run and logs one line per item that is new, changed (tier or response stage) or ended,
 with the full item, to `history/log/YYYY/MM/DD.jsonl` (format `tic-history/1`, first written for Elements). An item
 ends only when its source was read well on that run. The program serves the last 7 days of ended items beside its
-feed as `data/ended.geojson`. Format and adoption steps: `docs/history-log.md`.
+feed as `data/ended.geojson`. Format and adoption steps: `docs/history-log.md`. 0.5.1 (14 Nov 2026): a health entry's own
+`state`, when it gives one, must be fresh, late or up for its items to end (Cordon withholds a stale source's items).
+0.5.2 (14 Nov 2026): Headwind's entry adds the EU and UK sanctions lists to its `owns`, and their licences and USGS's
+(CC0 1.0) to its `terms`.
+0.5.3 (14 Nov 2026): Undertow is live (influence operations, family Information, prefix `UT-WP`), with its
+events and STIX files in `extra`.
+0.5.4 (15 Nov 2026): Wake's entry, still planned, describes its rebuilt PortWatch lane: status note, terms, `owns`,
+and freshness windows of 240 and 408 hours on its items' `data_as_of`, because PortWatch publishes weekly with a
+lag of 2 to 9 days (Wake's own source health: fresh to 10 days, late to 17).
+0.5.5 (15 Nov 2026): Wake is live (vessel transits through 28 chokepoints, family Maritime, prefix `WK-WP`) at wake.theintelligence.company,
+read and deployed by hand once a week until the IMF permits automated pulls.
+0.5.6 (15 Nov 2026): optional `data_as_of_precision` (`day` or `month`) for sources that give no time, with the
+linter's midnight-UTC check and `asOfDateLabel()` in the browser module, so a date-only item is shown as a date and
+not as the evening before; Undertow's `terms` now say what it quotes with credit (Meta, OpenAI, TikTok, EEAS).
 
 **Tests:** `python tests/test_kit.py`, `python tests/test_history.py` and `node tests/test_js.mjs`.
 

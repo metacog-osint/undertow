@@ -202,7 +202,8 @@ def page_data(snap: dict, records: list[dict], feed_doc: dict, events: list[dict
         iid = feed.item_id(r["key"])
         p = by_id[iid]
         rows.append({"id": iid, "publisher": r["publisher"], "title": r["title"], "period": r.get("period"),
-                     "disclosed_at": r.get("disclosed_at"), "origin": r.get("origin") or [],
+                     "disclosed_at": r.get("disclosed_at"), "disclosed_precision": r.get("disclosed_precision"),
+                     "origin": r.get("origin") or [],
                      "origin_wording": r.get("origin_wording"), "origin_level": r.get("origin_level"),
                      "alignment": r.get("alignment") or [], "targets": r.get("targets") or [],
                      "target_regions": r.get("target_regions") or [], "countries_named": r.get("countries_named") or [],
