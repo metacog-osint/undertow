@@ -30,6 +30,15 @@ ROUNDUP_RE = re.compile(r"^Disrupting (malicious|deceptive) uses of AI(?: by| *[
 NAME_RE = re.compile(r"[“\"‘']([^”\"’']{3,40})[”\"’']")
 
 
+def date_precision(published: str) -> str | None:
+    """OpenAI's feed dates an item it gives no time as 00:00:00 GMT, and dates the case studies of a monthly report
+    the 1st of that month (56 of 1,387 items on 15 Nov 2026 sat at midnight on the 1st, about four times chance):
+    'month' for midnight on the 1st, 'day' for midnight on any other date, None for a real time."""
+    if not published.endswith("T00:00:00Z"):
+        return None
+    return "month" if published[8:10] == "01" else "day"
+
+
 def fetch_allowed(url: str) -> bool:
     """The only openai.com URL this program may fetch is the RSS feed."""
     return url == RSS_URL
@@ -112,6 +121,7 @@ def build_records(items: list[dict]) -> tuple[list[dict], list[dict]]:
             "named_operations": text.named_operations((op_name or "") + " " + blob),
             "period": it["published"][:7],
             "disclosed_at": it["published"],
+            "disclosed_precision": date_precision(it["published"]),
             "origin": origin, "origin_text": place, "origin_wording": wording,
             "origin_level": level,
             "alignment": [],

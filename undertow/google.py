@@ -211,6 +211,7 @@ def build_records(pages: list[dict], urls: dict[tuple[int, int], str]) -> list[d
                 "named_operations": [],
                 "period": e["month"],
                 "disclosed_at": f"{pg['updated']}T00:00:00Z" if pg["updated"] else None,
+                "disclosed_precision": "day" if pg["updated"] else None,   # the bulletin gives a date, no time
                 "origin": e["origin"], "origin_text": e["linked_to"],
                 "origin_wording": f"linked to {e['linked_to']}" if e["linked_to"] else None,
                 "origin_level": "moderate" if e["origin"] else "none",

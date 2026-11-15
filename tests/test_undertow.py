@@ -102,6 +102,24 @@ class Pipeline(unittest.TestCase):
             self.assertEqual(errs, [], f["properties"]["id"])
         self.assertEqual(self.feed["contract"], "tic-feed/2")
 
+    def test_date_precision(self):
+        """A publisher date with no time says so (data_as_of_precision), so no page shows it as the evening before."""
+        by_pub = {}
+        for f in self.feed["features"]:
+            p = f["properties"]
+            by_pub.setdefault(p["operation"]["publisher"], []).append(p)
+            prec = p.get("data_as_of_precision")
+            if p["data_as_of"].endswith("T00:00:00Z") and p["operation"]["publisher"] != "meta":
+                self.assertIn(prec, ("day", "month"), p["id"])
+            if prec == "month":
+                self.assertEqual(p["data_as_of"][8:], "01T00:00:00Z", p["id"])
+        self.assertTrue(all(p.get("data_as_of_precision") is None for p in by_pub["meta"]))
+        self.assertTrue(all(p["data_as_of_precision"] == "day" for p in by_pub["google"] + by_pub["eeas"]))
+        self.assertTrue(any(p.get("data_as_of_precision") == "month" for p in by_pub["openai"]))
+        self.assertEqual(openai_rss.date_precision("2026-06-01T00:00:00Z"), "month")
+        self.assertEqual(openai_rss.date_precision("2026-10-08T00:00:00Z"), "day")
+        self.assertIsNone(openai_rss.date_precision("2024-08-16T11:00:00Z"))
+
     def test_no_indicator_handle_or_url_in_any_output(self):
         vals = meta_indicator_values()
         self.assertGreater(len(vals), 20)            # the fixtures really hold indicator tables

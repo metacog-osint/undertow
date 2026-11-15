@@ -19,9 +19,14 @@
     try { return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short", timeZoneName: "short" }); } catch (e) { return iso; }
   }
   function day(iso) { return iso ? String(iso).slice(0, 10) : ""; }
-  function stamp(iso) {
-    // A publisher date with no time of day (midnight UTC) is shown as the date, not shifted into the viewer's zone.
-    return /T00:00:00(\.0+)?Z$/.test(iso || "") ? day(iso) + " (date only)" : when(iso);
+  function stamp(iso, precision) {
+    // A publisher date with no time of day is shown as the month or the date, read in UTC, never shifted into the
+    // viewer's zone (tic-feed/2 data_as_of_precision).
+    if (precision === "month") {
+      try { return new Date(iso).toLocaleDateString(undefined, { month: "long", year: "numeric", timeZone: "UTC" }) + " (month only)"; }
+      catch (e) { return String(iso).slice(0, 7) + " (month only)"; }
+    }
+    return precision === "day" || /T00:00:00(\.0+)?Z$/.test(iso || "") ? day(iso) + " (date only)" : when(iso);
   }
   function num(n) { return Number(n).toLocaleString("en-US"); }
   function link(url, label) { return '<a href="' + esc(url) + '" rel="noopener">' + esc(label) + "</a>"; }
@@ -165,7 +170,7 @@
     var target = places(it.targets) + ((it.target_regions || []).length ? (it.targets.length ? "; " : "") + it.target_regions.join(", ") : "");
     var facts = [
       ["Publisher", '<span class="pub pub-' + it.publisher + '">' + esc(PUB[it.publisher]) + "</span>, " + link(it.url, it.disclosure.title) + (it.page ? " (p. " + esc(it.page) + ")" : "")],
-      [it.publisher === "meta" ? "Added to Meta's repository" : "Disclosed", esc(it.disclosed_at ? stamp(it.disclosed_at) : "not dated") + (it.period ? " · period " + esc(it.period) : "")],
+      [it.publisher === "meta" ? "Added to Meta's repository" : "Disclosed", esc(it.disclosed_at ? stamp(it.disclosed_at, it.disclosed_precision) : "not dated") + (it.period ? " · period " + esc(it.period) : "")],
       ["Origin (publisher's judgment)", it.origin.length ? esc(places(it.origin)) + (it.origin_wording ? ' · "' + esc(it.origin_wording) + '"' : "") + ' · stated level: ' + esc(it.origin_level) : "none stated" + (it.alignment.length ? "; aligned with " + esc(places(it.alignment)) : "") + (it.origin_wording ? ' · "' + esc(it.origin_wording) + '"' : "")],
       ["Operator named", it.orgs.length ? esc(it.orgs.join(", ")) : "none"],
       ["Targets", target ? esc(target) : (it.countries_named.length ? "none stated; countries named in the description: " + esc(places(it.countries_named)) : "none stated")],

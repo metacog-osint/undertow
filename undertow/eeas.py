@@ -64,6 +64,7 @@ def build_records(reg: dict) -> list[dict]:
             "named_operations": [o["id"]],
             "period": rep["covers"],
             "disclosed_at": f"{rep['published']}T00:00:00Z",
+            "disclosed_precision": "day",   # the report gives a date, no time
             "origin": o["origin"], "origin_text": o.get("origin_basis"), "origin_wording": wording,
             "origin_level": o["origin_level"],
             "alignment": o.get("alignment") or [],

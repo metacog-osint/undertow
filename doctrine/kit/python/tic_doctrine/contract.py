@@ -165,6 +165,12 @@ def check(item: dict, registers: dict | None = None) -> list[tuple[str, str, str
         err(GENERAL, f"continuum={p['continuum']!r} unknown")
     one_of(GENERAL, "product_category", vocab.enum("product_category"), required=False)
     one_of(GENERAL, "precision_class", vocab.enum("precision_class"), required=False)
+    one_of("sources", "data_as_of_precision", vocab.enum("data_as_of_precision"), required=False)
+    dap, asof = p.get("data_as_of_precision"), str(p.get("data_as_of") or "")
+    if dap == "day" and not asof.endswith("T00:00:00Z"):
+        err("sources", "data_as_of_precision 'day' needs data_as_of at midnight UTC (T00:00:00Z)")
+    elif dap == "month" and not (asof.endswith("T00:00:00Z") and asof[8:10] == "01"):
+        err("sources", "data_as_of_precision 'month' needs data_as_of at midnight UTC on the 1st")
     ncf_ids = p.get("ncf")
     if ncf_ids is not None:
         bad = [f for f in ncf_ids if f not in vocab.ncf()]
