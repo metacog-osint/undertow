@@ -14,14 +14,14 @@
   },
   "entered_by": "Claude (Undertow build session), read from the PDF text (pdftotext 14 Nov 2026)",
   "entered_at": "2026-11-14",
-  "checked_by": null,
-  "rule": "One row per Information Manipulation Set (IMS) the report names and describes in 'Infrastructures and Information Manipulation Sets (IMS) in 2025' (pp. 28-31) and 'Cheap and fast: the use of AI in Chinese FIMI operations' (p. 34). Quotes are the report's words, short, with the page. 'Aligned' is recorded as alignment, never as origin: the report itself calls Storm-1516 and Operation Overload non-attributed. Origin is set only where the report names who operates the IMS. Domains, outlet names and the names of individuals in the report are left out.",
+  "checked_by": "A second machine reading, not a person's check: Claude (Undertow session) on 15 Nov 2026 read every row against printed pp. 28-34 and p. 14 of the PDF (sha256 matched). Four quotes were put back to the report's exact words, the RRN region corrected, five targets from pp. 32 and 34 added and two origin bases reworded, each on Tom's yes (_ideas/drafts/2026-11-15-undertow-eeas-check.md).",
+  "rule": "One row per Information Manipulation Set (IMS) the report names and describes in 'Infrastructures and Information Manipulation Sets (IMS) in 2025' (pp. 28-31) and 'Cheap and fast: the use of AI in Chinese FIMI operations' (p. 34). Targets the report names for those IMS on p. 32 ('Ukraine: a persistent target of Russian FIMI') are added with the page. Quotes are the report's words, short, with the page. 'Aligned' is recorded as alignment, never as origin: the report itself calls Storm-1516 and Operation Overload non-attributed. Origin is set only where the report names who operates the IMS. Domains, outlet names and the names of individuals in the report are left out.",
   "operations": [
     {"id": "doppelganger", "name": "Doppelgänger", "page": 28,
      "attribution_wording": "operated by the EU-sanctioned entities Social Design Agency (SDA) and Struktura",
-     "origin": ["RU"], "origin_basis": "operators named (two Russian entities under EU sanctions)", "origin_level": "high",
+     "origin": ["RU"], "origin_basis": "operators named (Social Design Agency and Struktura, 'EU-sanctioned entities', p. 28); the report places Doppelgänger among the layers of the Russian FIMI ecosystem (p. 32)", "origin_level": "high",
      "alignment": [], "orgs": [{"name": "Social Design Agency", "country": "RU"}, {"name": "Struktura", "country": "RU"}],
-     "targets": [], "target_regions": [], "target_text": "expanded its target audience to include Hebrew-speaking communities",
+     "targets": ["UA"], "target_regions": [], "target_text": "expanded its target audience to include Hebrew-speaking communities (p. 28); Ukrainian audiences targeted through newly created domains impersonating Ukrainian media outlets (p. 32)",
      "counts": {},
      "behaviours": [
        {"text": "focuses on impersonating legitimate media outlets", "page": 28},
@@ -31,7 +31,7 @@
      "attribution_wording": "Another SDA-run IMS",
      "origin": ["RU"], "origin_basis": "operator named (Social Design Agency)", "origin_level": "high",
      "alignment": [], "orgs": [{"name": "Social Design Agency", "country": "RU"}],
-     "targets": ["DE", "FR", "IT", "PL", "TR", "US"], "target_regions": ["the Middle East", "Africa"],
+     "targets": ["DE", "FR", "IT", "PL", "TR", "US"], "target_regions": ["the Middle East", "North Africa"],
      "target_text": "around five websites targeting Germany, France, Italy, Poland, Turkey, the United States (US), and the Middle East and North Africa",
      "counts": {"websites": 5, "articles_per_week": 15},
      "behaviours": [
@@ -46,15 +46,15 @@
      "counts": {"videos_2025": 700, "videos_per_day_peak": 20},
      "behaviours": [
        {"text": "posting fake content like impersonation videos and deceptively redirecting to inauthentic articles", "page": 28},
-       {"text": "two sets of coordinated inauthentic accounts: seeder accounts and amplifier accounts", "page": 28},
-       {"text": "relies primarily on CIB channels on X; distribution via Telegram increased", "page": 29},
+       {"text": "The usual amplification pattern on X and Bluesky relies on two sets of coordinated inauthentic accounts", "page": 28},
+       {"text": "While Overload continues to rely primarily on CIB channels on X, distribution via Telegram increased noticeably in 2025.", "page": 29},
        {"text": "Storm-1516 and Overload use AI-generated videos easily identifiable as inauthentic", "page": 14}]},
     {"id": "storm-1516", "name": "Storm-1516", "page": 29,
      "attribution_wording": "Also known as CopyCop or False Façade, this nonattributed Russia-aligned IMS",
      "origin": [], "origin_basis": "the report calls it nonattributed", "origin_level": "none",
      "alignment": ["RU"],
-     "targets": ["DE", "US", "FR", "MD", "AM", "UA"], "target_regions": [],
-     "target_text": "networks dedicated to German, American, French, Moldovan or general audiences; Moldovan, Ukrainian, German and Armenian leaderships",
+     "targets": ["DE", "US", "FR", "MD", "AM", "UA", "PL"], "target_regions": [],
+     "target_text": "networks dedicated to German, American, French, Moldovan or general audiences; Moldovan, Ukrainian, German and Armenian leaderships (p. 29); messages during the Polish Presidential elections (p. 32)",
      "counts": {"websites": 453, "website_networks_created_2025": 5},
      "behaviours": [
        {"text": "uses fabricated websites, legitimate media platforms, online influencers and various amplification accounts", "page": 29},
@@ -65,8 +65,8 @@
      "attribution_wording": "Also known as Pravda network, it is one of the most prolific Russia-aligned IMS",
      "origin": [], "origin_basis": "the report says Russia-aligned and does not name an operator", "origin_level": "none",
      "alignment": ["RU"],
-     "targets": ["BA", "ES"], "target_regions": ["the Balkans"],
-     "target_text": "sub-domains dedicated to countries and regions, such as the Basque Country, Republika Srpska in Bosnia and Herzegovina and the Balkans",
+     "targets": ["BA", "ES"], "target_regions": ["the Balkans", "Africa"],
+     "target_text": "sub-domains dedicated to countries and regions, such as the Basque Country, Republika Srpska in Bosnia and Herzegovina and the Balkans (p. 29); subdomains targeting African audiences (p. 32)",
      "counts": {"websites": 101, "articles_per_day": 10000, "new_subdomains_end_2024": 26},
      "behaviours": [
        {"text": "pretending to be a media content aggregator", "page": 29},
@@ -75,7 +75,7 @@
      "attribution_wording": "The Chinese-aligned IMS",
      "origin": [], "origin_basis": "the report says Chinese-aligned and posting state messaging; no operator named", "origin_level": "none",
      "alignment": ["CN"],
-     "targets": [], "target_regions": [], "target_text": "dissidents and opposition voices",
+     "targets": ["US"], "target_regions": ["the European Union"], "target_text": "dissidents and opposition voices; AI-generated cartoons used to target both the EU and the US (p. 34)",
      "counts": {"platforms": 50},
      "behaviours": [
        {"text": "seeder accounts impersonating dissidents, which post a video or an image containing false allegations", "page": 29},
@@ -83,8 +83,8 @@
        {"text": "the use of AI-assisted impersonation videos", "page": 34},
        {"text": "frequently share AI-generated cartoons", "page": 34}]},
     {"id": "paperwall", "name": "Paperwall", "page": 34,
-     "attribution_wording": "These Chinese state-aligned IMS ... leveraged by the public relations firm Haimai",
-     "origin": ["CN"], "origin_basis": "operator named (a public relations firm, Haimai); content laundered from the Chinese state", "origin_level": "high",
+     "attribution_wording": "launder content originating from the Chinese state through a network of inauthentic news websites leveraged by the public relations firm Haimai",
+     "origin": ["CN"], "origin_basis": "the report says Paperwall launders 'content originating from the Chinese state' (p. 34) and calls it Chinese state-aligned (p. 29); it names the public relations firm Haimai but does not give Haimai's country", "origin_level": "high",
      "alignment": ["CN"], "orgs": [{"name": "Haimai", "country": "CN"}],
      "targets": ["AU"], "target_regions": ["Africa", "the Middle East", "Southeast Asia"],
      "target_text": "new audiences, mostly in Africa and the Middle East, but also Southeast Asia and Australia",
@@ -107,7 +107,7 @@
      "targets": [], "target_regions": [], "target_text": null,
      "counts": {"websites": 12},
      "behaviours": [
-       {"text": "seemingly independent websites publishing state-sponsored articles as original ones", "page": 34},
+       {"text": "These sites used AI to conceal their ties to the government by disguising the origin of their content and publishing state-sponsored articles as original ones.", "page": 34},
        {"text": "Generative tools have been used for the creation of profile pictures, website logos, and favicons", "page": 34},
        {"text": "uses AI to paraphrase and translate CGTN content to produce new, seemingly authentic articles", "page": 34}]}
   ]
