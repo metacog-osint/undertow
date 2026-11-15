@@ -1,4 +1,4 @@
-/*! tic-nav.js v1.10 · The Intelligence Company house bar: a link home and a Programs menu · canonical copy:
+/*! tic-nav.js v1.11 · The Intelligence Company house bar: a link home and a Programs menu · canonical copy:
  *  [local path] (copy into each site with tic-nav.css; keep the version line).
  *
  *  Tom, 1 Nov 2026: every program site needs a link back to the home page, and a dropdown of all programs, each
@@ -11,6 +11,8 @@
  *  this is site navigation. Keep PROGRAMS in step with the hub's oe/oe.js and product list.
  *    TicNav.mount(el?)   mounts the bar (done automatically once)
  *    TicNav.programs     the list below
+ *  On the hub itself (v1.11, Tom, 14 Nov 2026: the Programs menu on theintelligence.company too), load it with
+ *  data-home="here": the home link becomes plain text, since the reader is already home.
  */
 (function () {
   "use strict";
@@ -32,6 +34,10 @@
       label: "Human · press framing",
       short: "How the world's press covers each watched zone and topic.",
       long: "How the world's press covers each watched conflict zone and strategic topic: attention, escalation and framing, refreshed twice a day from GDELT." },
+    { id: "undertow", name: "Undertow", href: "https://undertow.theintelligence.company", status: "beta", group: "layers",
+      label: "Human · influence operations",
+      short: "Covert influence operations that platforms and governments have taken down, at the level of the operation.",
+      long: "Covert influence operations as the platforms and governments that disrupted them report them: Meta's takedown networks, Google's influence-operations bulletins, OpenAI's threat reports, TikTok's reports under the EU Code of Conduct, and the EEAS's named operations. Each gives the origin the publisher assessed, the targets, and the DISARM techniques described, with a STIX 2.1 export. Operations only: no account handles, links or names of individuals." },
     { id: "vigil", name: "Vigil", href: "https://vigil.theintelligence.company", status: "live", group: "layers",
       label: "Cyberspace · threat intelligence",
       short: "Ransomware, exploited vulnerabilities and threat indicators.",
@@ -107,10 +113,16 @@
     var nav = el("nav", "tic-house");
     nav.setAttribute("aria-label", "The Intelligence Company");
     var inner = el("div", "tic-house-in");
-    var home = el("a", "tic-house-home");
-    home.href = HOME;
-    home.append(el("span", "tic-house-arrow", "←"), " The Intelligence Company");
-    home.firstChild.setAttribute("aria-hidden", "true");
+    var atHome = script && script.getAttribute("data-home") === "here";
+    var home;
+    if (atHome) {
+      home = el("span", "tic-house-home", "The Intelligence Company");
+    } else {
+      home = el("a", "tic-house-home");
+      home.href = HOME;
+      home.append(el("span", "tic-house-arrow", "←"), " The Intelligence Company");
+      home.firstChild.setAttribute("aria-hidden", "true");
+    }
 
     var menu = el("div", "tic-house-menu");
     var btn = el("button", "tic-house-btn");
@@ -203,6 +215,6 @@
     if (slot) slot.append(nav); else document.body.insertBefore(nav, document.body.firstChild);
   }
 
-  window.TicNav = { version: "1.10", programs: PROGRAMS.slice(), mount: mount };
+  window.TicNav = { version: "1.11", programs: PROGRAMS.slice(), mount: mount };
   if (document.body) mount(); else document.addEventListener("DOMContentLoaded", function () { mount(); });
 })();
