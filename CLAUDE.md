@@ -26,10 +26,11 @@ section 6; programme row in `_ideas\new-programs.md`). Measurements and publishe
   tests, kitcheck, the last snapshot from the Actions cache, collect, build, check, then
   `wrangler pages deploy site --project-name undertow`. It uses secret `CLOUDFLARE_PAGES_TOKEN` and repo variable
   `CLOUDFLARE_ACCOUNT_ID` (set with `--body`; a PowerShell pipe's BOM broke Headwind's). Every run on 14 and 15 Nov
-  passed (43643868752, 43645582544, 43662903183, 43670100913, 43688512599, 43729348150, 43750332277).
+  passed (43643868752, 43645582544, 43662903183, 43670100913, 43688512599, 43729348150, 43750332277,
+  43758431795, 43765391411).
 - **tic-dispatch:** the hub's Worker (`dispatch/dispatch.js`) starts `update.yml` at :30 past 02, 08, 14 and 20 UTC.
-  **Tom's step, still open on 15 Nov:** add `undertow` to the dispatch token's repository access. Until then those
-  starts fail (404) and the cron is the clock; no dispatched run had happened by 1:48 PM CST on 15 Nov.
+  The dispatch token reaches Undertow: the first dispatched run started at 20:30 UTC on 15 Nov 2026 (43758431795,
+  passed). The cron `41 */6` stays as a fallback.
 - **Suite:**
   - Registry row in tic-doctrine `vocab/programs.json`: live since kit 0.5.3; 0.5.6 makes its terms line say what
     Undertow quotes with credit.
