@@ -208,7 +208,8 @@
     var w = S.items.reduce(function (a, it) { return a + (it.withheld || 0); }, 0);
     document.getElementById("withheld-n").textContent = "In this collection " + w + " span" + (w === 1 ? " was" : "s were") + " withheld.";
     document.getElementById("disarm-v").textContent = S.disarm_version;
-    document.getElementById("rules-status").textContent = S.disarm_rules_status === "reviewed" ? "The rule table is reviewed." :
+    document.getElementById("rules-status").textContent = S.disarm_rules_status === "reviewed" ?
+      "The rule table is reviewed. A technique is still Undertow's reading of the publisher's words, not the publisher's claim." :
       "The rule table is proposed and not yet reviewed by Tom: read every technique here as provisional.";
     var used = {};
     S.items.forEach(function (it) { (it.disarm || []).forEach(function (d) { used[d.rule] = (used[d.rule] || 0) + 1; }); });

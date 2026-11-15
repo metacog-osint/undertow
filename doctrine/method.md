@@ -44,8 +44,9 @@ every published file for defanged values, handles and URLs outside the publisher
 DISARM Framework v1.6.1 (CC BY-SA 4.0). A technique is attached only when a rule in the published table matches the
 publisher's own words; the matched phrase is kept (for Google, not kept: facts only). `basis: mapped` means it is
 Undertow's reading, not the publisher's claim; `basis: reported` is for a publisher that cites an id for one
-operation (none in this slice). A behaviour no rule matches stays as text. **The rule table is proposed and not yet
-reviewed by Tom**; every item says so (`disarm_rules_status`).
+operation (none in this slice). A behaviour no rule matches stays as text. **The rule table was reviewed by Tom on 14
+Nov 2026** (15 rules as drafted, two narrowed so that an unnamed medium is not read as images and a standalone
+website is not read as a news site); every item says so (`disarm_rules_status`).
 
 ## Outputs
 - `data/feed.geojson`: tic-feed/2. Geometry on the target countries the publisher names; Google and OpenAI name
