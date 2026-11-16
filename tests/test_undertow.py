@@ -172,6 +172,32 @@ class Pipeline(unittest.TestCase):
                          "intrusion-set", "marking-definition"} <= types)
         self.assertFalse(types & stix.FORBIDDEN)
 
+    def test_stix_threat_actors_only_for_hand_kept_organisations(self):
+        tas = [o for o in self.stix["objects"] if o["type"] == "threat-actor"]
+        self.assertTrue(tas, "the recorded replies name at least one organisation")
+        for t in tas:
+            self.assertIn(t["name"], stix.named_organisations())
+            self.assertEqual(t["threat_actor_types"], ["unknown"])
+            self.assertEqual(t["resource_level"], "organization")
+        rels = [o for o in self.stix["objects"] if o["type"] == "relationship" and o["target_ref"].startswith("threat-actor--")]
+        self.assertTrue(rels and all(r["source_ref"].startswith("campaign--") for r in rels))
+
+    def test_stix_validator_refuses_a_threat_actor_it_does_not_keep(self):
+        b = json.loads(json.dumps(self.stix))
+        ta = next(o for o in b["objects"] if o["type"] == "threat-actor")
+        ta["name"] = "Jane Example"
+        ta["roles"] = ["director"]
+        errs = stix.validate(b)
+        self.assertTrue(any("hand-kept organisation" in e for e in errs), errs)
+        self.assertTrue(any("roles is never stated" in e for e in errs), errs)
+
+    def test_a_free_text_org_never_becomes_a_threat_actor(self):
+        recs = json.loads(json.dumps([r for lane in self.snap["records"].values() for r in lane]))
+        recs[0]["orgs"] = [{"name": "Jane Example", "country": "RU"}]
+        b = stix.build_bundle(recs, "2026-11-16T00:00:00Z")
+        self.assertNotIn("Jane Example", [o.get("name") for o in b["objects"]])
+        self.assertEqual(stix.validate(b), [])
+
     def test_stix_disarm_objects_unchanged_with_cc_by_sa(self):
         vendored = {o["id"]: o for o in disarm.bundle()["objects"]}
         for o in self.stix["objects"]:
