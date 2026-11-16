@@ -19,7 +19,7 @@ individuals. It states no probability.
 | `dfrlab` | Atlantic Council's Digital Forensic Research Lab (from 16 Nov 2026) | `dfrlab.org/feed/` RSS pages, one at a time with a pause; never the article pages | Several a month | Reporter lane (below). Grade B2 |
 | `checkfirst` | CheckFirst, a Finnish research firm (from 16 Nov 2026) | `checkfirst.network/feed/` RSS pages, as DFRLab's | A few a month | Reporter lane. Grade B2 |
 | `correctiv` | CORRECTIV, a German investigative newsroom, English feed (from 16 Nov 2026) | `correctiv.org/en/feed/` RSS pages, as DFRLab's | Several a week, few on influence operations | Reporter lane. Grade B3: a newsroom often reports other researchers' findings |
-| `watch` | Undertow's watch register, `config/register/watch.json` (from 16 Nov 2026) | Entered by hand from the private triage list (below) | When Tom promotes a row | Reported activity that names no tracked operation |
+| `watch` | Undertow's watch register, `config/register/watch.json` (from 16 Nov 2026) | Entered by hand from the private triage list (below) | When Tom promotes a row | Reported activity entered by hand after review: activity a reporter lane does not match by title (unnamed, or naming tracked operations only in the report's text) |
 
 **Reporter lanes** keep an article only when its title or one-line description names an operation already listed in
 `config/operations.json` (by name or a publisher-given alias, case-sensitive). They keep the operations named, the

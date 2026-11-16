@@ -163,7 +163,7 @@ class Pipeline(unittest.TestCase):
             self.assertNotIn("[.]", body, name)
             self.assertIsNone(re.search(r"(?<![\w@])@[A-Za-z0-9_]{3,}(?![\w.])", body), name)
             for u in re.findall(r"https?://[^\s\"'<>)\]]+", body):
-                self.assertTrue(u.startswith(cli.ALLOWED_URL_PREFIXES), f"{name}: {u}")
+                self.assertTrue(u.startswith(cli.allowed_prefixes()), f"{name}: {u}")
 
     def test_no_personal_names_in_any_output(self):
         for name, body in self.files.items():
@@ -269,7 +269,8 @@ class Pipeline(unittest.TestCase):
         """Decision 1: reporter lanes publish reported-activity items, one per (reporter, operation), kept apart from
         disclosures, graded by the reporter, with first and last report and a state of active or quiet."""
         acts = [f["properties"] for f in self.feed["features"] if "activity" in f["properties"]]
-        by = {(p["operation"]["publisher"], p["activity"]["operation"]): p for p in acts}
+        by = {(p["operation"]["publisher"], p["activity"]["operation"] if p["operation"]["publisher"] != "watch"
+               else p["operation"]["key"]): p for p in acts}
         self.assertEqual(len(by), len(acts))
         self.assertEqual({k[0] for k in by} - {"watch"}, {"dfrlab", "checkfirst", "correctiv"})
         self.assertEqual(sum(p["activity"]["reports"] for p in acts if p["operation"]["publisher"] == "dfrlab"), 15)
@@ -320,9 +321,10 @@ class Pipeline(unittest.TestCase):
         self.assertIn("dfrlab", storm["operation"]["corroborated_by"])
         self.assertIn("correctiv", storm["operation"]["corroborated_by"])
         reps = [o for o in self.stix["objects"] if o["type"] == "report" and "x_tic_activity_state" in o]
-        # one report per item on a tracked operation; a watch row on an untracked one has no intrusion-set
+        # one report per reporter-lane item; a watch row is a campaign (attributed-to the operations it names)
         self.assertEqual(len(reps), len([f for f in self.feed["features"]
-                                         if "activity" in f["properties"] and f["properties"]["activity"]["operation"]]))
+                                         if "activity" in f["properties"] and f["properties"]["activity"]["operation"]
+                                         and f["properties"]["operation"]["publisher"] != "watch"]))
         self.assertTrue(all(len(o["object_refs"]) == 1 and o["object_refs"][0].startswith("intrusion-set--") for o in reps))
         self.assertFalse([o for o in self.stix["objects"] if o["type"] == "campaign" and "reported by" in o["name"]])
 
@@ -508,6 +510,43 @@ class Lanes(unittest.TestCase):
         self.assertIn("Example Lab reported on inauthentic networks targeting Moldova on 2026-11-01.", s)
         self.assertIn("Targets as entered from the report: Moldova.", s)
         self.assertNotIn("as the reporter states them", s)
+
+    def test_watch_row_with_several_tracked_operations(self):
+        """Tom, 16 Nov 2026: a watch row may name several tracked operations; a reporter's 'state-aligned' is
+        alignment, never origin; activity_period says when the activity ran; closing matches any listed operation."""
+        row = {"id": "example-vote", "operation": "Pro-Russian disinformation before an example vote",
+               "tracked_operations": ["storm-1516", "portal-kombat"],
+               "reporter": {"name": "Example Mechanism", "grade": "B2", "terms": "read 16 Nov 2026",
+                            "source_type": "government"},
+               "first_report": {"date": "2026-10-26", "url": "https://gov.example/report/"},
+               "countries": ["MD"], "activity_period": {"from": "2026-01-01", "to": "2026-06-10"},
+               "alignment": ["RU"], "attribution_wording": "Russian state-aligned"}
+        reg = {"reporter_hosts": ["https://gov.example/"], "rows": [row]}
+        self.assertEqual(activity.check_watch(reg), [])
+        for bad, word in (({"tracked_operations": ["no-such-op"]}, "not in config"),
+                          ({"tracked_operations": "storm-1516"}, "must be a list"),
+                          ({"activity_period": {"from": "2026-06", "to": "2026-01"}}, "activity_period"),
+                          ({"alignment": ["Russia"]}, "alignment")):
+            errs = activity.check_watch({"reporter_hosts": reg["reporter_hosts"], "rows": [dict(row, **bad)]})
+            self.assertTrue(any(word in e for e in errs), (bad, errs))
+        rec = activity.watch_records(reg, date(2026, 11, 16))[0]
+        self.assertEqual(rec["named_operations"], ["storm-1516", "portal-kombat"])
+        self.assertEqual(rec["origin"], [])
+        self.assertEqual(rec["alignment"], ["RU"])
+        self.assertIsNone(rec["activity"]["operation"])
+        self.assertEqual(rec["activity"]["operations"], ["storm-1516", "portal-kombat"])
+        s = feed.summary(rec)
+        self.assertIn("Activity the report covers: 2026-01-01 to 2026-06-10.", s)
+        self.assertIn("Operations Undertow tracks that the report names: Storm-1516, Portal Kombat.", s)
+        self.assertIn("recorded as alignment, not as an origin", s)
+        self.assertIn("adds no origin and no confidence", s)
+        old = dict(row, tracked_operation="storm-1516")
+        del old["tracked_operations"]
+        self.assertEqual(activity.row_operations(old), ["storm-1516"])
+        disc = {"key": "meta:x", "publisher": "meta", "disclosed_at": "2026-12-01T00:00:00Z", "period": "2026-11",
+                "targets": ["FR"], "named_operations": ["portal-kombat"], "title": "x"}
+        cands = activity.closing([row], [disc], months=12)["open"][0]["candidates"]
+        self.assertEqual([c["basis"] for c in cands], ["tracked operation"])   # the second listed operation
 
     def test_triage_lists_unnamed_activity_privately(self):
         """Decision 2: triage lists influence-worded articles naming no tracked operation into data/triage.jsonl,

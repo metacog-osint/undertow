@@ -115,6 +115,33 @@ snapshot; the feed shows them only as reported-activity items.
   report but not entered as a target), no origin, `checked_by` empty, no tracked operation (so no STIX report: there
   is no intrusion-set to report on). `reporter_hosts`: `https://dfrlab.org/`. Item `UT-WATCH-c12152a686`, active,
   marked at Armenia.
+- **Watch register widened (Tom's "Yes, as recommended", 16 Nov 2026, to
+  `_ideas\drafts\2026-11-16-undertow-watch-candidates.md`):**
+  - A row may list several `tracked_operations` (the older single `tracked_operation` still reads,
+    `activity.row_operations`). They become the item's `named_operations`: corroboration and a STIX campaign
+    `attributed-to` each intrusion set ("the publisher names this operation"), never origin or confidence. `closing`
+    matches any of them.
+  - Optional fields:
+    - `activity_period` {from, to}: when the activity ran, which is not the report date. It goes in the summary.
+    - `alignment`: a reporter's "state-aligned" or "Kremlin-aligned" is recorded as alignment, never origin, as
+      the EEAS's wording is.
+    - `label_starts_with_name`: the label keeps its capital mid-sentence.
+  - A row from a reporter with its own lane counts in that lane's independence group (`dfrlab`, not `watch:dfrlab`).
+  - The STIX campaign of a watch row carries the row's own grade, where it used to carry the lane's B3.
+  - **Hand-entered reporter:** the G7 Rapid Response Mechanism (Global Affairs Canada), B2, source_type government.
+    canada.ca terms, read 16 Nov 2026: non-commercial reproduction with the full title, the author and the URL.
+    `reporter_hosts` now also holds `https://checkfirst.network/` and `https://international.canada.ca/`.
+  - **Rows on 16 Nov 2026 (5):**
+    - Armenia, DFRLab: gained `activity_period` 2026-01 to 2026-06; the election was 7 Jun 2026.
+    - Armenia, CheckFirst, 10 Jun: Operation Overload, Portal Kombat, Storm-1516.
+    - Bulgaria, DFRLab, 9 Jun: Portal Kombat; the vote was 19 Apr.
+    - Roska Bridge, CheckFirst, 2 Jul: Portal Kombat; targets DE, FR, UA, US.
+    - Armenia, G7 RRM, 26 Oct: the three operations, alignment RU.
+  - **Waiting:**
+    - The RRM's Poland statement: the page names no operation as read, though a search summary said the Pravda
+      Network. Tom reads it first.
+    - The RRM's Moldova report: not read yet.
+    - VIGINUM's Rokh Solis: SGDSN's terms are unread because its site shows a browser check.
 - **Reporters (decision 3):** DFRLab, CheckFirst, CORRECTIV. Not Alliance4Europe (feed still since Sep 2025) or
   Ukraine's CCD (a party to the war). VIGINUM and Canada's RRM only as hand-entered watch rows.
 - **Origin (decision 4):** a reporter lane never adds an origin. A watch row's origin counts only when `checked_by`
