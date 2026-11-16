@@ -6,7 +6,7 @@ influence operations that Meta, Google, OpenAI, TikTok and the EEAS have publicl
 lanes and terms decisions: Tom, 14 Nov 2026 (spec: `[local path]`,
 section 6; programme row in `_ideas\new-programs.md`). Measurements and publishers' reports only: no probability.
 
-## State, 15 Nov 2026 (about 3:30 PM CST): live
+## State, 16 Nov 2026 (about 10 AM CST): live
 
 - **Repo:** `metacog-osint/undertow` (private, Tom's decision), branch `main`. Commits:
   - `3b4a72a`: the first live slice (14 Nov).
@@ -19,8 +19,14 @@ section 6; programme row in `_ideas\new-programs.md`). Measurements and publishe
   - `393758e`: health record and history log.
   - `e73b0e7`: STIX threat-actors for five hand-kept named organisations.
   - `a3e1a65`: the DFRLab lane (corroboration and link-out).
-  - Then the reported-activity slice (16 Nov 2026): CheckFirst and CORRECTIV lanes, reported-activity items, watch
-    register and the laptop-only triage list (below).
+  - The reported-activity slice (16 Nov 2026, below), after the history rewrite:
+    - `229716f`: CheckFirst and CORRECTIV lanes, reported-activity items, watch register and the laptop-only triage
+      list.
+    - `a3e59cf`: only stated targets on the map.
+    - `79cd60e`: the watch register's first row (Armenia, DFRLab).
+    - `606105f`: the baseline (watch-register closing, `UT-IND-3..4`), the `closing` list, triage at 180 days.
+    - `origin/main` was `f282823` at about 10 AM CST on 16 Nov, ahead of `606105f` only by the workflow's history
+      commits.
   - The workflow commits `history/` to main after each run, so fetch before working.
   - Each commit and push needs Tom's yes. Push by named commit (`git push origin <sha>:refs/heads/main`) after
     listing what is ahead, and ask for each push by its sha (the auto-mode check refused pushes until Tom said
@@ -239,9 +245,11 @@ fails keeps its last good records, which lack the field until the lane next succ
     organisation, or an identity for a person.
 
 ## Kit, house bar, layout
-- Doctrine kit **0.5.6** (tic-doctrine `37a1dad`), synced on 15 Nov with `python <tic-doctrine>/tools/sync.py
-  [local path]`. Kit 0.5.6 adds `data_as_of_precision` and Undertow's corrected terms line. Never edit
-  `doctrine/kit/` here.
+- Doctrine kit **0.5.6** vendored (tic-doctrine `5643761` since the history rewrite; `37a1dad` before it), synced on
+  15 Nov with `python <tic-doctrine>/tools/sync.py [local path]`. Kit 0.5.6 adds `data_as_of_precision` and
+  Undertow's corrected terms line. **The suite is at 0.5.9** (`5eec41a`, 16 Nov: 0.5.7 optional subdivisions, 0.5.8
+  Launch's history source, 0.5.9 Relief live); none of the three changes Undertow's own entry, so a sync is
+  housekeeping, on Tom's yes. Never edit `doctrine/kit/` here.
 - House bar: `site_src/tic-nav.js` **v1.13** (v1.12 made it sticky with a minimize button, `79f99a1`; v1.13 added
   Wake, `28fb96d`) and `tic-time.js` v1.3, copied from the hub's `site/shared/` by the sessions that rolled the bar
   out. Copy bar files from the hub; never edit them here.

@@ -492,6 +492,23 @@ class Lanes(unittest.TestCase):
         analysis.assess(recs)
         self.assertEqual(recs[0]["confidence"]["confidence"], "low")
 
+    def test_watch_label_mid_sentence(self):
+        """A watch row's label starts its title capitalised and reads lower-case mid-sentence; acronyms keep theirs.
+        Its targets are said to be entered from the report (Tom enters them at triage)."""
+        self.assertEqual(activity.in_sentence("Inauthentic networks before X"), "inauthentic networks before X")
+        for keep in ("RRN networks", "A", "G7 summit networks", "an unnamed network"):
+            self.assertEqual(activity.in_sentence(keep), keep)
+        row = {"id": "example-net", "operation": "Inauthentic networks targeting Moldova",
+               "reporter": {"name": "Example Lab", "grade": "B2", "terms": "read 16 Nov 2026"},
+               "first_report": {"date": "2026-11-01", "url": "https://lab.example/a/"}, "countries": ["MD"]}
+        rec = activity.watch_records({"rows": [row]}, date(2026, 11, 16))[0]
+        self.assertTrue(rec["title"].startswith("Inauthentic networks targeting Moldova: reported by"))
+        self.assertEqual(rec["disclosure"]["title"], "Example Lab reporting on inauthentic networks targeting Moldova")
+        s = feed.summary(rec)
+        self.assertIn("Example Lab reported on inauthentic networks targeting Moldova on 2026-11-01.", s)
+        self.assertIn("Targets as entered from the report: Moldova.", s)
+        self.assertNotIn("as the reporter states them", s)
+
     def test_triage_lists_unnamed_activity_privately(self):
         """Decision 2: triage lists influence-worded articles naming no tracked operation into data/triage.jsonl,
         which no published file ever holds; check fails if one of its headlines leaks."""
