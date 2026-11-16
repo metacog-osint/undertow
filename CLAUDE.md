@@ -49,7 +49,7 @@ python tools/undertow.py collect               # fetch every live lane into data
 python tools/undertow.py collect --only meta   # one or more lanes; the rest keep their last copy
 python tools/undertow.py build                 # build site/ from data/snapshot.json
 python tools/undertow.py check                 # registers, feed linter, STIX check, leak scan
-python -m unittest discover -s tests           # 33 offline tests on recorded real replies
+python -m unittest discover -s tests           # 36 offline tests on recorded real replies
 python tests/make_fixtures.py                  # re-record fixtures from the raw copies of the last collect
 python tools/serve.py                          # site/ on http://127.0.0.1:8781 with _headers (CSP); launch entry `undertow-site`
 python doctrine/kit/tic.py lint site/data/feed.geojson --doctrine doctrine
@@ -153,7 +153,16 @@ fails keeps its last good records, which lack the field until the lane next succ
   - Ids are UUIDv5 from namespace `uuid5(DNS, "undertow.theintelligence.company")` and a stable key. Timestamps come
     from the disclosure, so a rebuild is byte-identical unless the data change.
   - TLP:CLEAR is copied from OASIS `cti-stix-common-objects`.
-  - Never emitted: indicator, observed-data, cyber-observables, threat-actor, or an identity for a person.
+  - A named organisation (16 Nov 2026, second slice, Tom's "continue working on open items"): `threat-actor` with
+    `threat_actor_types` ["unknown"] and `resource_level` "organization", nothing more (no roles, goals, motivations,
+    sophistication or aliases), `attributed-to` from each campaign whose own publisher names it, and `located-at`
+    its country. Made only for a name hand-kept in `config/operations.json` or `config/register/`
+    (`stix.named_organisations()`), and `validate()` refuses any other name, so free text or a person's name can
+    never become one. Five on 16 Nov: Social Design Agency, ANO Dialog, Struktura (RU), Haimai and China Global
+    Television Network (CN). CGTN comes from the EEAS's "linked to Chinese state-controlled media" (Falsos Amigos);
+    the relationship says only that the publisher names the organisation.
+  - Never emitted: indicator, observed-data, cyber-observables, a threat-actor for anything but a hand-kept
+    organisation, or an identity for a person.
 
 ## Kit, house bar, layout
 - Doctrine kit **0.5.6** (tic-doctrine `37a1dad`), synced on 15 Nov with `python <tic-doctrine>/tools/sync.py
