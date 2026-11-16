@@ -422,6 +422,34 @@ class Lanes(unittest.TestCase):
         self.assertEqual(activity.QUIET_DAYS, 180)
         self.assertNotIn("ended", json.dumps(a2))
 
+    def test_only_stated_targets_are_marked_on_the_map(self):
+        """Tom, 16 Nov 2026: a reporter item is marked only at countries its reports name that a disclosure of the
+        same operation records as targets, never at the operators' country; a description's countries are never
+        geometry."""
+        from undertow import feed
+        rec = {"key": "correctiv:x", "named_operations": ["storm-1516"], "disclosed_at": "2026-11-11T11:25:06Z",
+               "url": "https://correctiv.org/en/x/", "countries_named": ["RU", "US"], "target_regions": [],
+               "platforms": [], "disarm": []}
+        act = activity.aggregate({"correctiv": [rec]}, date(2026, 11, 16))[0]
+        disclosure = {"key": "eeas:storm", "named_operations": ["storm-1516"], "targets": ["US", "FR"]}
+        activity.place([disclosure, act])
+        self.assertEqual(act["targets"], ["US"])
+        f = feed.feature(act, "2026-11-16T04:00:00Z")
+        self.assertEqual(f["geometry"]["type"], "Point")
+        self.assertEqual(f["properties"]["countries"], ["US", "RU"])
+        self.assertIn("records a target: United States", f["properties"]["summary"])
+        lone = activity.aggregate({"correctiv": [dict(rec, countries_named=["RU"])]}, date(2026, 11, 16))[0]
+        activity.place([disclosure, lone])
+        g = feed.feature(lone, "2026-11-16T04:00:00Z")
+        self.assertIsNone(g["geometry"])
+        self.assertEqual(g["properties"]["precision_class"], "none")
+        self.assertIn("not marked on the map", g["properties"]["summary"])
+        named_only = {k: v for k, v in act.items() if k != "activity"}
+        named_only.update(publisher="google", targets=[], countries_named=["RU", "UA"])
+        h = feed.feature(named_only, "2026-11-16T04:00:00Z")
+        self.assertIsNone(h["geometry"])
+        self.assertIn("not stated as targets", h["properties"]["summary"])
+
     def test_watch_register_checks_and_origin_rule(self):
         """Decision 4: a watch row's origin counts only when Tom checked it and the reporter shows its own evidence."""
         self.assertEqual(activity.check_watch(activity.load_watch()), [])

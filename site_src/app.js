@@ -175,8 +175,10 @@
     var a = it.activity, who = it.publisher === "watch" ? it.reporter : PUB[it.publisher];
     var links = (a.report_links || []).slice(0, 12).map(function (x) { return link(x.url, day(x.date)); }).join(", ") +
       ((a.report_links || []).length > 12 ? " and " + ((a.report_links || []).length - 12) + " earlier" : "");
-    var where = (it.targets || []).length ? "targets as the reporter states them: " + places(it.targets) :
-      (it.countries_named || []).length ? "named in the reports: " + places(it.countries_named) : "none named";
+    var where = it.publisher === "watch" ? ((it.targets || []).length ? "targets as the reporter states them: " + places(it.targets) : "none named") :
+      (it.countries_named || []).length ? "named in the reports: " + places(it.countries_named) + "; marked on the map: " +
+        ((it.targets || []).length ? places(it.targets) + " (targets that a disclosure of this operation records)" : "none (no target that a disclosure of this operation records)") :
+      "none named";
     return [
       ["Reporter", '<span class="pub pub-' + it.publisher + '">' + esc(who) + "</span>" + (it.reporter && it.reporter !== who ? ", " + esc(it.reporter) : "") + " (grade " + esc(a.grade) + "; a reporter, not the platform that acted)"],
       ["Reported activity", '<span class="badge' + (a.state === "active" ? "" : " badge-warn") + '">' + esc(a.state) + "</span> " +

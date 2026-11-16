@@ -107,6 +107,31 @@ def aggregate(reports_by_lane: dict[str, list[dict]], today: date) -> list[dict]
     return out
 
 
+MAPPED_AT = "countries named in the reports that a platform's or the EEAS's disclosure of this operation records as targets"
+
+
+def place(records: list[dict]) -> None:
+    """Map a reporter lane's item only at targets (Tom, 16 Nov 2026: "Mark only target countries on the map").
+
+    A reporter lane reads no targets, only the countries its reports name, and those often include where the
+    operators are said to be (Storm-1516's CORRECTIV story names Russia and the US). So the item's targets are the
+    countries named in its reports that a disclosure of the same operation (grade A2) records as targets; an item
+    with none is not marked on the map. The countries named stay in `countries_named`. Watch rows keep the countries
+    Tom entered as targets. Sets `targets` in place, on reporter-lane records only."""
+    disclosed: dict[str, set] = {}
+    for r in records:
+        if r.get("activity"):
+            continue
+        for op in r.get("named_operations") or []:
+            disclosed.setdefault(op, set()).update(r.get("targets") or [])
+    for r in records:
+        a = r.get("activity")
+        if not a or r.get("publisher") == "watch":
+            continue
+        r["targets"] = sorted(set(r.get("countries_named") or []) & disclosed.get(a["operation"], set()))
+        a["mapped_at"] = MAPPED_AT
+
+
 # --- the hand-kept watch register (config/register/watch.json) ---------------------------------------------------
 
 def load_watch(path: Path = WATCH_PATH) -> dict:
