@@ -172,12 +172,15 @@ def collect(root: Path = ROOT, getter=None, only: list[str] | None = None) -> di
             snap["records"][lane] = result["records"]
             snap["extra"][lane] = result["extra"]
             snap["lanes"][lane] = {"status": "ok", "fetched_at": now, "from_previous": False, "items": len(result["records"]),
+                                   "failures": 0,
                                    "fetches": [{k: r[k] for k in ("url", "sha256", "bytes")} for r in recs]}
         except Exception as exc:
             had = bool(prev_lane.get("fetched_at"))
             snap["records"][lane], snap["extra"][lane] = keep() if had else ([], {})
             snap["lanes"][lane] = {"status": "failed", "error": f"{type(exc).__name__}: {exc}"[:300], "failed_at": now,
-                                   "from_previous": had, "fetched_at": prev_lane.get("fetched_at")}
+                                   "from_previous": had, "fetched_at": prev_lane.get("fetched_at"),
+                                   "items": len(snap["records"][lane]),
+                                   "failures": int(prev_lane.get("failures") or 0) + 1}
     data_dir.mkdir(parents=True, exist_ok=True)
     snap_path.write_text(json.dumps(snap, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     return snap
@@ -233,7 +236,7 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
         snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
     snap = snapshot
     records = all_records(snap)
-    feed_doc = feed.build_feed(records, snap["generated_at"])
+    feed_doc = feed.build_feed(records, snap["generated_at"], feed.health(snap.get("lanes") or {}, records))
     bundle = stix.build_bundle(records, snap["generated_at"])
     gq = [(p["year"], p["quarter"]) for p in (snap.get("extra", {}).get("google") or {}).get("pages", [])]
     tr = (snap.get("extra", {}).get("tiktok") or {}).get("reports", [])
@@ -320,7 +323,10 @@ def check_all(root: Path = ROOT) -> list[str]:
             errs.append(f"{fid}: confidence High is not possible in this slice (no scored Verdict record)")
     bundle = json.loads((data / "stix.json").read_text(encoding="utf-8"))
     errs += [f"stix: {e}" for e in stix.validate(bundle)]
-    errs += leak_scan([data / "feed.geojson", data / "stix.json", data / "events.json", data / "snapshot.json"])
+    published = [data / "feed.geojson", data / "stix.json", data / "events.json", data / "snapshot.json"]
+    if (data / "ended.geojson").exists():  # written by the history step (tic.py history), served beside the feed
+        published.append(data / "ended.geojson")
+    errs += leak_scan(published)
     return errs
 
 

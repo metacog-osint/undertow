@@ -23,7 +23,7 @@ section 6; programme row in `_ideas\new-programs.md`). Measurements and publishe
 - **Site:** https://undertow.theintelligence.company. Cloudflare Pages project `undertow` (`undertow-cm3.pages.dev`);
   Tom added the Squarespace CNAME, and the domain has been active with HTTPS and HSTS since 4:21 PM CST on 14 Nov.
   `.github/workflows/update.yml` runs on every push to `main`, on cron `41 */6 * * *` and on workflow_dispatch:
-  tests, kitcheck, the last snapshot from the Actions cache, collect, build, check, then
+  tests, kitcheck, the last snapshot from the Actions cache, collect, build, check, history (below), check again, then
   `wrangler pages deploy site --project-name undertow`. It uses secret `CLOUDFLARE_PAGES_TOKEN` and repo variable
   `CLOUDFLARE_ACCOUNT_ID` (set with `--body`; a PowerShell pipe's BOM broke Headwind's). Every run on 14 and 15 Nov
   passed (43643868752, 43645582544, 43662903183, 43670100913, 43688512599, 43729348150, 43750332277,
@@ -49,7 +49,7 @@ python tools/undertow.py collect               # fetch every live lane into data
 python tools/undertow.py collect --only meta   # one or more lanes; the rest keep their last copy
 python tools/undertow.py build                 # build site/ from data/snapshot.json
 python tools/undertow.py check                 # registers, feed linter, STIX check, leak scan
-python -m unittest discover -s tests           # 29 offline tests on recorded real replies
+python -m unittest discover -s tests           # 33 offline tests on recorded real replies
 python tests/make_fixtures.py                  # re-record fixtures from the raw copies of the last collect
 python tools/serve.py                          # site/ on http://127.0.0.1:8781 with _headers (CSP); launch entry `undertow-site`
 python doctrine/kit/tic.py lint site/data/feed.geojson --doctrine doctrine
@@ -86,6 +86,22 @@ carries `data_as_of_precision`:
 15 Nov count: 23 month, 361 day and 41 exact (Meta's commit times, TikTok's report 9 and two OpenAI posts). The
 page shows "June 2026 (month only)" or "2026-10-30 (date only)", and COP shows the date or month in UTC. A lane that
 fails keeps its last good records, which lack the field until the lane next succeeds.
+
+## Health record and history log (built 15 Nov 2026, Tom's "Yes, build item 1")
+- **Health:** the feed carries a `health` block (`feed.health()`), one entry per source, **keyed by the source id the
+  items carry** (`meta-threat-research`, `google-iob`, `openai-news-rss`, `disinfocode-tiktok`, `eeas-fimi-4`), not by
+  lane name: the kit's history log and COP's ledger take an item's lane from its first source id. Shape as Cordon's
+  and Headwind's: state, last_ok, last_error, failures (consecutive, kept in the snapshot's `lanes`), checked_at,
+  detail, plus lane and data_as_of (newest disclosure among the lane's items). State is `up` when read on this run
+  and `failing` otherwise; the kit's fresh/late/stale would judge nothing, because disclosures have no fixed rhythm.
+- **History:** `update.yml` runs `tic.py history site/data/feed.geojson --dir history --ended
+  site/data/ended.geojson` after `check`, commits only `history/` to main with the workflow's token (which starts no
+  run), then runs `check` again so `ended.geojson` is in the leak scan before the deploy. Copied from Headwind's
+  step. `permissions: contents: write`. A failing lane ends nothing. `history/` holds published feed items only,
+  never `data/raw` or the snapshot. The first run writes about 2.6 MB (425 `new` lines and the state).
+- **Left for COP (its own worktree, on Tom's yes):** add Undertow's `ended` address
+  (`https://undertow.theintelligence.company/data/ended.geojson`) to COP's `config/programs.json`, and consider
+  `source_health: true`, so COP greys a failing lane's kept items as it does Headwind's.
 
 ## Hard rules and how they are held
 - **Operation level only.** No indicator values, account handles, URLs or domains, or names of individuals in any
@@ -162,7 +178,9 @@ fails keeps its last good records, which lack the field until the lane next succ
   monthly list.
 - Google items are keyed by position (`google:2026-q3:2026-07:01`), so if Google edits a bulletin, that month's keys
   shift. Other lanes key on content.
-- No anomaly rule, no history log (`tic.py history`) and no `health` block in the feed yet.
+- No anomaly rule yet: no baseline of disclosures. On 15 Nov, only Google's bulletins (TAG Bulletin pages answer
+  back to Q3 2020) looked long enough for one; Meta has three README periods and OpenAI about ten report dates.
+- History log: Google's keys are positional (above), so if Google edits a bulletin, that month logs as ended and new.
 
 ## Sources and terms (read 14 Nov 2026 unless marked)
 - Meta threat-research: MIT (LICENSE and README). Summaries are quoted with "Copyright (c) Meta Platforms, Inc. and

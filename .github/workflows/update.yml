@@ -1,9 +1,5 @@
 name: update
-# DRAFT, 14 Nov 2026: written and not yet run. Modelled on Headwind's. It does nothing until it is on main in a
-# GitHub repository, and it deploys nothing until Tom creates the Cloudflare Pages project `undertow` and sets the
-# secrets below. None of those exists yet.
-#
-# Every 6 hours (meant to be started by the hub's tic-dispatch Worker, because GitHub fires schedules 4-9 h late;
+# Live since 14 Nov 2026, modelled on Headwind's. Every 6 hours (meant to be started by the hub's tic-dispatch Worker, because GitHub fires schedules 4-9 h late;
 # its own cron is the fallback), on every push to main, and by hand: the tests, the last run's snapshot from this
 # repository's Actions cache, a live collection, the site build and check, then a deploy of site/ to Cloudflare
 # Pages. The publishers disclose twice a year to quarterly, so 6 hours is plenty.
@@ -16,6 +12,14 @@ name: update
 # Without the Cloudflare pair everything runs except the deploy. GITHUB_TOKEN (provided by Actions) is passed to
 # the collect step only, for the one GitHub API call that reads when Meta added each indicator file (a higher rate
 # limit than an anonymous call); it is never recorded. No other key is needed: every source is keyless.
+#
+# History (from 16 Nov 2026, the kit's tic-history/1, doctrine/kit/docs/history-log.md): after the check, the kit
+# compares the feed with history/state.json and writes one line per item that is new, changed or ended to
+# history/log/YYYY/MM/DD.jsonl, and the items ended in the last 7 days to site/data/ended.geojson (deployed with the
+# site, read by COP). The feed's `health` block, keyed by source id, says which lanes were read; a lane that failed
+# ends nothing. history/ holds only published feed items (operation level), never data/raw or the snapshot. It is
+# committed to main by the workflow's token, which starts no further run. A failure there is a gap in the history,
+# never a missed deploy.
 on:
   push:
     branches: [main]
@@ -23,7 +27,7 @@ on:
     - cron: "41 */6 * * *"
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write     # the history/ commit
 concurrency:
   group: update
   cancel-in-progress: false
@@ -60,6 +64,30 @@ jobs:
       - name: Build site/
         run: python tools/undertow.py build
       - name: Check (registers, feed linter, STIX, leak scan)
+        run: python tools/undertow.py check
+      # The run's checkout can be older than main: a run queued behind another starts from the commit that
+      # triggered it, without the history commit the run before made. So history/ is taken from main's tip first,
+      # and the commit is made on main's tip with only history/ staged (reset --mixed moves HEAD and the index,
+      # never the working tree, which holds the build's site/ files). No rebase, so nothing unstaged can stop it.
+      - name: History (history/, and site/data/ended.geojson)
+        run: |
+          git fetch -q --depth=1 origin main && git checkout -q FETCH_HEAD -- history 2>/dev/null \
+            || echo "::warning::could not take history/ from main's tip; using this checkout's"
+          python doctrine/kit/tic.py history site/data/feed.geojson --dir history --ended site/data/ended.geojson \
+            || { echo "::warning::history step failed; this run is missing from history/"; exit 0; }
+          git config user.name "undertow-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          stamp="history: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git fetch -q --depth=1 origin main && git reset -q --mixed FETCH_HEAD || { sleep $((i * 15)); continue; }
+            git add history
+            git diff --cached --quiet -- history && { echo "history: nothing new"; exit 0; }
+            git commit -q -m "$stamp" && git push -q origin HEAD:main && exit 0
+            echo "::warning::history push attempt $i failed"
+            sleep $((i * 15))
+          done
+          echo "::warning::history not committed this run; the next run logs these changes again from the last state"
+      - name: Check again, now with site/data/ended.geojson in the leak scan
         run: python tools/undertow.py check
       - name: Keep this run's snapshot for the next run
         uses: actions/cache/save@v6
