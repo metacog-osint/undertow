@@ -102,13 +102,14 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(counts["dfrlab"], 15)        # report records, folded into reported-activity items at build
         self.assertEqual(counts["checkfirst"], 5)
         self.assertEqual(counts["correctiv"], 3)
-        self.assertEqual(counts["watch"], 0)
+        self.assertEqual(counts["watch"], len(activity.load_watch()["rows"]))   # 1 since 16 Nov 2026 (Armenia)
 
     def test_health_keyed_by_item_source_ids(self):
         h = self.feed["health"]
         item_sources = {f["properties"]["sources"][0]["id"] for f in self.feed["features"]}
         self.assertLessEqual(item_sources, set(h))   # the history log's lane is an item's first source id
-        self.assertEqual(set(h) - item_sources, {"undertow-watch-register"})    # no watch rows yet
+        unused = set() if activity.load_watch()["rows"] else {"undertow-watch-register"}
+        self.assertEqual(set(h) - item_sources, unused)
         self.assertEqual({v["lane"] for v in h.values()}, set(cli.LANES))
         for sid, e in h.items():
             self.assertEqual(e["state"], "up", sid)
@@ -270,13 +271,15 @@ class Pipeline(unittest.TestCase):
         acts = [f["properties"] for f in self.feed["features"] if "activity" in f["properties"]]
         by = {(p["operation"]["publisher"], p["activity"]["operation"]): p for p in acts}
         self.assertEqual(len(by), len(acts))
-        self.assertEqual({k[0] for k in by}, {"dfrlab", "checkfirst", "correctiv"})
+        self.assertEqual({k[0] for k in by} - {"watch"}, {"dfrlab", "checkfirst", "correctiv"})
         self.assertEqual(sum(p["activity"]["reports"] for p in acts if p["operation"]["publisher"] == "dfrlab"), 15)
         self.assertEqual(len([p for p in acts if p["operation"]["publisher"] == "dfrlab"]), 5)
         grades = {"dfrlab": "B2", "checkfirst": "B2", "correctiv": "B3"}
         names = {o["id"]: o["name"] for o in text.operations()}
         for p in acts:
             a = p["activity"]
+            if a["reporter"] == "watch":            # hand-kept rows: test_watch_register_checks_and_origin_rule
+                continue
             self.assertEqual(p["sources"][0]["grade"], grades[a["reporter"]])
             self.assertIn(a["state"], ("active", "quiet"))
             self.assertNotIn("ended", p["title"] + p["summary"].replace("not evidence the operation stopped", ""))
@@ -317,7 +320,9 @@ class Pipeline(unittest.TestCase):
         self.assertIn("dfrlab", storm["operation"]["corroborated_by"])
         self.assertIn("correctiv", storm["operation"]["corroborated_by"])
         reps = [o for o in self.stix["objects"] if o["type"] == "report" and "x_tic_activity_state" in o]
-        self.assertEqual(len(reps), len([f for f in self.feed["features"] if "activity" in f["properties"]]))
+        # one report per item on a tracked operation; a watch row on an untracked one has no intrusion-set
+        self.assertEqual(len(reps), len([f for f in self.feed["features"]
+                                         if "activity" in f["properties"] and f["properties"]["activity"]["operation"]]))
         self.assertTrue(all(len(o["object_refs"]) == 1 and o["object_refs"][0].startswith("intrusion-set--") for o in reps))
         self.assertFalse([o for o in self.stix["objects"] if o["type"] == "campaign" and "reported by" in o["name"]])
 
@@ -453,7 +458,10 @@ class Lanes(unittest.TestCase):
     def test_watch_register_checks_and_origin_rule(self):
         """Decision 4: a watch row's origin counts only when Tom checked it and the reporter shows its own evidence."""
         self.assertEqual(activity.check_watch(activity.load_watch()), [])
-        self.assertEqual(activity.load_watch()["rows"], [])
+        live = activity.load_watch()                           # first row: Armenia, promoted by Tom on 16 Nov 2026
+        self.assertTrue(all(not r.get("origin") and not r.get("checked_by") for r in live["rows"]))
+        self.assertTrue(all(any(r["first_report"]["url"].startswith(h) for h in live["reporter_hosts"])
+                            for r in live["rows"]))
         row = {"id": "example-net", "operation": "an unnamed network targeting Moldova",
                "reporter": {"name": "Example Lab", "grade": "B2", "terms": "read 16 Nov 2026"},
                "first_report": {"date": "2026-11-01", "url": "https://lab.example/a/"},

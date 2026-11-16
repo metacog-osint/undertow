@@ -77,7 +77,7 @@ empty, and `lanes` in the snapshot says which. Standard library only (Python 3.1
 | `dfrlab` | `reporters.py` | Reporter lane (below). `dfrlab.org/feed/`. Grade B2 | 15 reports -> 5 activity items |
 | `checkfirst` | `reporters.py` | Reporter lane. `checkfirst.network/feed/` (10 a page). Grade B2 | 5 reports -> 2 items |
 | `correctiv` | `reporters.py` | Reporter lane. `correctiv.org/en/feed/` (100 a page; English stories back to 2015). Grade B3 (a newsroom often reports others' findings) | 3 reports -> 2 items |
-| `watch` | `activity.py` | `config/register/watch.json`, hand-kept; `check_watch()` refuses a bad row | 0 rows |
+| `watch` | `activity.py` | `config/register/watch.json`, hand-kept; `check_watch()` refuses a bad row | 1 row (Armenia, 16 Nov) |
 
 **Reporter lanes** (`undertow/reporters.py`, `REPORTERS`): WordPress RSS pages (`?paged=N`, 2 s apart), never an
 article page. Kept only when the title or one-line description names an operation in `config/operations.json`
@@ -102,7 +102,12 @@ snapshot; the feed shows them only as reported-activity items.
   reaches a published file). Tom promotes rows by hand into `config/register/watch.json`; each row's URL must be on a
   host in its `reporter_hosts`, which also extends the leak scan's allowed prefixes. First run, 16 Nov (120 days): 3
   entries, one real (DFRLab, 12 Oct 2026, coordinated inauthentic networks before Armenia's elections), two
-  CheckFirst event posts.
+  CheckFirst event posts. **First row (Tom's "Armenia entry, as proposed", 16 Nov 2026):**
+  `armenia-election-war-fears-2026`, "Inauthentic networks amplifying fears of war before Armenia's elections"
+  (DFRLab's framing, no names), DFRLab B2, first report 2026-10-12, target Armenia only (Azerbaijan is named in the
+  report but not entered as a target), no origin, `checked_by` empty, no tracked operation (so no STIX report: there
+  is no intrusion-set to report on). `reporter_hosts`: `https://dfrlab.org/`. Item `UT-WATCH-c12152a686`, active,
+  marked at Armenia.
 - **Reporters (decision 3):** DFRLab, CheckFirst, CORRECTIV. Not Alliance4Europe (feed still since Sep 2025) or
   Ukraine's CCD (a party to the war). VIGINUM and Canada's RRM only as hand-entered watch rows.
 - **Origin (decision 4):** a reporter lane never adds an origin. A watch row's origin counts only when `checked_by`

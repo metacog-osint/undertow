@@ -5,8 +5,16 @@
     "id": "lower-case slug, stable",
     "operation": "the operation's label as the reporter frames it (no names of individuals)",
     "tracked_operation": "optional: an id in config/operations.json once the operation is tracked there",
-    "reporter": {"name": "the reporter", "grade": "B2 or B3", "terms": "the reporter's terms, read and dated", "source_type": "independent research, newsroom or government"},
-    "first_report": {"date": "YYYY-MM-DD", "url": "the reporter's own page, on a host in reporter_hosts"},
+    "reporter": {
+      "name": "the reporter",
+      "grade": "B2 or B3",
+      "terms": "the reporter's terms, read and dated",
+      "source_type": "independent research, newsroom or government"
+    },
+    "first_report": {
+      "date": "YYYY-MM-DD",
+      "url": "the reporter's own page, on a host in reporter_hosts"
+    },
     "last_report": "optional, same shape",
     "reports": "optional count of reports",
     "countries": "ISO alpha-2 codes of the countries targeted, as the reporter states them",
@@ -18,6 +26,29 @@
     "checked_on": "YYYY-MM-DD",
     "closed_into": "optional: the disclosure key when a platform or government later names the network"
   },
-  "reporter_hosts": [],
-  "rows": []
+  "reporter_hosts": [
+    "https://dfrlab.org/"
+  ],
+  "rows": [
+    {
+      "id": "armenia-election-war-fears-2026",
+      "operation": "Inauthentic networks amplifying fears of war before Armenia's elections",
+      "reporter": {
+        "name": "DFRLab",
+        "grade": "B2",
+        "terms": "Atlantic Council Terms and Conditions of Use, read 16 Nov 2026: noncommercial use with the Council's notices retained; Undertow keeps the label, date and link only",
+        "source_type": "independent research"
+      },
+      "first_report": {
+        "date": "2026-10-12",
+        "url": "https://dfrlab.org/2026/10/12/inauthentic-networks-amplify-fears-of-war-before-armenian-elections/"
+      },
+      "countries": [
+        "AM"
+      ],
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-16",
+      "note": "Promoted from the 16 Nov 2026 triage run. Azerbaijan is named in the report but not entered as a target. No origin entered: Undertow does not read DFRLab's attribution and the row is not checked."
+    }
+  ]
 }
