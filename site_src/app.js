@@ -2,8 +2,8 @@
 (function () {
   "use strict";
 
-  var PUB = { meta: "Meta", google: "Google", openai: "OpenAI", tiktok: "TikTok", eeas: "EEAS" };
-  var ORDER = ["meta", "google", "openai", "tiktok", "eeas"];
+  var PUB = { meta: "Meta", google: "Google", openai: "OpenAI", tiktok: "TikTok", eeas: "EEAS", dfrlab: "DFRLab" };
+  var ORDER = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab"];
   var PAGE = 60;
   var T = window.TicTime;
 
@@ -171,12 +171,12 @@
     var facts = [
       ["Publisher", '<span class="pub pub-' + it.publisher + '">' + esc(PUB[it.publisher]) + "</span>, " + link(it.url, it.disclosure.title) + (it.page ? " (p. " + esc(it.page) + ")" : "")],
       [it.publisher === "meta" ? "Added to Meta's repository" : "Disclosed", esc(it.disclosed_at ? stamp(it.disclosed_at, it.disclosed_precision) : "not dated") + (it.period ? " · period " + esc(it.period) : "")],
-      ["Origin (publisher's judgment)", it.origin.length ? esc(places(it.origin)) + (it.origin_wording ? ' · "' + esc(it.origin_wording) + '"' : "") + ' · stated level: ' + esc(it.origin_level) : "none stated" + (it.alignment.length ? "; aligned with " + esc(places(it.alignment)) : "") + (it.origin_wording ? ' · "' + esc(it.origin_wording) + '"' : "")],
+      ["Origin (publisher's judgment)", it.publisher === "dfrlab" ? "not read: Undertow records only that DFRLab reported on the operation" : it.origin.length ? esc(places(it.origin)) + (it.origin_wording ? ' · "' + esc(it.origin_wording) + '"' : "") + ' · stated level: ' + esc(it.origin_level) : "none stated" + (it.alignment.length ? "; aligned with " + esc(places(it.alignment)) : "") + (it.origin_wording ? ' · "' + esc(it.origin_wording) + '"' : "")],
       ["Operator named", it.orgs.length ? esc(it.orgs.join(", ")) : "none"],
       ["Targets", target ? esc(target) : (it.countries_named.length ? "none stated; countries named in the description: " + esc(places(it.countries_named)) : "none stated")],
       ["Counts", esc(counts(it.counts)) || "none stated"],
       ["Languages", esc((it.languages || []).join(", "))],
-      ["Our confidence in origin", it.confidence ? esc(it.confidence) + (it.corroborated_by.length ? " (also named by " + esc(it.corroborated_by.map(function (p) { return p === "eu-eeas" ? "EEAS" : PUB[p] || p; }).join(", ")) + ")" : " (one publisher)") : "none (no origin stated)"],
+      ["Our confidence in origin", it.confidence ? esc(it.confidence) + (it.corroborated_by.length ? " (also named by " + esc(it.corroborated_by.map(function (p) { return p === "eu-eeas" ? "EEAS" : PUB[p] || p; }).join(", ")) + ")" : " (one publisher)") : it.publisher === "dfrlab" ? "none (corroborates that the operation was reported, not its origin)" : "none (no origin stated)"],
       ["DISARM", (it.disarm || []).map(function (d) { return esc(d.id + " " + d.name) + (d.phrase ? ' (rule ' + esc(d.rule) + ': "' + esc(d.phrase) + '")' : " (rule " + esc(d.rule) + ")"); }).join("; ") || "no rule matched"]
     ].filter(function (f) { return f[1]; });
     var body = "<p>" + esc(it.summary) + "</p>" +
@@ -221,7 +221,7 @@
     document.getElementById("rules").innerHTML = "<thead><tr><th scope=\"col\">Rule</th><th scope=\"col\">Technique</th><th scope=\"col\">Reads</th><th scope=\"col\">Items</th></tr></thead><tbody>" +
       S.rules.map(function (r) { return "<tr><td>" + esc(r.id) + "</td><td>" + esc(r.technique) + "</td><td>" + esc(r.about) + "</td><td>" + (used[r.id] || 0) + "</td></tr>"; }).join("") + "</tbody>";
     var labels = { meta: "Meta threat-research repository", google: "Google Influence Operations Bulletin", openai: "OpenAI news RSS",
-      tiktok: "TikTok via the EU Code of Conduct Transparency Centre", eeas: "EEAS FIMI report (register) and FIMI page" };
+      tiktok: "TikTok via the EU Code of Conduct Transparency Centre", eeas: "EEAS FIMI report (register) and FIMI page", dfrlab: "DFRLab RSS feed (corroboration)" };
     document.getElementById("lanes").innerHTML = ORDER.map(function (k) {
       var l = (S.lanes || {})[k] || {}, ok = l.status === "ok";
       var note = ok ? "collected " + when(l.fetched_at) + ", " + (l.items || 0) + " items" : (l.from_previous && l.fetched_at ? "failed; showing the copy from " + when(l.fetched_at) : "failed; no data");
@@ -232,6 +232,7 @@
       }
       if (k === "tiktok" && ex.reports) { note += ". Reports read: " + ex.reports.map(function (r) { return r.name + " (" + r.networks + " networks)"; }).join(", "); }
       if (k === "eeas" && ex.page) { note += ". 4th report still listed: " + (ex.page.listed ? "yes" : "no") + (ex.page.newer_report ? "; a newer report (" + ex.page.newer_report + "th) is listed: its register needs extracting" : "; no newer report listed"); }
+      if (k === "dfrlab" && ex.items_read) { note += ". " + ex.items_read + " feed items read this run (" + ex.pages_read + " pages); only articles naming a tracked operation are kept"; }
       if (k === "openai" && ex.roundups) { note += ". " + ex.roundups.length + " report round-ups kept as disclosures, not operations"; }
       return '<p class="small"><strong>' + esc(labels[k]) + '</strong> <span class="badge' + (ok ? "" : " badge-warn") + '">' + (ok ? "current" : "not current") + "</span><br>" + esc(note) + "</p>";
     }).join("");

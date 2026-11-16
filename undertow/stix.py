@@ -96,7 +96,7 @@ def build_bundle(records: list[dict], generated: str) -> dict:
                                         {"source_name": "undertow", "external_id": item_id(r["key"]),
                                          "url": f"https://undertow.theintelligence.company/#{item_id(r['key'])}"}],
                 "object_marking_refs": marks,
-                "x_tic_source_grade": "A2", "x_tic_status_class": "reported",
+                "x_tic_source_grade": SOURCES[lane].get("grade", "A2"), "x_tic_status_class": "reported",
                 "x_tic_attribution_wording": r.get("origin_wording"),
                 "x_tic_origin_level_stated": r.get("origin_level"),
                 "x_tic_alignment": r.get("alignment") or [],

@@ -1,7 +1,8 @@
 """Build Undertow's contract-v2 feed (tic-feed/2, GeoJSON) from the collected records.
 
 One item per disclosed network or operation: kind "observation", tier "routine", status_class "reported". Each is
-a publisher's report of its own enforcement action (source grade A2). Undertow states no probability. Geometry
+a publisher's report of its own enforcement action (source grade A2), except DFRLab's items: an independent
+lab's report on an operation another publisher named (grade B2). Undertow states no probability. Geometry
 is on the target countries the publisher names (Google and OpenAI name none: there it is the countries named in
 the stance or summary, marked as such), or null with a link to the page.
 """
@@ -46,9 +47,17 @@ SOURCES = {
              "source_type": "official report",
              "descriptor": "The EEAS annual report on foreign information manipulation and interference threats; the "
                            "Information Manipulation Sets it names, entered once by hand with page numbers."},
+    "dfrlab": {"id": "dfrlab-rss", "publisher": "DFRLab (Atlantic Council)", "grade": "B2",
+               "licence": ("Atlantic Council (DFRLab): noncommercial use with credit; operation names, dates and links "
+                           "only, no DFRLab text republished"),
+               "independence_group": "dfrlab", "source_type": "independent research",
+               "descriptor": "An investigation by the Atlantic Council's Digital Forensic Research Lab that names an "
+                             "operation another publisher disclosed. Independent research, not an enforcement action; "
+                             "Undertow does not read its attribution."},
 }
 REQUIREMENT = {"meta": ["UT-PIR-1", "UT-PIR-2"], "google": ["UT-PIR-1"], "openai": ["UT-PIR-1", "UT-PIR-3"],
-               "tiktok": ["UT-PIR-1", "UT-PIR-2"], "eeas": ["UT-PIR-1", "UT-PIR-2", "UT-PIR-3"]}
+               "tiktok": ["UT-PIR-1", "UT-PIR-2"], "eeas": ["UT-PIR-1", "UT-PIR-2", "UT-PIR-3"],
+               "dfrlab": ["UT-PIR-1"]}
 
 
 def item_id(key: str) -> str:
@@ -86,6 +95,17 @@ def _counts_text(c: dict) -> str:
 def summary(r: dict) -> str:
     pub = SOURCES[r["publisher"]]["publisher"].split(",")[0]
     bits = []
+    if r["publisher"] == "dfrlab":
+        ops = r["title"].removeprefix("DFRLab reports on ")
+        bits.append(f"The Atlantic Council's Digital Forensic Research Lab (DFRLab) published an investigation naming "
+                    f"{ops} on {r['disclosed_at'][:10]}. DFRLab is an independent lab, not the platform that acted.")
+        if r.get("countries_named") or r.get("target_regions"):
+            bits.append("Countries and regions named in DFRLab's description: "
+                        + ", ".join(_names(r.get("countries_named") or []) + (r.get("target_regions") or [])) + ".")
+        bits.append("Undertow records only that DFRLab reported on the operation: it does not read DFRLab's "
+                    "attribution, so this item adds no origin and no confidence. A country named is not an origin, and "
+                    "an origin is never a finding of who directed it.")
+        return " ".join(bits)
     if r["publisher"] == "eeas":
         bits.append(f"The EEAS names {r['operation_name']} among the Information Manipulation Sets active in 2025 "
                     f"(report p. {r.get('page')}).")
@@ -127,7 +147,8 @@ def actors(r: dict, sid: str) -> list[dict]:
 
 def feature(r: dict, generated: str) -> dict:
     src = dict(SOURCES[r["publisher"]])
-    src.update({"title": r["disclosure"]["title"], "url": r["url"], "grade": "A2", "accessed_at": generated})
+    src.setdefault("grade", "A2")
+    src.update({"title": r["disclosure"]["title"], "url": r["url"], "accessed_at": generated})
     if r.get("disclosed_at"):
         src["published_at"] = r["disclosed_at"]
     sid = src["id"]
@@ -248,11 +269,12 @@ def build_feed(records: list[dict], generated: str, health_record: dict | None =
         "method_version": METHOD,
         "licence": ("Undertow's own text: CC BY 4.0 (The Intelligence Company). Each item keeps its source's terms: "
                     "Meta MIT; Google facts and counts only; OpenAI RSS quoted with credit; TikTok via the EU Code of "
-                    "Conduct Transparency Centre; EEAS reuse with acknowledgement. DISARM technique names CC BY-SA 4.0 "
+                    "Conduct Transparency Centre; EEAS reuse with acknowledgement; DFRLab (Atlantic Council) names, dates and links "
+                    "only, noncommercial, with credit. DISARM technique names CC BY-SA 4.0 "
                     "(DISARM Foundation)."),
         "attribution": ("Undertow, The Intelligence Company. Sources: Meta threat-research repository; Google Influence "
                         "Operations Bulletin; OpenAI news RSS; TikTok's reports to the EU Code of Conduct on "
-                        "Disinformation; EEAS 4th report on FIMI threats. DISARM Framework v1.6.1, DISARM Foundation, "
+                        "Disinformation; EEAS 4th report on FIMI threats; Atlantic Council's Digital Forensic Research Lab (DFRLab). DISARM Framework v1.6.1, DISARM Foundation, "
                         "CC BY-SA 4.0."),
         "language_key": LANGUAGE_KEY,
         "note": ("Operation level only: no indicator values, account handles, URLs, domains or names of individuals. "

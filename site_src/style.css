@@ -21,6 +21,7 @@
   --p-openai: #0f766e;
   --p-tiktok: #a21caf;
   --p-eeas: #1e40af;
+  --p-dfrlab: #4d7c0f;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -42,6 +43,7 @@
     --p-openai: #5eead4;
     --p-tiktok: #f0abfc;
     --p-eeas: #93c5fd;
+    --p-dfrlab: #bef264;
   }
   .tic-time-dialog .tic-time-actions .tic-time-done { color: #0c1114; }
 }
@@ -76,7 +78,7 @@ body {
 .badge-warn { background: var(--warn-bg); color: var(--warn); }
 .pub { font-weight: 600; white-space: nowrap; }
 .pub-meta { color: var(--p-meta); } .pub-google { color: var(--p-google); } .pub-openai { color: var(--p-openai); }
-.pub-tiktok { color: var(--p-tiktok); } .pub-eeas { color: var(--p-eeas); }
+.pub-tiktok { color: var(--p-tiktok); } .pub-eeas { color: var(--p-eeas); } .pub-dfrlab { color: var(--p-dfrlab); }
 .foot { padding: 24px 0; border-top: 1px solid var(--border); margin-top: 24px; }
 main a { color: var(--link); text-decoration: none; }
 main a:hover, main a:focus { text-decoration: underline; }
@@ -96,6 +98,7 @@ table.matrix td.c5 { background: rgba(var(--cell), 0.85); color: var(--panel); f
 .dot-meta { fill: var(--p-meta); stroke: var(--p-meta); } .dot-google { fill: var(--p-google); stroke: var(--p-google); }
 .dot-openai { fill: var(--p-openai); stroke: var(--p-openai); } .dot-tiktok { fill: var(--p-tiktok); stroke: var(--p-tiktok); }
 .dot-eeas { fill: var(--p-eeas); stroke: var(--p-eeas); }
+.dot-dfrlab { fill: var(--p-dfrlab); stroke: var(--p-dfrlab); }
 .timeline svg { width: 100%; height: auto; display: block; }
 .timeline .axis { stroke: var(--border); }
 .timeline text { fill: var(--muted); font-size: 11px; }

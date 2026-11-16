@@ -1,6 +1,7 @@
 """Record test fixtures from the raw copies a live `collect` kept in data/raw/ (real replies, not made up).
 
-    python tests/make_fixtures.py
+    python tests/make_fixtures.py                 # every lane
+    python tests/make_fixtures.py --only dfrlab   # one lane; the other fixtures and their manifest entries stay
 
 Large replies are cut to the parts the parsers read, and the cut is stated in tests/fixtures/MANIFEST.json with
 the URL, the fetch time and the SHA-256 of the full reply. The Meta network files are kept whole, indicator tables
@@ -37,6 +38,20 @@ def raw_bytes(rec: dict) -> bytes:
     raise FileNotFoundError(rec["url"])
 
 
+def dfrlab_fixtures(idx, save) -> None:
+    """DFRLab: every feed page the last collect read, cut to title, link, pubDate, category and description (no
+    dc:creator, no content:encoded)."""
+    from undertow import dfrlab
+    n = 1
+    while dfrlab.page_url(n) in idx:
+        body = raw_bytes(idx[dfrlab.page_url(n)]).decode("utf-8")
+        body = re.sub(r"\s*<dc:creator>.*?</dc:creator>", "", body, flags=re.S)
+        body = re.sub(r"\s*<content:encoded>.*?</content:encoded>", "", body, flags=re.S)
+        save(f"dfrlab_feed_{n:02d}.xml", dfrlab.page_url(n), body.encode("utf-8"),
+             "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)")
+        n += 1
+
+
 def main() -> int:
     sys.path.insert(0, str(ROOT))
     from undertow import eeas, google, meta, openai_rss, tiktok
@@ -44,12 +59,24 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {"note": "Real replies recorded from the live collect of 14 Nov 2026 (data/raw), cut where stated.",
                 "files": {}}
+    only = sys.argv[sys.argv.index("--only") + 1:] if "--only" in sys.argv else None
 
     def save(name, url, body: bytes, cut: str | None = None):
         (OUT / name).write_bytes(body)
         rec = idx[url]
         manifest["files"][name] = {"url": url, "fetched_at": rec["fetched_at"], "sha256_full": rec["sha256"],
                                    "bytes_full": rec["bytes"], "cut": cut}
+
+    if only:
+        manifest = json.loads((OUT / "MANIFEST.json").read_text(encoding="utf-8"))
+        if "dfrlab" in only:
+            for name in [k for k in manifest["files"] if k.startswith("dfrlab_")]:
+                del manifest["files"][name]
+                (OUT / name).unlink(missing_ok=True)
+            dfrlab_fixtures(idx, save)
+        (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
+        print(f"updated {only}; {len(manifest['files'])} fixtures in {OUT}")
+        return 0
 
     # Meta: README whole, every network file the README lists, whole; commits cut to message and date.
     save("meta_readme.md", meta.README_URL, raw_bytes(idx[meta.README_URL]))
@@ -99,6 +126,7 @@ def main() -> int:
 
     # EEAS: the FIMI page whole.
     save("eeas_fimi_page.html", eeas.FIMI_PAGE, raw_bytes(idx[eeas.FIMI_PAGE]))
+    dfrlab_fixtures(idx, save)
 
     (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {len(manifest['files'])} fixtures to {OUT}")

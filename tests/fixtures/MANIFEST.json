@@ -217,6 +217,174 @@
       "sha256_full": "69c58a07a9ae840a7fbb39d46ebd2cb05911b7bdd69eeecb6c6c6e3cc04d4e7b",
       "bytes_full": 170832,
       "cut": null
+    },
+    "dfrlab_feed_01.xml": {
+      "url": "https://dfrlab.org/feed/",
+      "fetched_at": "2026-11-16T02:38:03Z",
+      "sha256_full": "fada1fd7a56f94d368ff46965715d22806faf160df58f7f5ca34ca9fd3ab8e70",
+      "bytes_full": 19598,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_02.xml": {
+      "url": "https://dfrlab.org/feed/?paged=2",
+      "fetched_at": "2026-11-16T02:38:05Z",
+      "sha256_full": "0f4a2339dbbdbfabb1715c31d14eddc4f23faf105fc35061630101eafe9d81f2",
+      "bytes_full": 19910,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_03.xml": {
+      "url": "https://dfrlab.org/feed/?paged=3",
+      "fetched_at": "2026-11-16T02:38:08Z",
+      "sha256_full": "41afed8bd94d0a5c545aaf8251cabfac084f4a97c570237d6226a4bd6e69c0c2",
+      "bytes_full": 19138,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_04.xml": {
+      "url": "https://dfrlab.org/feed/?paged=4",
+      "fetched_at": "2026-11-16T02:38:10Z",
+      "sha256_full": "8185f01a281831869d425d10b16f9fc3b728dcd04589051794f5e94c5c3d813e",
+      "bytes_full": 18851,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_05.xml": {
+      "url": "https://dfrlab.org/feed/?paged=5",
+      "fetched_at": "2026-11-16T02:38:12Z",
+      "sha256_full": "fb1f064cc195ca1f75a0eb366420e46014658e67f933c874965faf7f6afa2b1f",
+      "bytes_full": 19608,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_06.xml": {
+      "url": "https://dfrlab.org/feed/?paged=6",
+      "fetched_at": "2026-11-16T02:38:14Z",
+      "sha256_full": "a021f142a4203543f8db8341bcb76966ce8b17597dddcb49237e9d04d80435c3",
+      "bytes_full": 18046,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_07.xml": {
+      "url": "https://dfrlab.org/feed/?paged=7",
+      "fetched_at": "2026-11-16T02:38:16Z",
+      "sha256_full": "65322187126fdef10a3e95d7e521d82575088ad4460ff0821c92eac54be91bae",
+      "bytes_full": 20033,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_08.xml": {
+      "url": "https://dfrlab.org/feed/?paged=8",
+      "fetched_at": "2026-11-16T02:38:18Z",
+      "sha256_full": "61e9f1e7390a787d434fcfed0e808c173295102aa2b97113c5e1ccc1ebff0372",
+      "bytes_full": 20090,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_09.xml": {
+      "url": "https://dfrlab.org/feed/?paged=9",
+      "fetched_at": "2026-11-16T02:38:20Z",
+      "sha256_full": "48c1104c5943baba3af812a68692242573067f6ba59ac70a9d1037c6ba9f13c2",
+      "bytes_full": 16936,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_10.xml": {
+      "url": "https://dfrlab.org/feed/?paged=10",
+      "fetched_at": "2026-11-16T02:38:23Z",
+      "sha256_full": "ce177e7802891b0bd0187ee0af10b71172298ae068ce661587938601638142ce",
+      "bytes_full": 15412,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_11.xml": {
+      "url": "https://dfrlab.org/feed/?paged=11",
+      "fetched_at": "2026-11-16T02:38:25Z",
+      "sha256_full": "8fd47a0ab0126b7cb8103b4110d02801348654485c4b4798859760be3e85b6c5",
+      "bytes_full": 17169,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_12.xml": {
+      "url": "https://dfrlab.org/feed/?paged=12",
+      "fetched_at": "2026-11-16T02:38:27Z",
+      "sha256_full": "266eab5650cd8484664937d397e05681d81f809ec3bf8d64188f2c8cc79e19d2",
+      "bytes_full": 17829,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_13.xml": {
+      "url": "https://dfrlab.org/feed/?paged=13",
+      "fetched_at": "2026-11-16T02:38:29Z",
+      "sha256_full": "b5d7888e21a97340be8e36a170356419bb2f9eef2fc58eda5381141a61fafa45",
+      "bytes_full": 18337,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_14.xml": {
+      "url": "https://dfrlab.org/feed/?paged=14",
+      "fetched_at": "2026-11-16T02:38:31Z",
+      "sha256_full": "a94caeadd558b582982c2cccb5b8d5d68ebb5fbb49b2ca0afd108220b0b082f1",
+      "bytes_full": 16885,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_15.xml": {
+      "url": "https://dfrlab.org/feed/?paged=15",
+      "fetched_at": "2026-11-16T02:38:33Z",
+      "sha256_full": "9317567af0af915e5baa583a9215392dad7a6260c7e713047070667c6691a73c",
+      "bytes_full": 17067,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_16.xml": {
+      "url": "https://dfrlab.org/feed/?paged=16",
+      "fetched_at": "2026-11-16T02:38:35Z",
+      "sha256_full": "d8b2c5c66a2551c83c532a78c1a68b4473d2ff34a119bad90a17e200f1523626",
+      "bytes_full": 17750,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_17.xml": {
+      "url": "https://dfrlab.org/feed/?paged=17",
+      "fetched_at": "2026-11-16T02:38:38Z",
+      "sha256_full": "2c71a6b5622a7c0f4bb4db03345e4ab0066f3ea3093e158772b7dd0fdc8606c1",
+      "bytes_full": 16029,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_18.xml": {
+      "url": "https://dfrlab.org/feed/?paged=18",
+      "fetched_at": "2026-11-16T02:38:40Z",
+      "sha256_full": "3a0142aa39af4c5462f5b9dd4c0a3b90d5a34ded19886d31645bf3adcd56846f",
+      "bytes_full": 16977,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_19.xml": {
+      "url": "https://dfrlab.org/feed/?paged=19",
+      "fetched_at": "2026-11-16T02:38:42Z",
+      "sha256_full": "30fda274c1ee34819f0f5cb64de70fa0699878d70c59621634807cedf8e3b3aa",
+      "bytes_full": 18277,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_20.xml": {
+      "url": "https://dfrlab.org/feed/?paged=20",
+      "fetched_at": "2026-11-16T02:38:44Z",
+      "sha256_full": "2598d2c5a391146636e58d1bda4499f6063a0bf6ae83c2e0820646f461c6e65f",
+      "bytes_full": 18874,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_21.xml": {
+      "url": "https://dfrlab.org/feed/?paged=21",
+      "fetched_at": "2026-11-16T02:38:46Z",
+      "sha256_full": "b470c9343cc30045ce5b709face1a7ed9cbf6701f427e63bea40a5595fbb9c78",
+      "bytes_full": 18275,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_22.xml": {
+      "url": "https://dfrlab.org/feed/?paged=22",
+      "fetched_at": "2026-11-16T02:38:49Z",
+      "sha256_full": "cb3b686b8300822b1e0e46320510abac25c2e675de768be0cb4ce8584855381f",
+      "bytes_full": 17634,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_23.xml": {
+      "url": "https://dfrlab.org/feed/?paged=23",
+      "fetched_at": "2026-11-16T02:38:51Z",
+      "sha256_full": "cd3ad098edd03b91d510b1cb6dd17c484c7dc645901dc1698dfb8cab52634954",
+      "bytes_full": 18484,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "dfrlab_feed_24.xml": {
+      "url": "https://dfrlab.org/feed/?paged=24",
+      "fetched_at": "2026-11-16T02:38:53Z",
+      "sha256_full": "949038260eed3e6cfae8718098a7b771045f7d3cde8a74af3327e9c74ddd9072",
+      "bytes_full": 19499,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
     }
   }
 }

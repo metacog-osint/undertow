@@ -28,7 +28,7 @@ _spec = importlib.util.spec_from_file_location("undertow_cli", ROOT / "tools" / 
 cli = importlib.util.module_from_spec(_spec)   # tools/undertow.py (its name clashes with the package)
 _spec.loader.exec_module(cli)
 
-from undertow import analysis, disarm, eeas, feed, google, meta, openai_rss, stix, text, tiktok  # noqa: E402
+from undertow import analysis, dfrlab, disarm, eeas, feed, google, meta, openai_rss, stix, text, tiktok  # noqa: E402
 from tic_doctrine import contract, history, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
 
@@ -87,6 +87,7 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(counts["tiktok"], 25)
         self.assertGreater(counts["google"], 240)     # Q2 158 + Q3 93 recorded; Q1 not recorded
         self.assertGreater(counts["openai"], 20)
+        self.assertEqual(counts["dfrlab"], 15)
 
     def test_health_keyed_by_item_source_ids(self):
         h = self.feed["health"]
@@ -238,11 +239,55 @@ class Pipeline(unittest.TestCase):
     def test_doppelganger_corroborated_moderate(self):
         dop = [f["properties"] for f in self.feed["features"] if "doppelganger" in f["properties"]["operation"]["named_operations"]]
         pubs = {p["operation"]["publisher"] for p in dop}
-        self.assertEqual(pubs, {"meta", "openai", "eeas"})
-        self.assertTrue(all(p["confidence"] == "moderate" for p in dop))
+        self.assertEqual(pubs, {"meta", "openai", "eeas", "dfrlab"})
+        self.assertTrue(all(p["confidence"] == "moderate" for p in dop if p["operation"]["publisher"] != "dfrlab"))
+        self.assertTrue(all("confidence" not in p for p in dop if p["operation"]["publisher"] == "dfrlab"))
         eeas_dop = next(p for p in dop if p["operation"]["publisher"] == "eeas")
         self.assertEqual(eeas_dop["us_person_data"], "organizations")
         self.assertIn("Social Design Agency", eeas_dop["operation"]["sponsor"])
+
+    def test_dfrlab_keeps_only_tracked_operations_and_no_dfrlab_text(self):
+        """DFRLab items name a tracked operation; DFRLab's own titles and descriptions (which name individuals) and
+        its authors never reach a published file, and no article page is ever fetched."""
+        names = {o["name"] for o in text.operations()}
+        items = [f["properties"] for f in self.feed["features"] if f["properties"]["operation"]["publisher"] == "dfrlab"]
+        self.assertEqual(len(items), 15)
+        texts = []
+        for n in range(1, 40):
+            fx = FIX / f"dfrlab_feed_{n:02d}.xml"
+            if fx.exists():
+                for it in dfrlab.parse_page(fx.read_bytes()):
+                    texts += [it["title"], it["description"]]
+        texts = [s for s in texts if len(s) > 25]
+        blob = "\n".join(self.files.values())
+        for p in items:
+            self.assertTrue(p["operation"]["named_operations"], p["id"])
+            ops = p["title"].removeprefix("DFRLab reports on ").split(", ")
+            self.assertTrue(set(ops) <= names, p["title"])
+            self.assertEqual(p["sources"][0]["grade"], "B2")
+            self.assertEqual(p["operation"]["origin"], [])
+            self.assertEqual(p["sources"][0]["url"].split("/")[2], "dfrlab.org")
+        for s in texts:
+            self.assertNotIn(s, blob)
+        for name in ["Sandu", "Zelenskyy", "Navalny", "Biden"]:
+            self.assertFalse(any(name in json.dumps(p) for p in items), name)
+        dfr_urls = [u for u in FETCHED if "dfrlab.org" in u]
+        self.assertTrue(dfr_urls)
+        self.assertTrue(all(u.startswith(dfrlab.FEED_URL) for u in dfr_urls), dfr_urls)
+
+    def test_dfrlab_corroborates_but_never_raises_confidence(self):
+        recs = cli.all_records(self.snap)
+        with_d = {r["key"]: (r.get("confidence") or {}).get("confidence") for r in recs if r["publisher"] != "dfrlab"}
+        without = [r for r in recs if r["publisher"] != "dfrlab"]
+        for r in without:
+            r.pop("confidence", None)
+        analysis.assess(without)
+        self.assertEqual(with_d, {r["key"]: (r.get("confidence") or {}).get("confidence") for r in without})
+        storm = next(f["properties"] for f in self.feed["features"] if f["properties"]["operation"]["key"] == "eeas:fimi-4:storm-1516")
+        self.assertIn("dfrlab", storm["operation"]["corroborated_by"])
+        camp = [o for o in self.stix["objects"] if o["type"] == "campaign" and o["name"].startswith("DFRLab reports on")]
+        self.assertEqual(len(camp), 15)
+        self.assertTrue(all(o["x_tic_source_grade"] == "B2" for o in camp))
 
     def test_events_dates_only(self):
         evs = self.events["events"]
@@ -282,7 +327,7 @@ class HealthAndHistory(unittest.TestCase):
         self.assertEqual(e["state"], "failing")   # excluded by state, even if both runs fell in the same second
         self.assertIn("503", e["last_error"])
         self.assertNotIn("meta-threat-research", history.lanes_ok(self.feed2["health"]))
-        self.assertEqual(len(history.lanes_ok(self.feed2["health"])), 4)
+        self.assertEqual(len(history.lanes_ok(self.feed2["health"])), len(cli.LANES) - 1)
 
     def _run(self, feed2):
         t1 = datetime(2026, 11, 16, 2, 30, tzinfo=timezone.utc)
@@ -308,6 +353,28 @@ class HealthAndHistory(unittest.TestCase):
 
 
 class Lanes(unittest.TestCase):
+    def test_dfrlab_reads_until_it_reaches_what_it_read_before(self):
+        pages = {n: (FIX / f"dfrlab_feed_{n:02d}.xml") for n in range(1, 40) if (FIX / f"dfrlab_feed_{n:02d}.xml").exists()}
+        read = []
+
+        def fetch_page(n):
+            read.append(n)
+            return pages[n].read_bytes() if n in pages else None
+        recs, extra, n = dfrlab.read(fetch_page, None, pause=0)
+        self.assertEqual(extra["backfilled_to"], dfrlab.SINCE)
+        self.assertLess(extra["oldest_read"], dfrlab.SINCE)
+        self.assertEqual(len(recs), 15)
+        read.clear()
+        recs2, extra2, n2 = dfrlab.read(fetch_page, extra, pause=0)
+        self.assertLessEqual(n2, 2)                       # incremental: back to 30 days before the newest item
+        self.assertEqual(len(dfrlab.merge(recs2, recs)), 15)
+        read.clear()
+        dfrlab.read(fetch_page, dict(extra, ops_fingerprint="changed"), pause=0)
+        self.assertEqual(len(read), n)                    # a new alias reads the whole feed again
+        self.assertIsNone(dfrlab.build_record({"title": "A study of coordinated networks", "description": "",
+                                               "categories": [], "published": "2026-10-01T10:00:00Z",
+                                               "link": "https://dfrlab.org/2026/10/01/x/"}))
+
     def test_meta_counts_and_indicator_count(self):
         net = meta.parse_network((FIX / "meta_meta-h2-2026-iran-cib-based-network.md").read_text(encoding="utf-8"))
         self.assertEqual(net["counts"], {"facebook_accounts": 4, "instagram_accounts": 31})

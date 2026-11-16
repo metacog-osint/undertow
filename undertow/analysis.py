@@ -21,7 +21,8 @@ sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 from tic_doctrine import confidence  # noqa: E402
 
 GRADE = "A2"
-PUBLISHER_GROUP = {"meta": "meta", "google": "google", "openai": "openai", "tiktok": "tiktok", "eeas": "eu-eeas"}
+PUBLISHER_GROUP = {"meta": "meta", "google": "google", "openai": "openai", "tiktok": "tiktok", "eeas": "eu-eeas",
+                   "dfrlab": "dfrlab"}
 
 
 def corroboration(records: list[dict]) -> dict[str, dict]:

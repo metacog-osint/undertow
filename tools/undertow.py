@@ -23,11 +23,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 
-from undertow import analysis, disarm, eeas, feed, fetch, google, meta, openai_rss, stix, tiktok  # noqa: E402
+from undertow import analysis, dfrlab, disarm, eeas, feed, fetch, google, meta, openai_rss, stix, tiktok  # noqa: E402
 from tic_doctrine import contract, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
 
-LANES = ["meta", "google", "openai", "tiktok", "eeas"]
+LANES = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab"]
 
 
 def _github_headers() -> dict:
@@ -149,7 +149,27 @@ def _lane_eeas(raw_dir, prev, getter):
                                           "report": regs[-1]["report"]}}, [rec]
 
 
-LANE_FN = {"meta": _lane_meta, "google": _lane_google, "openai": _lane_openai, "tiktok": _lane_tiktok, "eeas": _lane_eeas}
+def _lane_dfrlab(raw_dir, prev, getter):
+    recs = []
+
+    def page(n):
+        try:
+            b, rr = fetch.fetch("dfrlab-rss", dfrlab.page_url(n), raw_dir, "xml", getter=getter)
+        except Exception as exc:
+            if n > 1 and dfrlab.is_end(exc):
+                return None
+            raise
+        recs.append(rr)
+        return b
+
+    pause = 0 if getter is not None else dfrlab.PAUSE_S
+    new, extra, _ = dfrlab.read(page, (prev.get("extra") or {}).get("dfrlab"), pause=pause)
+    records = dfrlab.merge(new, (prev.get("records") or {}).get("dfrlab"))
+    return {"records": records, "extra": extra}, recs
+
+
+LANE_FN = {"meta": _lane_meta, "google": _lane_google, "openai": _lane_openai, "tiktok": _lane_tiktok, "eeas": _lane_eeas,
+           "dfrlab": _lane_dfrlab}
 
 
 def collect(root: Path = ROOT, getter=None, only: list[str] | None = None) -> dict:
@@ -168,7 +188,7 @@ def collect(root: Path = ROOT, getter=None, only: list[str] | None = None) -> di
             snap["lanes"][lane] = {**prev_lane, "from_previous": True} if prev_lane else {"status": "not run"}
             continue
         try:
-            result, recs = LANE_FN[lane](raw_dir, {"extra": prev.get("extra") or {}}, getter)
+            result, recs = LANE_FN[lane](raw_dir, {"extra": prev.get("extra") or {}, "records": prev.get("records") or {}}, getter)
             snap["records"][lane] = result["records"]
             snap["extra"][lane] = result["extra"]
             snap["lanes"][lane] = {"status": "ok", "fetched_at": now, "from_previous": False, "items": len(result["records"]),
@@ -280,7 +300,7 @@ ALLOWED_URL_PREFIXES = (
     "https://www.eeas.europa.eu/", "https://undertow.theintelligence.company", "https://theintelligence.company",
     "https://github.com/DISARMFoundation/", "https://raw.githubusercontent.com/DISARMFoundation/",
     "https://docs.oasis-open.org/", "https://github.com/metacog-osint/tic-doctrine", "https://creativecommons.org/",
-    "https://www.disarm.foundation/", "https://disarm.foundation/",
+    "https://www.disarm.foundation/", "https://disarm.foundation/", "https://dfrlab.org/",
 )
 URL_IN_TEXT = re.compile(r"https?://[^\s\"'<>)\]]+")
 LEAK_PATTERNS = [(re.compile(r"\[\.\]"), "a defanged value"), (re.compile(r"(?<![\w@])@[A-Za-z0-9_]{3,}(?![\w.])"), "an @handle"),

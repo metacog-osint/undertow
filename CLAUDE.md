@@ -49,7 +49,7 @@ python tools/undertow.py collect               # fetch every live lane into data
 python tools/undertow.py collect --only meta   # one or more lanes; the rest keep their last copy
 python tools/undertow.py build                 # build site/ from data/snapshot.json
 python tools/undertow.py check                 # registers, feed linter, STIX check, leak scan
-python -m unittest discover -s tests           # 36 offline tests on recorded real replies
+python -m unittest discover -s tests           # 39 offline tests on recorded real replies
 python tests/make_fixtures.py                  # re-record fixtures from the raw copies of the last collect
 python tools/serve.py                          # site/ on http://127.0.0.1:8781 with _headers (CSP); launch entry `undertow-site`
 python doctrine/kit/tic.py lint site/data/feed.geojson --doctrine doctrine
@@ -59,7 +59,7 @@ python doctrine/kit/tic.py kitcheck            # the vendored kit is intact
 `collect` never falls back to made-up data. A lane that fails keeps its last good copy (`from_previous`) or stays
 empty, and `lanes` in the snapshot says which. Standard library only (Python 3.12+).
 
-## Lanes (first collect 14 Nov 2026; 15 Nov: 425 items)
+## Lanes (first collect 14 Nov 2026; 16 Nov: 440 items, 425 plus DFRLab's 15)
 
 | Lane | Module | Source and how it is read | Items |
 |---|---|---|---|
@@ -68,6 +68,7 @@ empty, and `lanes` in the snapshot says which. Standard library only (Python 3.1
 | `openai` | `openai_rss.py` | `openai.com/news/rss.xml` ONLY. `fetch_allowed()` refuses any other openai.com URL, and a test holds it. An item is an operation when its title or summary says "influence" (not Global Affairs); round-ups are disclosures. Kept: operation name, origin wording, the one-line summary (scrubbed, quoted with credit). Since 1 Jan 2024 | 27 operations, 6 round-ups |
 | `tiktok` | `tiktok.py` | EU Code of Conduct Transparency Centre JSON, `disinfocode.eu/reports/tiktok/<n>/json`: reports 8 (Jul-Dec 2025) and 9 (Jan-Jun 2026), probing two numbers ahead. NEVER tiktok.com. Networks come from Commitment 14 TTP 6, the crisis chapter and the elections chapter, merged on (origin, accounts, followers). TikTok's description is quoted with credit | 25 (report 8: 8, report 9: 17) |
 | `eeas` | `eeas.py` | `config/register/eeas-fimi-4.json`: the nine Information Manipulation Sets of the 4th EEAS FIMI report (12 Mar 2026), entered once from the PDF (sha256 recorded), each row and quote cited to its printed page. Each run reads the EEAS FIMI page to confirm the report is listed and to notice a 5th | 9 |
+| `dfrlab` | `dfrlab.py` | Corroboration and link-out (16 Nov 2026, Tom's "complete remaining open items"). `dfrlab.org/feed/` RSS pages (`?paged=N`, ten items a page, 2 s apart), never an article page. Kept only when the title or one-line description names an operation in `config/operations.json` (case-sensitive, as every lane); then the operations, time, link, countries named and platforms from a fixed list. **Never kept:** DFRLab's title or description (they name individuals: Sandu, Zelenskyy, Navalny, Trump), `dc:creator`, author categories, attribution. Grade B2, `source_type` "independent research", origin "not read": DFRLab joins an operation's `corroborated_by` but adds no origin line, so it never changes a confidence level (a test holds this). First run reads back to 2024-01-01 (24 pages); later runs stop 30 days before the newest item read last time and merge with the kept records; a change to the operations' names or aliases (`ops_fingerprint`) reads the whole feed again | 15 (2024-03 to 2026-09: Doppelganger 6, Portal Kombat 4, Storm-1516 2, Spamouflage 2, Operation Overload 1) |
 
 Outputs in `site/data/`:
 - `feed.geojson`: 425 items, 1.9 MB, linter PASS.
@@ -202,3 +203,9 @@ fails keeps its last good records, which lack the field until the lane next succ
   tiktok.com is never read (its terms bar automated extraction). TikTok's descriptions are quoted with credit.
 - EEAS: reuse is authorised provided the source is acknowledged (legal notice, as recorded in the plan).
 - DISARM v1.6.1: CC BY-SA 4.0 (LICENSE.md and the bundle marking; the README's CC-BY-4.0 line is the outlier).
+- DFRLab (read 16 Nov 2026): Atlantic Council Terms and Conditions of Use (dfrlab.org/terms-of-use/ is a 404; the
+  site is the Council's). Copies for noncommercial use with the Council's notices; automated access no faster than a
+  person; no harvesting of personal information. robots.txt: empty `Disallow:`. Undertow keeps names, dates and
+  links only and credits "Atlantic Council's Digital Forensic Research Lab".
+- `config/operations.json` gained the alias "Pravda Network" (DFRLab's capitalisation of "Pravda network") for
+  Portal Kombat, 16 Nov 2026.
