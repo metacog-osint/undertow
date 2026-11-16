@@ -54,7 +54,8 @@ python tools/undertow.py collect               # fetch every live lane into data
 python tools/undertow.py collect --only meta   # one or more lanes; the rest keep their last copy
 python tools/undertow.py build                 # build site/ from data/snapshot.json
 python tools/undertow.py check                 # registers, feed linter, STIX check, leak scan
-python tools/undertow.py triage [--days 60]    # LAPTOP ONLY: new, unnamed reported activity -> data/triage.jsonl
+python tools/undertow.py triage [--days 180]   # LAPTOP ONLY: new, unnamed reported activity -> data/triage.jsonl
+python tools/undertow.py closing [--months 12] # LAPTOP ONLY: watch rows against later disclosures -> data/closing.json
 python -m unittest discover -s tests           # 43 offline tests on recorded real replies
 python tests/make_fixtures.py                  # re-record fixtures from the raw copies of the last collect
 python tools/serve.py                          # site/ on http://127.0.0.1:8781 with _headers (CSP); launch entry `undertow-site`
@@ -115,10 +116,29 @@ snapshot; the feed shows them only as reported-activity items.
   of the counted lines go into the confidence basis; still capped Moderate. `analysis.group()` gives a watch row its
   reporter's own independence group.
 - **Terms (decision 5):** read before building (below).
-- **Not built yet:** the baseline (match each later takedown to its earlier reports: lead time and reporting rate
-  for `UT-IND-1..2`; lead time partly measures researchers referring operations to platforms, so it is not an
-  independent warning signal); cross-suite joins through COP (Headwind sanctions listings, Verdict's election
-  calendar, Context and Watchfloor). No warning tier until the baseline exists.
+- **Baseline (Tom's "Yes, all four", 16 Nov 2026, to `_ideas\drafts\2026-11-16-undertow-baseline-numbers.md`):**
+  - Name-matched lead time is set aside. 2 of 22 named takedown events had an earlier report, both Doppelganger and
+    left-censored, because platforms coin most names in the disclosure.
+  - The baseline is the watch register's closing. New indicators in `doctrine/indicators.json`:
+    - `UT-IND-3`: lead days from first report to the takedown a row is `closed_into`.
+    - `UT-IND-4`: the share of rows closed within 12 months.
+  - `UT-IND-1..2` keep their own meanings (corroboration; target-country quarterly count). Earlier notes tied lead
+    time to them by mistake.
+  - No anomaly rule and no warning tier before 10 closed rows; even then the measures are described, never rated.
+  - `python tools/undertow.py closing [--months 12]` (laptop only; refuses in Actions; writes git-ignored
+    `data/closing.json`) lists, per open row, disclosures up to 12 months after its first report that share a
+    country (a stated target, else a country the description names, labelled "not a target") or name its tracked
+    operation. Each candidate shows its period. Closed rows show their lead, and a `closed_into` that is not a dated
+    disclosure on file is a problem (exit 1).
+  - Run it after each collect that brings a new disclosure, about monthly.
+  - First run, 16 Nov: the Armenia row has four Google Q3 2026 candidates (bulletin of 30 Oct, periods Jul to Sep
+    2026, Armenia named in the stance, not a target). They acted before DFRLab's 12 Oct report, so none is a lead
+    in the baseline's sense. Tom decides whether any closes the row.
+  - Triage's default window is 180 days (was 60).
+  - Volume: hand-entered VIGINUM and RRM rows as they publish. No new reporter lane until one shows current,
+    on-topic output.
+- **Not built yet:** cross-suite joins through COP (Headwind sanctions listings, Verdict's election calendar, Context
+  and Watchfloor).
 
 Outputs in `site/data/`:
 - `feed.geojson`: 425 items, 1.9 MB, linter PASS.
@@ -227,7 +247,8 @@ fails keeps its last good records, which lack the field until the lane next succ
   out. Copy bar files from the hub; never edit them here.
 - Registers:
   - Requirements and intelligence needs: `UT-REQ-1`, `UT-PIR-1..3`, `UT-EEI-1..2`.
-  - Indicators `UT-IND-1..2` are registered and unused; assumptions are `UT-ASM-1..4`.
+  - Indicators `UT-IND-1..4` are registered and unused (3 and 4, the watch-register baseline, since 16 Nov 2026);
+    assumptions are `UT-ASM-1..4`.
   - There is no warning problem, because there is no baseline of disclosures.
   - Every item is kind observation, tier routine, `reported`, grade A2.
 

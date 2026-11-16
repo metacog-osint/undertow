@@ -54,9 +54,23 @@ confidence only when Tom has checked the row and the reporter shows its own evid
 (`origin_evidence: own`). A reporter repeating a platform's or government's attribution (`cites-other`) is the same
 line counted twice, so it does not count. The cap stays Moderate.
 
-No anomaly rule and no warning tier yet. The first baseline will match each later takedown to its earlier reports,
-measuring lead time and reporting rate (`UT-IND-1..2`). Part of that lead time is the referral pipeline: platforms
-often act because researchers send them what they found, so lead time is not an independent warning signal.
+**Baseline (Tom, 16 Nov 2026).** No anomaly rule and no warning tier before 10 watch rows are closed into a
+takedown. The baseline is the watch register, not name matches:
+- `UT-IND-3`: days from a watch row's first report to the takedown it is closed into (`closed_into`).
+- `UT-IND-4`: the share of watch rows a takedown closes within 12 months.
+Both are described (median, range, share) and never fire a rule.
+
+Name-matched lead time was measured on 16 Nov 2026 and set aside. Over
+34.5 months, 2 of 22 named takedown events had a reporter's report before them, both Doppelganger and
+left-censored, because platforms coin most operation names in the disclosure itself. Such pairs are shown as facts,
+never rated.
+
+`python tools/undertow.py closing` (laptop only) lists, for each open watch row, the disclosures from its first
+report up to 12 months later that share a country with it or name its tracked operation. It shows each one's
+period, because a quarterly bulletin published after the report may cover action taken before it. A candidate is a
+lead for Tom to read, never a finding, and Tom closes a row by hand. Part of any lead time is the referral pipeline:
+platforms often act because researchers send them what they found, so lead time is not an independent warning
+signal.
 
 ## Three questions kept apart
 1. **Did the takedown happen?** The publisher's own report of its own action: A2, `reported`.
