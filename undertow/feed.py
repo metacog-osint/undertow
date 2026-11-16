@@ -1,8 +1,12 @@
 """Build Undertow's contract-v2 feed (tic-feed/2, GeoJSON) from the collected records.
 
-One item per disclosed network or operation: kind "observation", tier "routine", status_class "reported". Each is
-a publisher's report of its own enforcement action (source grade A2), except DFRLab's items: an independent
-lab's report on an operation another publisher named (grade B2). Undertow states no probability. Geometry
+Two units, kept apart (decision 1, Tom, 16 Nov 2026), both kind "observation", tier "routine", status_class "reported":
+- a disclosure: one item per network or operation a publisher disclosed, its report of its own enforcement action or
+  its own naming (source grade A2);
+- reported activity: one item per operation and reporter (activity.py), saying that an independent reporter has
+  reported the operation while it runs, with the first and last report and a state of active or quiet (grade B2 or
+  B3, by reporter). It adds no origin unless it is a watch row Tom checked whose reporter shows its own evidence.
+Undertow states no probability. Geometry
 is on the target countries the publisher names (Google and OpenAI name none: there it is the countries named in
 the stance or summary, marked as such), or null with a link to the page.
 """
@@ -51,13 +55,32 @@ SOURCES = {
                "licence": ("Atlantic Council (DFRLab): noncommercial use with credit; operation names, dates and links "
                            "only, no DFRLab text republished"),
                "independence_group": "dfrlab", "source_type": "independent research",
-               "descriptor": "An investigation by the Atlantic Council's Digital Forensic Research Lab that names an "
-                             "operation another publisher disclosed. Independent research, not an enforcement action; "
+               "descriptor": "Investigations by the Atlantic Council's Digital Forensic Research Lab that name an "
+                             "operation Undertow tracks. Independent research, not an enforcement action; "
                              "Undertow does not read its attribution."},
+    "checkfirst": {"id": "checkfirst-rss", "publisher": "CheckFirst", "grade": "B2",
+                   "licence": ("CheckFirst: read, index and cite with credit and a link (its llms.txt; no terms of use "
+                               "published); operation names, dates and links only, no CheckFirst text republished"),
+                   "independence_group": "checkfirst", "source_type": "independent research",
+                   "descriptor": "Investigations by CheckFirst, a Finnish research firm, that name an operation "
+                                 "Undertow tracks. Independent research, not an enforcement action; Undertow does "
+                                 "not read its attribution."},
+    "correctiv": {"id": "correctiv-rss", "publisher": "CORRECTIV", "grade": "B3",
+                  "licence": ("CORRECTIV: no terms of use or licence published (all rights reserved); facts only, "
+                              "operation names, dates and links, no CORRECTIV text republished"),
+                  "independence_group": "correctiv", "source_type": "news media",
+                  "descriptor": "Stories by CORRECTIV, a German investigative newsroom, that name an operation "
+                                "Undertow tracks. A newsroom often reports other researchers' findings, so it is "
+                                "graded B3; Undertow does not read its attribution."},
+    "watch": {"id": "undertow-watch-register", "publisher": "Undertow watch register", "grade": "B3",
+              "licence": "Each row keeps its reporter's terms (config/register/watch.json); names, dates and links only",
+              "independence_group": "watch", "source_type": "independent research",
+              "descriptor": "Reported activity that names no tracked operation, entered by hand from the reporter's "
+                            "own publication after Tom's review."},
 }
 REQUIREMENT = {"meta": ["UT-PIR-1", "UT-PIR-2"], "google": ["UT-PIR-1"], "openai": ["UT-PIR-1", "UT-PIR-3"],
                "tiktok": ["UT-PIR-1", "UT-PIR-2"], "eeas": ["UT-PIR-1", "UT-PIR-2", "UT-PIR-3"],
-               "dfrlab": ["UT-PIR-1"]}
+               "dfrlab": ["UT-PIR-1"], "checkfirst": ["UT-PIR-1"], "correctiv": ["UT-PIR-1"], "watch": ["UT-PIR-1"]}
 
 
 def item_id(key: str) -> str:
@@ -95,16 +118,32 @@ def _counts_text(c: dict) -> str:
 def summary(r: dict) -> str:
     pub = SOURCES[r["publisher"]]["publisher"].split(",")[0]
     bits = []
-    if r["publisher"] == "dfrlab":
-        ops = r["title"].removeprefix("DFRLab reports on ")
-        bits.append(f"The Atlantic Council's Digital Forensic Research Lab (DFRLab) published an investigation naming "
-                    f"{ops} on {r['disclosed_at'][:10]}. DFRLab is an independent lab, not the platform that acted.")
-        if r.get("countries_named") or r.get("target_regions"):
-            bits.append("Countries and regions named in DFRLab's description: "
-                        + ", ".join(_names(r.get("countries_named") or []) + (r.get("target_regions") or [])) + ".")
-        bits.append("Undertow records only that DFRLab reported on the operation: it does not read DFRLab's "
-                    "attribution, so this item adds no origin and no confidence. A country named is not an origin, and "
-                    "an origin is never a finding of who directed it.")
+    if r.get("activity"):
+        a = r["activity"]
+        who = a["reporter_name"]
+        n = a["reports"]
+        span = (f"on {a['first_report'][:10]}" if n == 1 else
+                f"{n} times between {a['first_report'][:10]} and {a['last_report'][:10]}")
+        bits.append(f"{who} reported on {a['operation_name']} {span}.")
+        bits.append(f"State: {a['state']}" + (
+            f" (last report within {a['quiet_after_days']} days)." if a["state"] == "active" else
+            f" (no report from {who} in more than {a['quiet_after_days']} days; not evidence the operation stopped)."))
+        places = (r.get("targets") or []) or (r.get("countries_named") or [])
+        if places or r.get("target_regions"):
+            lab = ("Targets as the reporter states them: " if r.get("targets") else
+                   "Countries and regions named in the reports: ")
+            bits.append(lab + ", ".join(_names(places) + (r.get("target_regions") or [])) + ".")
+        if r.get("origin"):
+            bits.append(f"Origin as {who} states it from its own evidence, checked against the report: "
+                        f"{', '.join(_names(r['origin']))}.")
+        elif r["publisher"] == "watch" and r.get("origin_reported"):
+            bits.append(f"{who} states an origin ({', '.join(_names(r['origin_reported']))}); Undertow does not count "
+                        f"it ({r.get('origin_level')}).")
+        else:
+            bits.append(f"Undertow records that {who} reported the operation, not {who}'s attribution, so this item "
+                        "adds no origin and no confidence.")
+        bits.append(f"{who} is a reporter, not the platform that acted (grade {a['grade']}). A country named is not "
+                    "an origin, and an origin is never a finding of who directed it.")
         return " ".join(bits)
     if r["publisher"] == "eeas":
         bits.append(f"The EEAS names {r['operation_name']} among the Information Manipulation Sets active in 2025 "
@@ -148,6 +187,11 @@ def actors(r: dict, sid: str) -> list[dict]:
 def feature(r: dict, generated: str) -> dict:
     src = dict(SOURCES[r["publisher"]])
     src.setdefault("grade", "A2")
+    if r["publisher"] == "watch":
+        rp = r["reporter"]
+        src.update({"publisher": rp["name"], "grade": rp["grade"], "licence": rp["terms"],
+                    "source_type": rp.get("source_type") or src["source_type"],
+                    "independence_group": r["independence_group"]})
     src.update({"title": r["disclosure"]["title"], "url": r["url"], "accessed_at": generated})
     if r.get("disclosed_at"):
         src["published_at"] = r["disclosed_at"]
@@ -211,6 +255,8 @@ def feature(r: dict, generated: str) -> dict:
     }
     if r.get("languages"):
         props["operation"]["languages"] = r["languages"]
+    if r.get("activity"):
+        props["activity"] = r["activity"]
     if r.get("confidence"):
         props.update(r["confidence"])
     if r.get("coverage_fraction") is not None:
@@ -270,11 +316,12 @@ def build_feed(records: list[dict], generated: str, health_record: dict | None =
         "licence": ("Undertow's own text: CC BY 4.0 (The Intelligence Company). Each item keeps its source's terms: "
                     "Meta MIT; Google facts and counts only; OpenAI RSS quoted with credit; TikTok via the EU Code of "
                     "Conduct Transparency Centre; EEAS reuse with acknowledgement; DFRLab (Atlantic Council) names, dates and links "
-                    "only, noncommercial, with credit. DISARM technique names CC BY-SA 4.0 "
+                    "only, noncommercial, with credit; CheckFirst and CORRECTIV names, dates and links only, with "
+                    "credit. DISARM technique names CC BY-SA 4.0 "
                     "(DISARM Foundation)."),
         "attribution": ("Undertow, The Intelligence Company. Sources: Meta threat-research repository; Google Influence "
                         "Operations Bulletin; OpenAI news RSS; TikTok's reports to the EU Code of Conduct on "
-                        "Disinformation; EEAS 4th report on FIMI threats; Atlantic Council's Digital Forensic Research Lab (DFRLab). DISARM Framework v1.6.1, DISARM Foundation, "
+                        "Disinformation; EEAS 4th report on FIMI threats; Atlantic Council's Digital Forensic Research Lab (DFRLab); CheckFirst; CORRECTIV. DISARM Framework v1.6.1, DISARM Foundation, "
                         "CC BY-SA 4.0."),
         "language_key": LANGUAGE_KEY,
         "note": ("Operation level only: no indicator values, account handles, URLs, domains or names of individuals. "

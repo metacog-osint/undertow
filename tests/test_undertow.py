@@ -28,7 +28,8 @@ _spec = importlib.util.spec_from_file_location("undertow_cli", ROOT / "tools" / 
 cli = importlib.util.module_from_spec(_spec)   # tools/undertow.py (its name clashes with the package)
 _spec.loader.exec_module(cli)
 
-from undertow import analysis, dfrlab, disarm, eeas, feed, google, meta, openai_rss, stix, text, tiktok  # noqa: E402
+from undertow import (activity, analysis, disarm, eeas, feed, google, meta, openai_rss, reporters,  # noqa: E402
+                      stix, text, tiktok)
 from tic_doctrine import contract, history, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
 
@@ -36,6 +37,17 @@ MANIFEST = json.loads((FIX / "MANIFEST.json").read_text(encoding="utf-8"))
 BY_URL = {v["url"]: FIX / name for name, v in MANIFEST["files"].items()}
 NAMES_QUOTED = ["Peter Magyar", "George Soros", "Viktor Orbán", "Orbán", "Magyar", "Soros"]
 FETCHED: list[str] = []
+REPORTER_LANES = list(reporters.REPORTERS)
+
+
+def reporter_texts() -> list[str]:
+    """Every title and description in the recorded reporter feeds (they name individuals)."""
+    out = []
+    for lane in REPORTER_LANES:
+        for fx in sorted(FIX.glob(f"{lane}_feed_*.xml")):
+            for it in reporters.parse_page(fx.read_bytes()):
+                out += [it["title"], it["description"]]
+    return [x for x in out if len(x) > 25]
 
 
 def getter(url: str, timeout: int = 60) -> bytes:
@@ -87,20 +99,25 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(counts["tiktok"], 25)
         self.assertGreater(counts["google"], 240)     # Q2 158 + Q3 93 recorded; Q1 not recorded
         self.assertGreater(counts["openai"], 20)
-        self.assertEqual(counts["dfrlab"], 15)
+        self.assertEqual(counts["dfrlab"], 15)        # report records, folded into reported-activity items at build
+        self.assertEqual(counts["checkfirst"], 5)
+        self.assertEqual(counts["correctiv"], 3)
+        self.assertEqual(counts["watch"], 0)
 
     def test_health_keyed_by_item_source_ids(self):
         h = self.feed["health"]
         item_sources = {f["properties"]["sources"][0]["id"] for f in self.feed["features"]}
-        self.assertEqual(set(h), item_sources)       # the history log's lane is an item's first source id
+        self.assertLessEqual(item_sources, set(h))   # the history log's lane is an item's first source id
+        self.assertEqual(set(h) - item_sources, {"undertow-watch-register"})    # no watch rows yet
         self.assertEqual({v["lane"] for v in h.values()}, set(cli.LANES))
         for sid, e in h.items():
             self.assertEqual(e["state"], "up", sid)
             self.assertEqual(e["last_ok"], e["checked_at"], sid)
             self.assertEqual(e["failures"], 0, sid)
             self.assertIsNone(e["last_error"], sid)
-            self.assertTrue(e["data_as_of"], sid)
-        self.assertEqual(history.lanes_ok(h), item_sources)
+            if sid != "undertow-watch-register":
+                self.assertTrue(e["data_as_of"], sid)
+        self.assertEqual(history.lanes_ok(h), set(h))
 
     def test_openai_only_rss_fetched(self):
         openai_urls = [u for u in FETCHED if "openai.com" in u]
@@ -193,7 +210,8 @@ class Pipeline(unittest.TestCase):
         self.assertTrue(any("roles is never stated" in e for e in errs), errs)
 
     def test_a_free_text_org_never_becomes_a_threat_actor(self):
-        recs = json.loads(json.dumps([r for lane in self.snap["records"].values() for r in lane]))
+        recs = json.loads(json.dumps(cli.all_records(self.snap)))
+        recs = [r for r in recs if not r.get("activity")] + [r for r in recs if r.get("activity")]
         recs[0]["orgs"] = [{"name": "Jane Example", "country": "RU"}]
         b = stix.build_bundle(recs, "2026-11-16T00:00:00Z")
         self.assertNotIn("Jane Example", [o.get("name") for o in b["objects"]])
@@ -239,55 +257,69 @@ class Pipeline(unittest.TestCase):
     def test_doppelganger_corroborated_moderate(self):
         dop = [f["properties"] for f in self.feed["features"] if "doppelganger" in f["properties"]["operation"]["named_operations"]]
         pubs = {p["operation"]["publisher"] for p in dop}
-        self.assertEqual(pubs, {"meta", "openai", "eeas", "dfrlab"})
-        self.assertTrue(all(p["confidence"] == "moderate" for p in dop if p["operation"]["publisher"] != "dfrlab"))
-        self.assertTrue(all("confidence" not in p for p in dop if p["operation"]["publisher"] == "dfrlab"))
+        self.assertEqual(pubs, {"meta", "openai", "eeas", "dfrlab", "correctiv"})
+        self.assertTrue(all(p["confidence"] == "moderate" for p in dop if "activity" not in p))
+        self.assertTrue(all("confidence" not in p for p in dop if "activity" in p))
         eeas_dop = next(p for p in dop if p["operation"]["publisher"] == "eeas")
         self.assertEqual(eeas_dop["us_person_data"], "organizations")
         self.assertIn("Social Design Agency", eeas_dop["operation"]["sponsor"])
 
-    def test_dfrlab_keeps_only_tracked_operations_and_no_dfrlab_text(self):
-        """DFRLab items name a tracked operation; DFRLab's own titles and descriptions (which name individuals) and
-        its authors never reach a published file, and no article page is ever fetched."""
-        names = {o["name"] for o in text.operations()}
-        items = [f["properties"] for f in self.feed["features"] if f["properties"]["operation"]["publisher"] == "dfrlab"]
-        self.assertEqual(len(items), 15)
-        texts = []
-        for n in range(1, 40):
-            fx = FIX / f"dfrlab_feed_{n:02d}.xml"
-            if fx.exists():
-                for it in dfrlab.parse_page(fx.read_bytes()):
-                    texts += [it["title"], it["description"]]
-        texts = [s for s in texts if len(s) > 25]
-        blob = "\n".join(self.files.values())
-        for p in items:
-            self.assertTrue(p["operation"]["named_operations"], p["id"])
-            ops = p["title"].removeprefix("DFRLab reports on ").split(", ")
-            self.assertTrue(set(ops) <= names, p["title"])
-            self.assertEqual(p["sources"][0]["grade"], "B2")
+    def test_reported_activity_one_item_per_operation_and_reporter(self):
+        """Decision 1: reporter lanes publish reported-activity items, one per (reporter, operation), kept apart from
+        disclosures, graded by the reporter, with first and last report and a state of active or quiet."""
+        acts = [f["properties"] for f in self.feed["features"] if "activity" in f["properties"]]
+        by = {(p["operation"]["publisher"], p["activity"]["operation"]): p for p in acts}
+        self.assertEqual(len(by), len(acts))
+        self.assertEqual({k[0] for k in by}, {"dfrlab", "checkfirst", "correctiv"})
+        self.assertEqual(sum(p["activity"]["reports"] for p in acts if p["operation"]["publisher"] == "dfrlab"), 15)
+        self.assertEqual(len([p for p in acts if p["operation"]["publisher"] == "dfrlab"]), 5)
+        grades = {"dfrlab": "B2", "checkfirst": "B2", "correctiv": "B3"}
+        names = {o["id"]: o["name"] for o in text.operations()}
+        for p in acts:
+            a = p["activity"]
+            self.assertEqual(p["sources"][0]["grade"], grades[a["reporter"]])
+            self.assertIn(a["state"], ("active", "quiet"))
+            self.assertNotIn("ended", p["title"] + p["summary"].replace("not evidence the operation stopped", ""))
             self.assertEqual(p["operation"]["origin"], [])
-            self.assertEqual(p["sources"][0]["url"].split("/")[2], "dfrlab.org")
-        for s in texts:
-            self.assertNotIn(s, blob)
-        for name in ["Sandu", "Zelenskyy", "Navalny", "Biden"]:
-            self.assertFalse(any(name in json.dumps(p) for p in items), name)
-        dfr_urls = [u for u in FETCHED if "dfrlab.org" in u]
-        self.assertTrue(dfr_urls)
-        self.assertTrue(all(u.startswith(dfrlab.FEED_URL) for u in dfr_urls), dfr_urls)
+            self.assertNotIn("confidence", p)
+            self.assertLessEqual(a["first_report"], a["last_report"])
+            self.assertEqual(p["data_as_of"], a["last_report"])
+            self.assertEqual(len(a["report_links"]), a["reports"])
+            self.assertTrue(p["title"].startswith(names[a["operation"]] + ": "))
+            self.assertTrue(all(x["url"].startswith(reporters.REPORTERS[a["reporter"]].link_prefix) for x in a["report_links"]))
+            self.assertEqual(p["kind"], "observation")
+        storm = by[("correctiv", "storm-1516")]
+        self.assertEqual(storm["activity"]["state"], "active")     # 11 Nov 2026, within 180 days of the collect
 
-    def test_dfrlab_corroborates_but_never_raises_confidence(self):
+    def test_reporters_keep_no_reporter_text_and_fetch_only_feeds(self):
+        """Reporters' titles and descriptions (which name individuals) and authors never reach a published file, and
+        no article page is ever fetched."""
+        blob = "\n".join(self.files.values())
+        for t in reporter_texts():
+            self.assertNotIn(t, blob)
+        for name in ["Sandu", "Zelenskyy", "Navalny", "Biden"]:
+            self.assertNotIn(name, blob, name)
+        for lane in REPORTER_LANES:
+            rep = reporters.REPORTERS[lane]
+            urls = [u for u in FETCHED if u.startswith(rep.link_prefix.split("/en/")[0])]
+            self.assertTrue(urls, lane)
+            self.assertTrue(all(u.startswith(rep.feed_url) for u in urls), urls)
+
+    def test_reporters_corroborate_but_never_raise_confidence(self):
         recs = cli.all_records(self.snap)
-        with_d = {r["key"]: (r.get("confidence") or {}).get("confidence") for r in recs if r["publisher"] != "dfrlab"}
-        without = [r for r in recs if r["publisher"] != "dfrlab"]
+        with_r = {r["key"]: (r.get("confidence") or {}).get("confidence") for r in recs if not r.get("activity")}
+        without = [r for r in recs if not r.get("activity")]
         for r in without:
             r.pop("confidence", None)
         analysis.assess(without)
-        self.assertEqual(with_d, {r["key"]: (r.get("confidence") or {}).get("confidence") for r in without})
+        self.assertEqual(with_r, {r["key"]: (r.get("confidence") or {}).get("confidence") for r in without})
         storm = next(f["properties"] for f in self.feed["features"] if f["properties"]["operation"]["key"] == "eeas:fimi-4:storm-1516")
         self.assertIn("dfrlab", storm["operation"]["corroborated_by"])
-        camp = [o for o in self.stix["objects"] if o["type"] == "campaign" and o["name"].startswith("DFRLab reports on")]
-        self.assertEqual(len(camp), 15)
-        self.assertTrue(all(o["x_tic_source_grade"] == "B2" for o in camp))
+        self.assertIn("correctiv", storm["operation"]["corroborated_by"])
+        reps = [o for o in self.stix["objects"] if o["type"] == "report" and "x_tic_activity_state" in o]
+        self.assertEqual(len(reps), len([f for f in self.feed["features"] if "activity" in f["properties"]]))
+        self.assertTrue(all(len(o["object_refs"]) == 1 and o["object_refs"][0].startswith("intrusion-set--") for o in reps))
+        self.assertFalse([o for o in self.stix["objects"] if o["type"] == "campaign" and "reported by" in o["name"]])
 
     def test_events_dates_only(self):
         evs = self.events["events"]
@@ -354,26 +386,98 @@ class HealthAndHistory(unittest.TestCase):
 
 class Lanes(unittest.TestCase):
     def test_dfrlab_reads_until_it_reaches_what_it_read_before(self):
+        R = reporters.REPORTERS["dfrlab"]
         pages = {n: (FIX / f"dfrlab_feed_{n:02d}.xml") for n in range(1, 40) if (FIX / f"dfrlab_feed_{n:02d}.xml").exists()}
         read = []
 
         def fetch_page(n):
             read.append(n)
             return pages[n].read_bytes() if n in pages else None
-        recs, extra, n = dfrlab.read(fetch_page, None, pause=0)
-        self.assertEqual(extra["backfilled_to"], dfrlab.SINCE)
-        self.assertLess(extra["oldest_read"], dfrlab.SINCE)
+        recs, extra, n = reporters.read(R, fetch_page, None, pause=0)
+        self.assertEqual(extra["backfilled_to"], R.since)
+        self.assertLess(extra["oldest_read"], R.since)
         self.assertEqual(len(recs), 15)
         read.clear()
-        recs2, extra2, n2 = dfrlab.read(fetch_page, extra, pause=0)
+        recs2, extra2, n2 = reporters.read(R, fetch_page, extra, pause=0)
         self.assertLessEqual(n2, 2)                       # incremental: back to 30 days before the newest item
-        self.assertEqual(len(dfrlab.merge(recs2, recs)), 15)
+        self.assertEqual(len(reporters.merge(R, recs2, recs)), 15)
         read.clear()
-        dfrlab.read(fetch_page, dict(extra, ops_fingerprint="changed"), pause=0)
+        reporters.read(R, fetch_page, dict(extra, ops_fingerprint="changed"), pause=0)
         self.assertEqual(len(read), n)                    # a new alias reads the whole feed again
-        self.assertIsNone(dfrlab.build_record({"title": "A study of coordinated networks", "description": "",
-                                               "categories": [], "published": "2026-10-01T10:00:00Z",
-                                               "link": "https://dfrlab.org/2026/10/01/x/"}))
+        self.assertIsNone(reporters.build_record(R, {"title": "A study of coordinated networks", "description": "",
+                                                     "categories": [], "published": "2026-10-01T10:00:00Z",
+                                                     "link": "https://dfrlab.org/2026/10/01/x/"}))
+        self.assertIsNone(reporters.build_record(R, {"title": "Storm-1516 again", "description": "",
+                                                     "categories": [], "published": "2026-10-01T10:00:00Z",
+                                                     "link": "https://elsewhere.example/x/"}))
+
+    def test_activity_state_quiet_after_180_days_never_ended(self):
+        rec = {"key": "dfrlab:x", "named_operations": ["storm-1516"], "disclosed_at": "2026-01-10T12:00:00Z",
+               "url": "https://dfrlab.org/2026/01/10/x/", "countries_named": ["FR"], "target_regions": [],
+               "platforms": [], "disarm": []}
+        a1 = activity.aggregate({"dfrlab": [rec]}, date(2026, 7, 9))[0]      # 180 days later
+        a2 = activity.aggregate({"dfrlab": [rec]}, date(2026, 7, 10))[0]     # 181 days later
+        self.assertEqual((a1["activity"]["state"], a2["activity"]["state"]), ("active", "quiet"))
+        self.assertTrue(a2["title"].endswith("(quiet)"))
+        self.assertEqual(activity.QUIET_DAYS, 180)
+        self.assertNotIn("ended", json.dumps(a2))
+
+    def test_watch_register_checks_and_origin_rule(self):
+        """Decision 4: a watch row's origin counts only when Tom checked it and the reporter shows its own evidence."""
+        self.assertEqual(activity.check_watch(activity.load_watch()), [])
+        self.assertEqual(activity.load_watch()["rows"], [])
+        row = {"id": "example-net", "operation": "an unnamed network targeting Moldova",
+               "reporter": {"name": "Example Lab", "grade": "B2", "terms": "read 16 Nov 2026"},
+               "first_report": {"date": "2026-11-01", "url": "https://lab.example/a/"},
+               "countries": ["MD"], "origin": ["RU"], "origin_evidence": "own", "checked_by": "Tom",
+               "checked_on": "2026-11-16", "tracked_operation": "storm-1516"}
+        reg = {"reporter_hosts": ["https://lab.example/"], "rows": [row]}
+        self.assertEqual(activity.check_watch(reg), [])
+        bad = json.loads(json.dumps(reg))
+        bad["rows"][0]["operation"] = "Maia Sandu smear network"
+        bad["rows"][0]["first_report"]["url"] = "https://operation-domain.example/x"
+        errs = activity.check_watch(bad)
+        self.assertTrue(any("scrubber" in e for e in errs), errs)
+        self.assertTrue(any("reporter host" in e for e in errs), errs)
+        today = date(2026, 11, 16)
+        counted = activity.watch_records(reg, today)[0]
+        self.assertEqual(counted["origin"], ["RU"])
+        for change in ({"checked_by": None}, {"origin_evidence": "cites-other"}):
+            r2 = activity.watch_records({"rows": [dict(row, **change)]}, today)[0]
+            self.assertEqual(r2["origin"], [], change)
+            self.assertEqual(r2["origin_reported"], ["RU"])
+        eeas_storm = {"key": "eeas:x", "publisher": "eeas", "origin": ["RU"], "named_operations": ["storm-1516"]}
+        recs = [eeas_storm, counted]
+        analysis.assess(recs)
+        self.assertEqual(eeas_storm["confidence"]["confidence"], "moderate")    # two lines, still capped
+        self.assertEqual(eeas_storm["confidence"]["confidence_basis"]["factors"]["grades"], ["A2", "B2"])
+        uncounted = activity.watch_records({"rows": [dict(row, checked_by=None)]}, today)[0]
+        recs = [dict(eeas_storm, confidence=None), uncounted]
+        analysis.assess(recs)
+        self.assertEqual(recs[0]["confidence"]["confidence"], "low")
+
+    def test_triage_lists_unnamed_activity_privately(self):
+        """Decision 2: triage lists influence-worded articles naming no tracked operation into data/triage.jsonl,
+        which no published file ever holds; check fails if one of its headlines leaks."""
+        tmp = Path(tempfile.mkdtemp(prefix="undertow-triage-"))
+        try:
+            found = cli.triage(days=3650, root=tmp, getter=getter, pause=0)
+            self.assertTrue(found)
+            self.assertTrue((tmp / "data" / "triage.jsonl").exists())
+            for c in found:
+                self.assertEqual(text.named_operations(c["title"]), [])
+                self.assertTrue(c["wording"])
+            self.assertEqual(cli.triage(days=3650, root=tmp, getter=getter, pause=0), [])   # nothing twice
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        import os
+        os.environ["GITHUB_ACTIONS"] = "true"
+        try:
+            n = len(FETCHED)
+            self.assertEqual(cli.main(["triage"]), 1)             # refused in Actions: laptop only
+            self.assertEqual(len(FETCHED), n)
+        finally:
+            del os.environ["GITHUB_ACTIONS"]
 
     def test_meta_counts_and_indicator_count(self):
         net = meta.parse_network((FIX / "meta_meta-h2-2026-iran-cib-based-network.md").read_text(encoding="utf-8"))

@@ -1,0 +1,23 @@
+{
+  "register": "watch",
+  "note": "Hand-kept register of reported activity that names no tracked operation (decision 2, Tom, 16 Nov 2026). Rows are promoted by Tom from the private triage list (python tools/undertow.py triage, data/triage.jsonl, never published). Each row is the operation as the reporter frames it, never a person's name, handle, URL or domain of the operation. See undertow/activity.py for the fields and doctrine/method.md for the rules.",
+  "fields": {
+    "id": "lower-case slug, stable",
+    "operation": "the operation's label as the reporter frames it (no names of individuals)",
+    "tracked_operation": "optional: an id in config/operations.json once the operation is tracked there",
+    "reporter": {"name": "the reporter", "grade": "B2 or B3", "terms": "the reporter's terms, read and dated", "source_type": "independent research, newsroom or government"},
+    "first_report": {"date": "YYYY-MM-DD", "url": "the reporter's own page, on a host in reporter_hosts"},
+    "last_report": "optional, same shape",
+    "reports": "optional count of reports",
+    "countries": "ISO alpha-2 codes of the countries targeted, as the reporter states them",
+    "platforms": "optional list",
+    "origin": "optional ISO alpha-2 codes of the origin the reporter states",
+    "origin_evidence": "own (the reporter shows its own evidence), cites-other (repeats a platform's or government's attribution) or none",
+    "attribution_wording": "optional: the reporter's attribution words, short",
+    "checked_by": "who checked the row against the report (decision 4: origin counts only when this is set and origin_evidence is own)",
+    "checked_on": "YYYY-MM-DD",
+    "closed_into": "optional: the disclosure key when a platform or government later names the network"
+  },
+  "reporter_hosts": [],
+  "rows": []
+}

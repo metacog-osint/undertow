@@ -22,7 +22,12 @@ from tic_doctrine import confidence  # noqa: E402
 
 GRADE = "A2"
 PUBLISHER_GROUP = {"meta": "meta", "google": "google", "openai": "openai", "tiktok": "tiktok", "eeas": "eu-eeas",
-                   "dfrlab": "dfrlab"}
+                   "dfrlab": "dfrlab", "checkfirst": "checkfirst", "correctiv": "correctiv"}
+
+
+def group(r: dict) -> str:
+    """The independence group a record counts under: its publisher's, or a watch row's own reporter."""
+    return r.get("independence_group") or PUBLISHER_GROUP[r["publisher"]]
 
 
 def corroboration(records: list[dict]) -> dict[str, dict]:
@@ -31,9 +36,10 @@ def corroboration(records: list[dict]) -> dict[str, dict]:
     for r in records:
         for op in r.get("named_operations") or []:
             slot = out.setdefault(op, {"publishers": set(), "origins": {}})
-            slot["publishers"].add(PUBLISHER_GROUP[r["publisher"]])
+            slot["publishers"].add(group(r))
             for cc in r.get("origin") or []:
-                slot["origins"].setdefault(cc, set()).add(PUBLISHER_GROUP[r["publisher"]])
+                slot["origins"].setdefault(cc, set()).add(group(r))
+                slot.setdefault("grades", {})[group(r)] = r.get("grade") or GRADE
     return out
 
 
@@ -42,12 +48,14 @@ def assess(records: list[dict]) -> None:
     corr = corroboration(records)
     for r in records:
         origin = r.get("origin") or []
-        mine = PUBLISHER_GROUP[r["publisher"]]
+        mine = group(r)
         lines, contradicted, others = {mine}, False, set()
+        grades = {mine: r.get("grade") or GRADE}
         for op in r.get("named_operations") or []:
             c = corr.get(op) or {}
             for cc in origin:
                 lines |= c.get("origins", {}).get(cc, set())
+            grades.update(c.get("grades") or {})
             for cc, pubs in (c.get("origins") or {}).items():
                 if origin and cc not in origin and pubs - {mine}:
                     contradicted = True
@@ -57,7 +65,7 @@ def assess(records: list[dict]) -> None:
             r["confidence"] = None
             continue
         f = confidence.fields(confidence.Evidence(independent_lines=len(lines), contradicted=contradicted,
-                                                  grades=[GRADE], ease_of_faking="high", method_scored=False))
+                                                  grades=sorted({grades.get(g, GRADE) for g in lines}), ease_of_faking="high", method_scored=False))
         f["confidence_basis"]["scope"] = "origin: where the operators were, as the publishers report it (not who directed it)"
         f["confidence_basis"]["lines"] = sorted(lines)
         r["confidence"] = f
