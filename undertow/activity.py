@@ -132,6 +132,68 @@ def place(records: list[dict]) -> None:
         a["mapped_at"] = MAPPED_AT
 
 
+# --- closing: watch rows against later disclosures (UT-IND-3..4, Tom, 16 Nov 2026) --------------------------------
+
+CLOSE_MONTHS = 12
+TAKEDOWN_LANES = ("meta", "google", "openai", "tiktok")   # a platform acted; the EEAS's annual naming is "naming"
+
+
+def _date(s: str) -> date:
+    return date.fromisoformat(s[:10])
+
+
+def closing(rows: list[dict], disclosures: list[dict], months: int = CLOSE_MONTHS) -> dict:
+    """The baseline's working list. For each open watch row, the disclosures dated from its first report up to
+    `months` later that share a target country with it (a disclosure's stated targets, else the countries its
+    description names) or name its tracked operation. Tom reads the list and closes a row by hand (`closed_into`).
+    For each closed row, the lead from first report to that disclosure, which is what UT-IND-3 and UT-IND-4 count.
+    Matching is by country and period only, so a candidate is a lead for Tom to read, never a finding."""
+    by_key = {d["key"]: d for d in disclosures}
+    window = round(months * 30.44)
+    open_rows, closed, problems = [], [], []
+    for row in rows:
+        first = _date(row["first_report"]["date"])
+        if row.get("closed_into"):
+            d = by_key.get(row["closed_into"])
+            if not d or not d.get("disclosed_at"):
+                problems.append(f"{row['id']}: closed_into {row['closed_into']!r} is not a dated disclosure on file")
+                continue
+            closed.append({"row": row["id"], "closed_into": d["key"], "publisher": d["publisher"],
+                           "kind": "takedown" if d["publisher"] in TAKEDOWN_LANES else "naming",
+                           "disclosed_at": d["disclosed_at"][:10],
+                           "lead_days": (_date(d["disclosed_at"]) - first).days})
+            continue
+        mine = set(row.get("countries") or [])
+        cands = []
+        for d in disclosures:
+            if not d.get("disclosed_at"):
+                continue
+            days = (_date(d["disclosed_at"]) - first).days
+            if not 0 <= days <= window:
+                continue
+            places = set(d.get("targets") or []) or set(d.get("countries_named") or [])
+            shared = sorted(mine & places)
+            by_op = bool(row.get("tracked_operation")) and row["tracked_operation"] in (d.get("named_operations") or [])
+            if shared or by_op:
+                cands.append({"key": d["key"], "publisher": d["publisher"],
+                              "kind": "takedown" if d["publisher"] in TAKEDOWN_LANES else "naming",
+                              "title": (d.get("disclosure") or {}).get("title") or d.get("title"),
+                              "disclosed_at": d["disclosed_at"][:10], "days_after_first_report": days,
+                              # the period the publisher acted in or covers: a takedown published after the report
+                              # can still have acted before it (Google's quarterly bulletins)
+                              "period": d.get("period"),
+                              "basis": "tracked operation" if by_op else (
+                                  "shared target country" if d.get("targets") else "shared named country (not a target)"),
+                              "countries": shared})
+        cands.sort(key=lambda c: (c["basis"] != "tracked operation", c["days_after_first_report"]))
+        open_rows.append({"row": row["id"], "first_report": first.isoformat(), "candidates": cands})
+    leads = sorted(c["lead_days"] for c in closed if c["kind"] == "takedown")
+    return {"months": months, "open": open_rows, "closed": closed, "problems": problems,
+            "closed_into_takedown": len(leads),
+            "median_lead_days": (leads[len(leads) // 2] if len(leads) % 2 else
+                                 (leads[len(leads) // 2 - 1] + leads[len(leads) // 2]) / 2) if leads else None}
+
+
 # --- the hand-kept watch register (config/register/watch.json) ---------------------------------------------------
 
 def load_watch(path: Path = WATCH_PATH) -> dict:

@@ -515,6 +515,43 @@ class Lanes(unittest.TestCase):
         finally:
             del os.environ["GITHUB_ACTIONS"]
 
+    def test_closing_lists_candidates_and_measures_closed_rows(self):
+        """Tom, 16 Nov 2026 (UT-IND-3..4): open watch rows get the disclosures up to 12 months after their first report
+        that share a country or name the tracked operation; closed rows give their lead; a bad closed_into is a
+        problem; the command is laptop only."""
+        rows = [
+            {"id": "open-row", "first_report": {"date": "2026-01-10"}, "countries": ["MD"],
+             "tracked_operation": "storm-1516"},
+            {"id": "closed-row", "first_report": {"date": "2026-01-10"}, "countries": ["AM"],
+             "closed_into": "meta:x"},
+            {"id": "bad-row", "first_report": {"date": "2026-01-10"}, "closed_into": "meta:missing"},
+        ]
+        ds = [
+            {"key": "meta:x", "publisher": "meta", "disclosed_at": "2026-04-10T00:00:00Z", "targets": ["AM"]},
+            {"key": "google:a", "publisher": "google", "disclosed_at": "2026-03-01T00:00:00Z", "period": "2026-02",
+             "targets": [], "countries_named": ["MD", "RU"]},
+            {"key": "eeas:s", "publisher": "eeas", "disclosed_at": "2026-03-12T00:00:00Z", "targets": ["DE"],
+             "named_operations": ["storm-1516"]},
+            {"key": "openai:late", "publisher": "openai", "disclosed_at": "2027-06-01T00:00:00Z", "targets": ["MD"]},
+            {"key": "openai:early", "publisher": "openai", "disclosed_at": "2025-12-01T00:00:00Z", "targets": ["MD"]},
+        ]
+        out = activity.closing(rows, ds)
+        cands = out["open"][0]["candidates"]
+        self.assertEqual([c["key"] for c in cands], ["eeas:s", "google:a"])     # tracked operation first; in window
+        self.assertEqual(cands[0]["kind"], "naming")
+        self.assertEqual(cands[1]["basis"], "shared named country (not a target)")
+        self.assertEqual(cands[1]["period"], "2026-02")
+        self.assertEqual(out["closed"], [{"row": "closed-row", "closed_into": "meta:x", "publisher": "meta",
+                                          "kind": "takedown", "disclosed_at": "2026-04-10", "lead_days": 90}])
+        self.assertEqual((out["closed_into_takedown"], out["median_lead_days"]), (1, 90))
+        self.assertEqual(len(out["problems"]), 1)
+        import os
+        os.environ["GITHUB_ACTIONS"] = "true"
+        try:
+            self.assertEqual(cli.main(["closing"]), 1)            # refused in Actions: laptop only
+        finally:
+            del os.environ["GITHUB_ACTIONS"]
+
     def test_meta_counts_and_indicator_count(self):
         net = meta.parse_network((FIX / "meta_meta-h2-2026-iran-cib-based-network.md").read_text(encoding="utf-8"))
         self.assertEqual(net["counts"], {"facebook_accounts": 4, "instagram_accounts": 31})

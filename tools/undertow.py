@@ -4,7 +4,8 @@
     python tools/undertow.py collect --only meta     # one or more lanes; the rest keep their last copy
     python tools/undertow.py build                   # build site/ from data/snapshot.json
     python tools/undertow.py check                   # registers, feed linter, STIX check, leak scan
-    python tools/undertow.py triage [--days 60]      # LAPTOP ONLY: list new, unnamed reported activity for Tom
+    python tools/undertow.py triage [--days 180]     # LAPTOP ONLY: list new, unnamed reported activity for Tom
+    python tools/undertow.py closing [--months 12]   # LAPTOP ONLY: watch rows against later disclosures (UT-IND-3..4)
 
 collect never falls back to made-up data. A lane that fails keeps its last good copy (from_previous) or stays
 empty, and the snapshot's "lanes" block says which.
@@ -444,6 +445,20 @@ def triage(days: int = 60, root: Path = ROOT, getter=None, pause: float | None =
     return found
 
 
+def closing_list(root: Path = ROOT, months: int = activity.CLOSE_MONTHS) -> dict:
+    """Watch rows against the disclosures in data/snapshot.json (UT-IND-3..4). Writes data/closing.json (git-ignored,
+    never published) and returns it. Run after each collect that brings a new disclosure; Tom closes rows by hand."""
+    snap = json.loads((root / "data" / "snapshot.json").read_text(encoding="utf-8"))
+    recs = snap.get("records") or {}
+    disclosures = [r for lane in LANES if lane not in REPORTER_LANES and lane != "watch" for r in recs.get(lane, [])]
+    reg = activity.load_watch(root / "config" / "register" / "watch.json")
+    out = activity.closing(reg.get("rows") or [], disclosures, months)
+    out["snapshot"] = snap.get("generated_at")
+    path = root / "data" / "closing.json"
+    path.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Undertow: attributed influence-operation takedowns, at operation level.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -452,7 +467,9 @@ def main(argv=None) -> int:
     sub.add_parser("build")
     sub.add_parser("check")
     t = sub.add_parser("triage", help="laptop only: list new, unnamed reported activity into data/triage.jsonl")
-    t.add_argument("--days", type=int, default=60)
+    t.add_argument("--days", type=int, default=180)    # Tom, 16 Nov 2026: 180 days, to raise the register's volume
+    k = sub.add_parser("closing", help="laptop only: watch rows against later disclosures into data/closing.json")
+    k.add_argument("--months", type=int, default=activity.CLOSE_MONTHS)
     args = ap.parse_args(argv)
     if args.cmd == "collect":
         snap = collect(only=args.only)
@@ -483,6 +500,25 @@ def main(argv=None) -> int:
         print(f"{len(found)} new for triage (added to data/triage.jsonl; private, never published). Promote a row by "
               "hand into config/register/watch.json.")
         return 0
+    if args.cmd == "closing":
+        if os.environ.get("GITHUB_ACTIONS"):
+            print("closing runs on the laptop only: Tom closes watch rows by hand.")
+            return 1
+        out = closing_list(months=args.months)
+        for o in out["open"]:
+            print(f"  {o['row']} (first report {o['first_report']}): {len(o['candidates'])} candidate(s)")
+            for c in o["candidates"][:10]:
+                print(f"      {c['disclosed_at']}  +{c['days_after_first_report']} d  period {c['period'] or '-'}  "
+                      f"{c['publisher']} ({c['kind']}), "
+                      f"{c['basis']} {', '.join(c['countries'])}: {c['key']}")
+        for c in out["closed"]:
+            print(f"  closed: {c['row']} -> {c['closed_into']} ({c['kind']}), lead {c['lead_days']} d")
+        for p in out["problems"]:
+            print(f"  problem: {p}")
+        print(f"{len(out['open'])} open, {out['closed_into_takedown']} closed into a takedown, median lead "
+              f"{out['median_lead_days'] if out['median_lead_days'] is not None else 'none yet'}; UT-IND-3..4 need 10 "
+              "closed rows. Written to data/closing.json (private). Close a row by hand: closed_into in watch.json.")
+        return 1 if out["problems"] else 0
     return 0
 
 
