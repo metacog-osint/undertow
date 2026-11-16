@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 from tic_doctrine import CONTRACT, geo  # noqa: E402
 
-from . import activity, disarm  # noqa: E402
+from . import activity, disarm, text  # noqa: E402
 
 SITE = "https://undertow.theintelligence.company"
 METHOD = "undertow-1.0"
@@ -75,7 +75,8 @@ SOURCES = {
     "watch": {"id": "undertow-watch-register", "publisher": "Undertow watch register", "grade": "B3",
               "licence": "Each row keeps its reporter's terms (config/register/watch.json); names, dates and links only",
               "independence_group": "watch", "source_type": "independent research",
-              "descriptor": "Reported activity that names no tracked operation, entered by hand from the reporter's "
+              "descriptor": "Reported activity a reporter lane does not match by title (unnamed, or naming tracked operations only "
+                            "in the report's text), entered by hand from the reporter's "
                             "own publication after Tom's review."},
 }
 REQUIREMENT = {"meta": ["UT-PIR-1", "UT-PIR-2"], "google": ["UT-PIR-1"], "openai": ["UT-PIR-1", "UT-PIR-3"],
@@ -124,15 +125,27 @@ def summary(r: dict) -> str:
         n = a["reports"]
         span = (f"on {a['first_report'][:10]}" if n == 1 else
                 f"{n} times between {a['first_report'][:10]} and {a['last_report'][:10]}")
-        label = activity.in_sentence(a["operation_name"]) if r["publisher"] == "watch" else a["operation_name"]
+        label = (a.get("operation_in_sentence") or activity.in_sentence(a["operation_name"])
+                 if r["publisher"] == "watch" else a["operation_name"])
         bits.append(f"{who} reported on {label} {span}.")
         bits.append(f"State: {a['state']}" + (
             f" (last report within {a['quiet_after_days']} days)." if a["state"] == "active" else
             f" (no report from {who} in more than {a['quiet_after_days']} days; not evidence the operation stopped)."))
         if r["publisher"] == "watch":
+            ap = a.get("activity_period")
+            if ap:
+                bits.append(f"Activity the report covers: {ap['from']} to {ap['to']}.")
             if r.get("targets") or r.get("target_regions"):
                 bits.append("Targets as entered from the report: "
                             + ", ".join(_names(r.get("targets") or []) + (r.get("target_regions") or [])) + ".")
+            if r.get("named_operations"):
+                names = {o["id"]: o["name"] for o in text.operations()}
+                bits.append("Operations Undertow tracks that the report names: "
+                            + ", ".join(names.get(o, o) for o in r["named_operations"]) + ".")
+            if r.get("alignment"):
+                bits.append(f"{who} describes it as aligned with {', '.join(_names(r['alignment']))}"
+                            + (f' ("{r["origin_wording"]}")' if r.get("origin_wording") else "")
+                            + "; recorded as alignment, not as an origin.")
         else:
             named = r.get("countries_named") or []
             if named or r.get("target_regions"):

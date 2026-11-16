@@ -54,6 +54,12 @@ def in_sentence(label: str) -> str:
     return label
 
 
+def label_in_sentence(row: dict) -> str:
+    """A watch row's label mid-sentence: lower-cased first letter, unless the row says the label starts with a name
+    (`label_starts_with_name`: "Russian ...", "Kremlin-aligned ...", "Roska Bridge ...")."""
+    return row["operation"] if row.get("label_starts_with_name") else in_sentence(row["operation"])
+
+
 def _title(op_name: str, who: str, st: str, last: str) -> str:
     # A name match says the reporter wrote about the operation, not that it found the operation running, so the title
     # states the report and puts the state in brackets.
@@ -182,7 +188,7 @@ def closing(rows: list[dict], disclosures: list[dict], months: int = CLOSE_MONTH
                 continue
             places = set(d.get("targets") or []) or set(d.get("countries_named") or [])
             shared = sorted(mine & places)
-            by_op = bool(row.get("tracked_operation")) and row["tracked_operation"] in (d.get("named_operations") or [])
+            by_op = bool(set(row_operations(row)) & set(d.get("named_operations") or []))
             if shared or by_op:
                 cands.append({"key": d["key"], "publisher": d["publisher"],
                               "kind": "takedown" if d["publisher"] in TAKEDOWN_LANES else "naming",
@@ -255,9 +261,30 @@ def check_watch(reg: dict) -> list[str]:
                 errs.append(f"{rid}: country codes are ISO alpha-2 ({cc!r})")
         if row.get("origin") and row.get("origin_evidence") not in EVIDENCE:
             errs.append(f"{rid}: origin_evidence must be one of {sorted(EVIDENCE)}")
-        if row.get("tracked_operation") and row["tracked_operation"] not in ops:
-            errs.append(f"{rid}: tracked_operation {row['tracked_operation']!r} is not in config/operations.json")
+        if row.get("tracked_operations") is not None and not isinstance(row["tracked_operations"], list):
+            errs.append(f"{rid}: tracked_operations must be a list of ids")
+        for op in row_operations(row) if isinstance(row.get("tracked_operations") or [], list) else []:
+            if op not in ops:
+                errs.append(f"{rid}: tracked operation {op!r} is not in config/operations.json")
+        for cc in row.get("alignment") or []:
+            if not re.fullmatch(r"[A-Z]{2}", cc):
+                errs.append(f"{rid}: alignment codes are ISO alpha-2 ({cc!r})")
+        ap = row.get("activity_period")
+        if ap is not None and not (isinstance(ap, dict)
+                                   and re.fullmatch(r"\d{4}-\d{2}(-\d{2})?", ap.get("from") or "")
+                                   and re.fullmatch(r"\d{4}-\d{2}(-\d{2})?", ap.get("to") or "")
+                                   and ap["from"] <= ap["to"]):
+            errs.append(f"{rid}: activity_period needs from and to as YYYY-MM or YYYY-MM-DD, from not after to")
     return errs
+
+
+def row_operations(row: dict) -> list[str]:
+    """The tracked operations a watch row's report names (Tom, 16 Nov 2026: a list, `tracked_operations`; the older
+    single `tracked_operation` still reads)."""
+    ops = list(row.get("tracked_operations") or [])
+    if row.get("tracked_operation") and row["tracked_operation"] not in ops:
+        ops.insert(0, row["tracked_operation"])
+    return ops
 
 
 def origin_counts(row: dict) -> bool:
@@ -274,14 +301,16 @@ def watch_records(reg: dict, today: date) -> list[dict]:
         st = state(last["date"], today)
         counts = origin_counts(row)
         key = f"watch:{row['id']}"
-        group = "watch:" + re.sub(r"[^a-z0-9]+", "-", rep["name"].lower()).strip("-")
+        ops = row_operations(row)
+        lane_of = {r.name: lane for lane, r in reporters.REPORTERS.items()}
+        group = lane_of.get(rep["name"]) or "watch:" + re.sub(r"[^a-z0-9]+", "-", rep["name"].lower()).strip("-")
         out.append({
             "key": key, "lane": "watch", "publisher": "watch", "grade": rep["grade"], "independence_group": group,
             "reporter": rep,
-            "disclosure": {"id": key, "title": f"{rep['name']} reporting on {in_sentence(row['operation'])}", "url": last["url"]},
+            "disclosure": {"id": key, "title": f"{rep['name']} reporting on {label_in_sentence(row)}", "url": last["url"]},
             "title": _title(row["operation"], rep["name"], st, last["date"]),
             "operation_name": row["operation"],
-            "named_operations": [row["tracked_operation"]] if row.get("tracked_operation") else [],
+            "named_operations": ops,
             "period": last["date"][:7],
             "disclosed_at": last["date"] + "T00:00:00Z",
             "disclosed_precision": "day",
@@ -293,15 +322,18 @@ def watch_records(reg: dict, today: date) -> list[dict]:
                                              "the reporter cites another's attribution") + ")"
                 if row.get("origin") else "none stated"),
             "origin_reported": list(row.get("origin") or []),
-            "alignment": [],
+            # a reporter's "state-aligned" or "Kremlin-aligned" is alignment, never origin (as the EEAS's wording)
+            "alignment": list(row.get("alignment") or []),
             "targets": list(row.get("countries") or []),
             "target_regions": [], "target_text": None, "countries_named": [],
             "platforms": sorted(row.get("platforms") or []),
             "counts": {}, "summary": None, "summary_note": None, "orgs": [],
             "url": last["url"], "withheld": 0, "disarm": [],
             "activity": {
-                "unit": "reported activity", "operation": row.get("tracked_operation"),
-                "operation_name": row["operation"], "reporter": "watch", "reporter_name": rep["name"],
+                "unit": "reported activity", "operation": ops[0] if len(ops) == 1 else None, "operations": ops,
+                "activity_period": row.get("activity_period"),
+                "operation_name": row["operation"], "operation_in_sentence": label_in_sentence(row),
+                "reporter": "watch", "reporter_name": rep["name"],
                 "grade": rep["grade"], "first_report": first["date"], "last_report": last["date"],
                 "reports": int(row.get("reports") or (2 if row.get("last_report") else 1)), "state": st,
                 "quiet_after_days": QUIET_DAYS, "state_as_of": today.isoformat(),

@@ -1,10 +1,11 @@
 {
   "register": "watch",
-  "note": "Hand-kept register of reported activity that names no tracked operation (decision 2, Tom, 16 Nov 2026). Rows are promoted by Tom from the private triage list (python tools/undertow.py triage, data/triage.jsonl, never published). Each row is the operation as the reporter frames it, never a person's name, handle, URL or domain of the operation. See undertow/activity.py for the fields and doctrine/method.md for the rules.",
+  "note": "Hand-kept register of reported activity that a reporter lane does not match by title: unnamed activity, or a report that names tracked operations only in its text (decision 2, Tom, 16 Nov 2026; several tracked operations, alignment and activity_period from 16 Nov 2026). Rows are promoted by Tom from the private triage list (python tools/undertow.py triage, data/triage.jsonl, never published). Each row is the operation as the reporter frames it, never a person's name, handle, URL or domain of the operation. See undertow/activity.py for the fields and doctrine/method.md for the rules.",
   "fields": {
     "id": "lower-case slug, stable",
     "operation": "the operation's label as the reporter frames it (no names of individuals)",
-    "tracked_operation": "optional: an id in config/operations.json once the operation is tracked there",
+    "label_starts_with_name": "optional true when the label begins with a name or demonym, so it keeps its capital mid-sentence",
+    "tracked_operations": "optional list: ids in config/operations.json of the tracked operations the report names (Tom, 16 Nov 2026); the older single tracked_operation still reads",
     "reporter": {
       "name": "the reporter",
       "grade": "B2 or B3",
@@ -18,16 +19,20 @@
     "last_report": "optional, same shape",
     "reports": "optional count of reports",
     "countries": "ISO alpha-2 codes of the countries targeted, as the reporter states them",
+    "activity_period": "optional {from, to}, YYYY-MM or YYYY-MM-DD: the period the report says the activity ran (not the report date)",
     "platforms": "optional list",
     "origin": "optional ISO alpha-2 codes of the origin the reporter states",
     "origin_evidence": "own (the reporter shows its own evidence), cites-other (repeats a platform's or government's attribution) or none",
     "attribution_wording": "optional: the reporter's attribution words, short",
+    "alignment": "optional ISO alpha-2 codes where the reporter calls the activity aligned with a state ('state-aligned', 'Kremlin-aligned'): recorded as alignment, never origin",
     "checked_by": "who checked the row against the report (decision 4: origin counts only when this is set and origin_evidence is own)",
     "checked_on": "YYYY-MM-DD",
     "closed_into": "optional: the disclosure key when a platform or government later names the network"
   },
   "reporter_hosts": [
-    "https://dfrlab.org/"
+    "https://dfrlab.org/",
+    "https://checkfirst.network/",
+    "https://international.canada.ca/"
   ],
   "rows": [
     {
@@ -48,7 +53,158 @@
       ],
       "promoted_by": "Tom",
       "promoted_on": "2026-11-16",
-      "note": "Promoted from the 16 Nov 2026 triage run. Azerbaijan is named in the report but not entered as a target. No origin entered: Undertow does not read DFRLab's attribution and the row is not checked."
+      "note": "Promoted from the 16 Nov 2026 triage run. Azerbaijan is named in the report but not entered as a target. No origin entered: Undertow does not read DFRLab's attribution and the row is not checked. Activity period added 16 Nov 2026 from the report: claims tracked 1 Jan to 7 Jun 2026 (the parliamentary election of 7 June), some pages silent from 9 June.",
+      "activity_period": {
+        "from": "2026-01",
+        "to": "2026-06"
+      }
+    },
+    {
+      "id": "armenia-election-checkfirst-2026",
+      "operation": "Pro-Russian disinformation before Armenia's June 2026 parliamentary elections",
+      "tracked_operations": [
+        "operation-overload",
+        "portal-kombat",
+        "storm-1516"
+      ],
+      "reporter": {
+        "name": "CheckFirst",
+        "grade": "B2",
+        "terms": "No terms of use published (privacy policy only); its llms.txt welcomes reading, indexing and citing with attribution and a link; read 16 Nov 2026. Undertow keeps the label, date and link only",
+        "source_type": "independent research"
+      },
+      "first_report": {
+        "date": "2026-06-10",
+        "url": "https://checkfirst.network/noise-without-effect-anti-pashinyan-disinformation-on-the-rise-ahead-of-armenian-parliamentary-elections/"
+      },
+      "countries": [
+        "AM"
+      ],
+      "activity_period": {
+        "from": "2026-05",
+        "to": "2026-06"
+      },
+      "platforms": [
+        "Max",
+        "Telegram",
+        "TikTok"
+      ],
+      "attribution_wording": "foreign, especially pro-Russian, actors",
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-16",
+      "note": "From the 16 Nov 2026 triage run (180 days); Tom's yes to the watch-candidates draft, candidate 1. Not the activity of armenia-election-war-fears-2026 (other platforms, no war-fear networks). No origin entered; the row is not checked."
+    },
+    {
+      "id": "bulgaria-election-eu-interference-claims-2026",
+      "operation": "Kremlin-aligned claims of EU interference around the April 2026 parliamentary election in Bulgaria",
+      "tracked_operations": [
+        "portal-kombat"
+      ],
+      "reporter": {
+        "name": "DFRLab",
+        "grade": "B2",
+        "terms": "Atlantic Council Terms and Conditions of Use, read 16 Nov 2026: noncommercial use with the Council's notices retained; Undertow keeps the label, date and link only",
+        "source_type": "independent research"
+      },
+      "first_report": {
+        "date": "2026-06-09",
+        "url": "https://dfrlab.org/2026/06/09/kremlin-aligned-actors-targeted-bulgarian-vote-with-eu-interference-claims/"
+      },
+      "countries": [
+        "BG"
+      ],
+      "activity_period": {
+        "from": "2026-04-01",
+        "to": "2026-04-19"
+      },
+      "platforms": [
+        "Facebook",
+        "Telegram",
+        "X"
+      ],
+      "attribution_wording": "Kremlin-aligned",
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-16",
+      "note": "From the 16 Nov 2026 triage run (180 days); candidate 2. DFRLab monitored 1 to 19 Apr 2026 (the vote of 19 April); overt state media republished and coordinated laundering through mirror sites; the report names the Pravda Network. No platform action reported. No origin entered; not checked.",
+      "label_starts_with_name": true
+    },
+    {
+      "id": "roska-bridge-2026",
+      "operation": "Roska Bridge, a pro-Russian set using decentralised platforms",
+      "tracked_operations": [
+        "portal-kombat"
+      ],
+      "reporter": {
+        "name": "CheckFirst",
+        "grade": "B2",
+        "terms": "No terms of use published (privacy policy only); its llms.txt welcomes reading, indexing and citing with attribution and a link; read 16 Nov 2026. Undertow keeps the label, date and link only",
+        "source_type": "independent research"
+      },
+      "first_report": {
+        "date": "2026-07-02",
+        "url": "https://checkfirst.network/roska-bridge-how-a-pro-russian-ims-exploits-vulnerabilities-of-decentralised-platforms-to-spread-propaganda/"
+      },
+      "countries": [
+        "DE",
+        "FR",
+        "UA",
+        "US"
+      ],
+      "activity_period": {
+        "from": "2025-09",
+        "to": "2026-07"
+      },
+      "platforms": [
+        "Bluesky",
+        "Mastodon"
+      ],
+      "attribution_wording": "pro-Russian",
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-16",
+      "note": "From the 16 Nov 2026 triage run; candidate 3. CheckFirst's own name for the set, active since at least Sep 2025; it states a structural link to Portal Kombat without formal proof. Accounts still active at the time of research. No origin entered; not checked.",
+      "label_starts_with_name": true
+    },
+    {
+      "id": "armenia-election-g7-rrm-2026",
+      "operation": "Russian state-aligned operations around Armenia's 2026 parliamentary elections, in joint G7 monitoring",
+      "tracked_operations": [
+        "operation-overload",
+        "portal-kombat",
+        "storm-1516"
+      ],
+      "reporter": {
+        "name": "G7 Rapid Response Mechanism (Global Affairs Canada)",
+        "grade": "B2",
+        "terms": "canada.ca terms, read 16 Nov 2026: non-commercial reproduction allowed with the complete title, the author and the original URL; no commercial redistribution without permission. Undertow keeps the label, date and link only",
+        "source_type": "government"
+      },
+      "first_report": {
+        "date": "2026-10-26",
+        "url": "https://international.canada.ca/en/global-affairs/corporate/reports/rapid-response-mechanism/news/2026-armenia-election"
+      },
+      "countries": [
+        "AM"
+      ],
+      "activity_period": {
+        "from": "2026-01-01",
+        "to": "2026-06-10"
+      },
+      "platforms": [
+        "Bluesky",
+        "Facebook",
+        "Instagram",
+        "Telegram",
+        "TikTok",
+        "X"
+      ],
+      "alignment": [
+        "RU"
+      ],
+      "attribution_wording": "Russian state-aligned",
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-16",
+      "note": "Hand-entered (candidate 4); the page shows no publication date, only Date modified 2026-10-26, which is used. Monitoring 1 Jan to 10 Jun 2026 (election 7 June). The report says platform moderators removed several Operation Overload videos, undated. 'State-aligned' is recorded as alignment, never origin. Not the activity of armenia-election-war-fears-2026.",
+      "label_starts_with_name": true
     }
   ]
 }
