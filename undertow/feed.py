@@ -128,11 +128,21 @@ def summary(r: dict) -> str:
         bits.append(f"State: {a['state']}" + (
             f" (last report within {a['quiet_after_days']} days)." if a["state"] == "active" else
             f" (no report from {who} in more than {a['quiet_after_days']} days; not evidence the operation stopped)."))
-        places = (r.get("targets") or []) or (r.get("countries_named") or [])
-        if places or r.get("target_regions"):
-            lab = ("Targets as the reporter states them: " if r.get("targets") else
-                   "Countries and regions named in the reports: ")
-            bits.append(lab + ", ".join(_names(places) + (r.get("target_regions") or [])) + ".")
+        if r["publisher"] == "watch":
+            if r.get("targets") or r.get("target_regions"):
+                bits.append("Targets as the reporter states them: "
+                            + ", ".join(_names(r.get("targets") or []) + (r.get("target_regions") or [])) + ".")
+        else:
+            named = r.get("countries_named") or []
+            if named or r.get("target_regions"):
+                bits.append("Countries and regions named in the reports: "
+                            + ", ".join(_names(named) + (r.get("target_regions") or [])) + ".")
+            if r.get("targets"):
+                bits.append("Marked on the map only where a platform's or the EEAS's disclosure of this operation "
+                            f"records a target: {', '.join(_names(r['targets']))}.")
+            elif named:
+                bits.append("None of them is a target that a disclosure of this operation records, so the item is "
+                            "not marked on the map.")
         if r.get("origin"):
             bits.append(f"Origin as {who} states it from its own evidence, checked against the report: "
                         f"{', '.join(_names(r['origin']))}.")
@@ -162,7 +172,8 @@ def summary(r: dict) -> str:
     if r.get("targets") or r.get("target_regions"):
         bits.append("Targets as stated: " + ", ".join(_names(r.get("targets") or []) + (r.get("target_regions") or [])) + ".")
     elif r.get("countries_named"):
-        bits.append("Countries named in the publisher's description: " + ", ".join(_names(r["countries_named"])) + ".")
+        bits.append("Countries named in the publisher's description: " + ", ".join(_names(r["countries_named"]))
+                    + " (not stated as targets, so not marked on the map).")
     ct = _counts_text(r.get("counts") or {})
     if ct:
         bits.append(f"Counts: {ct}.")
@@ -196,8 +207,12 @@ def feature(r: dict, generated: str) -> dict:
     if r.get("disclosed_at"):
         src["published_at"] = r["disclosed_at"]
     sid = src["id"]
-    places = r.get("targets") or r.get("countries_named") or []
-    countries = list(dict.fromkeys((r.get("origin") or []) + places + (r.get("alignment") or [])))
+    # Only stated targets are marked on the map (Tom, 16 Nov 2026). Countries a description merely names (Google's
+    # stance, OpenAI's one line, a reporter's story) stay in `countries` and in the summary, never in the geometry,
+    # because they often include where the operators are said to be.
+    places = r.get("targets") or []
+    countries = list(dict.fromkeys((r.get("origin") or []) + places + (r.get("countries_named") or [])
+                                   + (r.get("alignment") or [])))
     props = {
         "contract": CONTRACT,
         "id": item_id(r["key"]),

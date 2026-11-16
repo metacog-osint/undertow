@@ -227,8 +227,14 @@ fails keeps its last good records, which lack the field until the lane next succ
   - Every item is kind observation, tier routine, `reported`, grade A2.
 
 ## Known limits
-- Google names no target. Its items' geometry is on the countries the stance names (`countries_named`), and on the
-  page they count under "none named" in the origin-by-target matrix.
+- **Only stated targets are marked on the map** (Tom, 16 Nov 2026, "Mark only target countries on the map"). Google
+  and OpenAI name no target, so all their items (342 and 27 on 16 Nov) have no geometry and list under Off the map
+  in COP; before, 249 Google and 15 OpenAI items were drawn on the countries their stance or summary names, which
+  can include the operators' country. Those countries stay in `countries` and `countries_named` and the summary
+  says they are not targets. A reporter's item is marked at countries its reports name that a disclosure of the
+  same operation records as targets (`activity.place`): on 16 Nov, 5 of 9 (CORRECTIV's Storm-1516 at the US only,
+  no longer Russia), 4 off the map. On 16 Nov, 47 of 434 items have geometry. On the page Google counts under
+  "none named" in the origin-by-target matrix.
 - Meta's "added" date is when the file entered the repository. The H2 2025 files were all added on 19 May 2026, so
   that date is later than the report.
 - OpenAI's RSS gives no target and no Breakout category; its origin wording is only what the one line says.

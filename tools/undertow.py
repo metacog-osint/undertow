@@ -240,6 +240,7 @@ def all_records(snap: dict) -> list[dict]:
     today = _today(snap)
     out += activity.aggregate({lane: recs.get(lane, []) for lane in REPORTER_LANES}, today)
     out += activity.watch_records({"rows": recs.get("watch", [])}, today)
+    activity.place(out)
     analysis.assess(out)
     return out
 

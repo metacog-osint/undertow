@@ -85,9 +85,12 @@ Nov 2026** (15 rules as drafted, two narrowed so that an unnamed medium is not r
 website is not read as a news site); every item says so (`disarm_rules_status`).
 
 ## Outputs
-- `data/feed.geojson`: tic-feed/2. Geometry on the target countries the publisher names; Google and OpenAI name
-  none, so their geometry is on the countries named in the stance or summary (`countries_named`), and null when none
-  is named.
+- `data/feed.geojson`: tic-feed/2. Geometry only on stated target countries (Tom, 16 Nov 2026), never on a country a
+  description merely names, because those often include where the operators are said to be. Google and OpenAI name
+  no target, so their items have no geometry; the countries their stance or summary names stay in `countries` and
+  `countries_named` and in the summary. A reporter's item is marked only at countries its reports name that a
+  platform's or the EEAS's disclosure of the same operation records as targets (`activity.place`); a watch row at
+  the countries entered as its targets.
 - `data/stix.json`: a STIX 2.1 bundle with deterministic UUIDv5 ids. Report per disclosure, campaign per network,
   a report per reported-activity item on the operation's intrusion-set (no campaign, origin or relationship),
   location with `originates-from` and `targets`, DISARM's own attack-pattern objects (unchanged, with DISARM's CC
