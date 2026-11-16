@@ -197,10 +197,50 @@ def feature(r: dict, generated: str) -> dict:
     return {"type": "Feature", "geometry": _geometry(places), "properties": props}
 
 
-def build_feed(records: list[dict], generated: str) -> dict:
+def health(lanes: dict, records: list[dict]) -> dict:
+    """The feed's per-source health record, keyed by the source id the lane's items carry (the key the kit's history
+    log and COP's ledger read), in Cordon's and Headwind's shape: state, last_ok, last_error, failures, checked_at,
+    detail, plus lane and data_as_of (the newest disclosure date among the lane's items).
+
+    State is "up" when the lane was read on its last check and "failing" when it was not (its last good items stay
+    in the feed, marked from_previous on the page). Disclosures come twice a year to quarterly with no fixed date, so
+    the kit's "fresh", "late" and "stale" would judge nothing. A failing lane's last_ok is older than its checked_at,
+    so the history log ends none of its items."""
+    newest: dict[str, str] = {}
+    for r in records:
+        d = r.get("disclosed_at")
+        if d and d > newest.get(r["publisher"], ""):
+            newest[r["publisher"]] = d
+    out = {}
+    for lane, src in SOURCES.items():
+        st = lanes.get(lane) or {}
+        ok = st.get("status") == "ok"
+        failed = st.get("status") == "failed"
+        n = st.get("items") or 0
+        if ok:
+            detail = f"{n} items" + (" (last good copy, not read on this run)" if st.get("from_previous") else "")
+        elif failed:
+            detail = (f"not read; {n} items from the last good copy" if st.get("from_previous")
+                      else "not read; no earlier copy, so no items")
+        else:
+            detail = "not run yet"
+        out[src["id"]] = {
+            "state": "up" if ok else "failing",
+            "last_ok": st.get("fetched_at"),
+            "last_error": st.get("error") if failed else None,
+            "failures": int(st.get("failures") or 0) if (ok or failed) else 0,
+            "checked_at": st.get("failed_at") if failed else st.get("fetched_at"),
+            "detail": detail,
+            "lane": lane,
+            "data_as_of": newest.get(lane),
+        }
+    return out
+
+
+def build_feed(records: list[dict], generated: str, health_record: dict | None = None) -> dict:
     feats = [feature(r, generated) for r in records]
     feats.sort(key=lambda f: (f["properties"]["data_as_of"], f["properties"]["id"]), reverse=True)
-    return {
+    doc = {
         "type": "FeatureCollection",
         "contract": CONTRACT,
         "program": "undertow",
@@ -217,5 +257,8 @@ def build_feed(records: list[dict], generated: str) -> dict:
         "language_key": LANGUAGE_KEY,
         "note": ("Operation level only: no indicator values, account handles, URLs, domains or names of individuals. "
                  "Origin is the publisher's judgment of where the operators were and is never read as sponsorship."),
-        "features": feats,
     }
+    if health_record is not None:
+        doc["health"] = health_record
+    doc["features"] = feats
+    return doc

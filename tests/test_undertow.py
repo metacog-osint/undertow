@@ -14,7 +14,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,7 +29,7 @@ cli = importlib.util.module_from_spec(_spec)   # tools/undertow.py (its name cla
 _spec.loader.exec_module(cli)
 
 from undertow import analysis, disarm, eeas, feed, google, meta, openai_rss, stix, text, tiktok  # noqa: E402
-from tic_doctrine import contract, registers  # noqa: E402
+from tic_doctrine import contract, history, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
 
 MANIFEST = json.loads((FIX / "MANIFEST.json").read_text(encoding="utf-8"))
@@ -87,6 +87,19 @@ class Pipeline(unittest.TestCase):
         self.assertEqual(counts["tiktok"], 25)
         self.assertGreater(counts["google"], 240)     # Q2 158 + Q3 93 recorded; Q1 not recorded
         self.assertGreater(counts["openai"], 20)
+
+    def test_health_keyed_by_item_source_ids(self):
+        h = self.feed["health"]
+        item_sources = {f["properties"]["sources"][0]["id"] for f in self.feed["features"]}
+        self.assertEqual(set(h), item_sources)       # the history log's lane is an item's first source id
+        self.assertEqual({v["lane"] for v in h.values()}, set(cli.LANES))
+        for sid, e in h.items():
+            self.assertEqual(e["state"], "up", sid)
+            self.assertEqual(e["last_ok"], e["checked_at"], sid)
+            self.assertEqual(e["failures"], 0, sid)
+            self.assertIsNone(e["last_error"], sid)
+            self.assertTrue(e["data_as_of"], sid)
+        self.assertEqual(history.lanes_ok(h), item_sources)
 
     def test_openai_only_rss_fetched(self):
         openai_urls = [u for u in FETCHED if "openai.com" in u]
@@ -213,6 +226,59 @@ class Pipeline(unittest.TestCase):
             self.assertEqual(e["kind"], "data_release")
             self.assertNotIn("probability", json.dumps(e))
             self.assertIn("not a published date", e["title"])
+
+
+class HealthAndHistory(unittest.TestCase):
+    """A failed lane is marked failing in the feed's health record, so the kit's history log ends none of its items;
+    a lane read well ends the items that left it."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = Path(tempfile.mkdtemp(prefix="undertow-hist-"))
+        cli.collect(root=cls.tmp, getter=getter)
+        cls.feed1 = json.loads(cli.build_site(root=cls.tmp)["data/feed.geojson"])
+
+        def meta_down(url, timeout=60):
+            if "meta/threat-research" in url:
+                raise urllib.error.HTTPError(url, 503, "down", {}, None)
+            return getter(url, timeout)
+        cls.snap2 = cli.collect(root=cls.tmp, getter=meta_down)
+        cls.feed2 = json.loads(cli.build_site(root=cls.tmp)["data/feed.geojson"])
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def test_failed_lane_is_failing_and_keeps_last_copy(self):
+        st = self.snap2["lanes"]["meta"]
+        self.assertEqual((st["status"], st["from_previous"], st["failures"], st["items"]), ("failed", True, 1, 22))
+        e = self.feed2["health"]["meta-threat-research"]
+        self.assertEqual(e["state"], "failing")   # excluded by state, even if both runs fell in the same second
+        self.assertIn("503", e["last_error"])
+        self.assertNotIn("meta-threat-research", history.lanes_ok(self.feed2["health"]))
+        self.assertEqual(len(history.lanes_ok(self.feed2["health"])), 4)
+
+    def _run(self, feed2):
+        t1 = datetime(2026, 11, 16, 2, 30, tzinfo=timezone.utc)
+        state, lines = history.update({}, self.feed1, self.feed1["health"], t1)
+        self.assertEqual({ln["change"] for ln in lines}, {"new"})
+        self.assertEqual(len(lines), len(self.feed1["features"]))
+        return history.update(state, feed2, feed2["health"], t1 + timedelta(hours=6))[1]
+
+    def test_failed_lane_ends_nothing(self):
+        # As if the failed lane had lost an item too: its items still must not end.
+        feed2 = dict(self.feed2)
+        gone = next(f for f in feed2["features"] if f["properties"]["sources"][0]["id"] == "meta-threat-research")
+        feed2["features"] = [f for f in feed2["features"] if f is not gone]
+        self.assertEqual([ln for ln in self._run(feed2) if ln["change"] == "ended"], [])
+
+    def test_read_lane_ends_the_item_that_left(self):
+        feed2 = dict(self.feed1)
+        gone = next(f for f in feed2["features"] if f["properties"]["sources"][0]["id"] == "google-iob")
+        feed2["features"] = [f for f in feed2["features"] if f is not gone]
+        ended = [ln for ln in self._run(feed2) if ln["change"] == "ended"]
+        self.assertEqual([ln["id"] for ln in ended], [gone["properties"]["id"]])
+        self.assertEqual(ended[0]["lane"], "google-iob")
 
 
 class Lanes(unittest.TestCase):
