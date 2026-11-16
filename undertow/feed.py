@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 from tic_doctrine import CONTRACT, geo  # noqa: E402
 
-from . import disarm  # noqa: E402
+from . import activity, disarm  # noqa: E402
 
 SITE = "https://undertow.theintelligence.company"
 METHOD = "undertow-1.0"
@@ -124,13 +124,14 @@ def summary(r: dict) -> str:
         n = a["reports"]
         span = (f"on {a['first_report'][:10]}" if n == 1 else
                 f"{n} times between {a['first_report'][:10]} and {a['last_report'][:10]}")
-        bits.append(f"{who} reported on {a['operation_name']} {span}.")
+        label = activity.in_sentence(a["operation_name"]) if r["publisher"] == "watch" else a["operation_name"]
+        bits.append(f"{who} reported on {label} {span}.")
         bits.append(f"State: {a['state']}" + (
             f" (last report within {a['quiet_after_days']} days)." if a["state"] == "active" else
             f" (no report from {who} in more than {a['quiet_after_days']} days; not evidence the operation stopped)."))
         if r["publisher"] == "watch":
             if r.get("targets") or r.get("target_regions"):
-                bits.append("Targets as the reporter states them: "
+                bits.append("Targets as entered from the report: "
                             + ", ".join(_names(r.get("targets") or []) + (r.get("target_regions") or [])) + ".")
         else:
             named = r.get("countries_named") or []

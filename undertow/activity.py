@@ -45,6 +45,15 @@ def state(last: str, today: date) -> str:
     return "active" if (today - _day(last)).days <= QUIET_DAYS else "quiet"
 
 
+def in_sentence(label: str) -> str:
+    """A watch row's label is a description written to start a title ("Inauthentic networks ..."). Mid-sentence its
+    first letter is lower-cased, unless the first word has another capital or a digit (an acronym such as RRN)."""
+    first = label.split(" ", 1)[0]
+    if len(first) > 1 and first[0].isupper() and first[1:] == first[1:].lower() and not any(c.isdigit() for c in first):
+        return label[0].lower() + label[1:]
+    return label
+
+
 def _title(op_name: str, who: str, st: str, last: str) -> str:
     # A name match says the reporter wrote about the operation, not that it found the operation running, so the title
     # states the report and puts the state in brackets.
@@ -269,7 +278,7 @@ def watch_records(reg: dict, today: date) -> list[dict]:
         out.append({
             "key": key, "lane": "watch", "publisher": "watch", "grade": rep["grade"], "independence_group": group,
             "reporter": rep,
-            "disclosure": {"id": key, "title": f"{rep['name']} reporting on {row['operation']}", "url": last["url"]},
+            "disclosure": {"id": key, "title": f"{rep['name']} reporting on {in_sentence(row['operation'])}", "url": last["url"]},
             "title": _title(row["operation"], rep["name"], st, last["date"]),
             "operation_name": row["operation"],
             "named_operations": [row["tracked_operation"]] if row.get("tracked_operation") else [],
