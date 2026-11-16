@@ -385,6 +385,41 @@
       "sha256_full": "949038260eed3e6cfae8718098a7b771045f7d3cde8a74af3327e9c74ddd9072",
       "bytes_full": 19499,
       "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "checkfirst_feed_01.xml": {
+      "url": "https://checkfirst.network/feed/",
+      "fetched_at": "2026-11-16T03:27:07Z",
+      "sha256_full": "bd3e7ccf3e0131105e35c1d7aba94f1c9747b88cc164bb5215ea11c8ee326633",
+      "bytes_full": 11768,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "checkfirst_feed_02.xml": {
+      "url": "https://checkfirst.network/feed/?paged=2",
+      "fetched_at": "2026-11-16T03:27:10Z",
+      "sha256_full": "a3d393b52807fa63ce9741da8330fae4bc5cc0e259d274341c7fc0b74ff76555",
+      "bytes_full": 11046,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "checkfirst_feed_03.xml": {
+      "url": "https://checkfirst.network/feed/?paged=3",
+      "fetched_at": "2026-11-16T03:27:13Z",
+      "sha256_full": "56b3091653c9fde0032e6634bcd3112f197ce647555313672e8bd668e7b0e125",
+      "bytes_full": 11594,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "checkfirst_feed_04.xml": {
+      "url": "https://checkfirst.network/feed/?paged=4",
+      "fetched_at": "2026-11-16T03:27:16Z",
+      "sha256_full": "ff54b6758951a83593ed22c6205b276dffd983867499a8ab35966bf6d079b2fe",
+      "bytes_full": 11405,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "correctiv_feed_01.xml": {
+      "url": "https://correctiv.org/en/feed/",
+      "fetched_at": "2026-11-16T03:27:18Z",
+      "sha256_full": "f6df7a4687828ff8ebb832e688af057a6cbfe3f17c804061fd4ae1966cb38bae",
+      "bytes_full": 114942,
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
     }
   }
 }

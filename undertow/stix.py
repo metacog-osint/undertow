@@ -13,6 +13,9 @@ Mapping (plan section 3; STIX 2.1 OS, docs.oasis-open.org/cti/stix/v2.1/os/stix-
   name hand-kept in config/operations.json or config/register/ (curated organisations, never a person).
   threat_actor_types is ["unknown"] and resource_level "organization": the publisher's naming is not a finding of
   who directed it, and the country is where the publisher places the organisation.
+- reported activity on a tracked operation (16 Nov 2026): a report (report_types ["threat-actor"]) by the reporter
+  whose object_refs is the operation's intrusion-set, one external reference per report, x_tic_activity_state
+  "active" or "quiet". No campaign, origin or relationship: a reporter acted on nothing and adds no origin
 - markings: TLP:CLEAR (TLP 2.0, copied from OASIS) plus a statement marking per source licence
 
 Never emitted: indicator, observed-data, any cyber-observable (user-account, url, domain-name), an identity for a
@@ -86,6 +89,31 @@ def build_bundle(records: list[dict], generated: str) -> dict:
         lane = r["publisher"]
         used_lanes.add(lane)
         marks = [tlp["id"], statement[lane]]
+        if r.get("activity") and lane != "watch":
+            # Reported activity on a tracked operation: a STIX report by the reporter about the intrusion set, not a
+            # campaign of its own (the reporter disclosed nothing it acted on).
+            a = r["activity"]
+            o = next((x for x in text.operations() if x["id"] == a["operation"]), None)
+            if not o:
+                continue
+            iid = sid("intrusion-set", o["id"])
+            iset = {"type": "intrusion-set", "spec_version": "2.1", "id": iid, "created_by_ref": SUITE,
+                    "created": EPOCH, "modified": EPOCH, "name": o["name"], "object_marking_refs": [tlp["id"]]}
+            if o.get("aliases"):
+                iset["aliases"] = o["aliases"]
+            add(iset)
+            first, last = ts(a["first_report"]), ts(a["last_report"])
+            add({"type": "report", "spec_version": "2.1", "id": sid("report", r["key"]), "created_by_ref": SUITE,
+                 "created": first, "modified": last, "name": r["title"], "description": summary(r),
+                 "report_types": ["threat-actor"], "published": last, "object_refs": [iid],
+                 "external_references": [{"source_name": SOURCES[lane]["publisher"], "url": x["url"],
+                                          "description": f"report of {x['date'][:10]}"} for x in a["report_links"]]
+                 + [{"source_name": "undertow", "external_id": item_id(r["key"]),
+                     "url": f"https://undertow.theintelligence.company/#{item_id(r['key'])}"}],
+                 "object_marking_refs": marks, "x_tic_source_grade": a["grade"], "x_tic_status_class": "reported",
+                 "x_tic_activity_state": a["state"], "x_tic_reports": a["reports"],
+                 "x_tic_first_report": first, "x_tic_quiet_after_days": a["quiet_after_days"]})
+            continue
         cid = sid("campaign", r["key"])
         when = ts(r.get("disclosed_at"))
         conf = (r.get("confidence") or {}).get("confidence")

@@ -16,7 +16,12 @@ section 6; programme row in `_ideas\new-programs.md`). Measurements and publishe
   - `28fb96d`: house bar v1.13, from the session that listed Wake.
   - `e70194d`: EEAS register, second machine reading.
   - `d2d0b8f`: date precision and kit 0.5.6.
-  - Then this notes rewrite.
+  - `393758e`: health record and history log.
+  - `e73b0e7`: STIX threat-actors for five hand-kept named organisations.
+  - `a3e1a65`: the DFRLab lane (corroboration and link-out).
+  - Then the reported-activity slice (16 Nov 2026): CheckFirst and CORRECTIV lanes, reported-activity items, watch
+    register and the laptop-only triage list (below).
+  - The workflow commits `history/` to main after each run, so fetch before working.
   - Each commit and push needs Tom's yes. Push by named commit (`git push origin <sha>:refs/heads/main`) after
     listing what is ahead, and ask for each push by its sha (the auto-mode check refused pushes until Tom said
     "Push <sha>").
@@ -49,7 +54,8 @@ python tools/undertow.py collect               # fetch every live lane into data
 python tools/undertow.py collect --only meta   # one or more lanes; the rest keep their last copy
 python tools/undertow.py build                 # build site/ from data/snapshot.json
 python tools/undertow.py check                 # registers, feed linter, STIX check, leak scan
-python -m unittest discover -s tests           # 39 offline tests on recorded real replies
+python tools/undertow.py triage [--days 60]    # LAPTOP ONLY: new, unnamed reported activity -> data/triage.jsonl
+python -m unittest discover -s tests           # 43 offline tests on recorded real replies
 python tests/make_fixtures.py                  # re-record fixtures from the raw copies of the last collect
 python tools/serve.py                          # site/ on http://127.0.0.1:8781 with _headers (CSP); launch entry `undertow-site`
 python doctrine/kit/tic.py lint site/data/feed.geojson --doctrine doctrine
@@ -59,7 +65,7 @@ python doctrine/kit/tic.py kitcheck            # the vendored kit is intact
 `collect` never falls back to made-up data. A lane that fails keeps its last good copy (`from_previous`) or stays
 empty, and `lanes` in the snapshot says which. Standard library only (Python 3.12+).
 
-## Lanes (first collect 14 Nov 2026; 16 Nov: 440 items, 425 plus DFRLab's 15)
+## Lanes (first collect 14 Nov 2026; 16 Nov: 434 feed items, 425 disclosures plus 9 reported-activity items)
 
 | Lane | Module | Source and how it is read | Items |
 |---|---|---|---|
@@ -68,7 +74,46 @@ empty, and `lanes` in the snapshot says which. Standard library only (Python 3.1
 | `openai` | `openai_rss.py` | `openai.com/news/rss.xml` ONLY. `fetch_allowed()` refuses any other openai.com URL, and a test holds it. An item is an operation when its title or summary says "influence" (not Global Affairs); round-ups are disclosures. Kept: operation name, origin wording, the one-line summary (scrubbed, quoted with credit). Since 1 Jan 2024 | 27 operations, 6 round-ups |
 | `tiktok` | `tiktok.py` | EU Code of Conduct Transparency Centre JSON, `disinfocode.eu/reports/tiktok/<n>/json`: reports 8 (Jul-Dec 2025) and 9 (Jan-Jun 2026), probing two numbers ahead. NEVER tiktok.com. Networks come from Commitment 14 TTP 6, the crisis chapter and the elections chapter, merged on (origin, accounts, followers). TikTok's description is quoted with credit | 25 (report 8: 8, report 9: 17) |
 | `eeas` | `eeas.py` | `config/register/eeas-fimi-4.json`: the nine Information Manipulation Sets of the 4th EEAS FIMI report (12 Mar 2026), entered once from the PDF (sha256 recorded), each row and quote cited to its printed page. Each run reads the EEAS FIMI page to confirm the report is listed and to notice a 5th | 9 |
-| `dfrlab` | `dfrlab.py` | Corroboration and link-out (16 Nov 2026, Tom's "complete remaining open items"). `dfrlab.org/feed/` RSS pages (`?paged=N`, ten items a page, 2 s apart), never an article page. Kept only when the title or one-line description names an operation in `config/operations.json` (case-sensitive, as every lane); then the operations, time, link, countries named and platforms from a fixed list. **Never kept:** DFRLab's title or description (they name individuals: Sandu, Zelenskyy, Navalny, Trump), `dc:creator`, author categories, attribution. Grade B2, `source_type` "independent research", origin "not read": DFRLab joins an operation's `corroborated_by` but adds no origin line, so it never changes a confidence level (a test holds this). First run reads back to 2024-01-01 (24 pages); later runs stop 30 days before the newest item read last time and merge with the kept records; a change to the operations' names or aliases (`ops_fingerprint`) reads the whole feed again | 15 (2024-03 to 2026-09: Doppelganger 6, Portal Kombat 4, Storm-1516 2, Spamouflage 2, Operation Overload 1) |
+| `dfrlab` | `reporters.py` | Reporter lane (below). `dfrlab.org/feed/`. Grade B2 | 15 reports -> 5 activity items |
+| `checkfirst` | `reporters.py` | Reporter lane. `checkfirst.network/feed/` (10 a page). Grade B2 | 5 reports -> 2 items |
+| `correctiv` | `reporters.py` | Reporter lane. `correctiv.org/en/feed/` (100 a page; English stories back to 2015). Grade B3 (a newsroom often reports others' findings) | 3 reports -> 2 items |
+| `watch` | `activity.py` | `config/register/watch.json`, hand-kept; `check_watch()` refuses a bad row | 0 rows |
+
+**Reporter lanes** (`undertow/reporters.py`, `REPORTERS`): WordPress RSS pages (`?paged=N`, 2 s apart), never an
+article page. Kept only when the title or one-line description names an operation in `config/operations.json`
+(case-sensitive, as every lane): operations, time, link, countries named, platforms from a fixed list. **Never
+kept:** the reporter's title or description (they name individuals), `dc:creator`, author categories, attribution.
+First run reads back to 2024-01-01; later runs stop 30 days before the newest item read last time; a change to the
+operations' names or aliases (`ops_fingerprint`) reads the whole feed again. The lanes' report records stay in the
+snapshot; the feed shows them only as reported-activity items.
+
+## Reported activity (16 Nov 2026, Tom's "Yes, all five" to `_ideas\drafts\2026-11-16-undertow-emerging-ops.md`)
+- **Unit (decision 1):** `undertow/activity.py`. One item per (reporter, operation), apart from disclosures: key
+  `<lane>:activity:<op>`, the reporter, first and last report, count, every report link, and state **active**
+  (last report within `QUIET_DAYS` = 180) or **quiet**, never "ended". 180, not 90, because DFRLab's 15 reports span
+  30 months. Title "<op>: reported by <reporter>, last on <date> (active)", because a name match says the reporter
+  wrote about the operation, not that it found it running (CheckFirst's two Portal Kombat matches are a dataset
+  launch and an OpenCTI connector). `data_as_of` is the last report. STIX: a `report` on the operation's
+  intrusion-set, no campaign. Adding the unit ended DFRLab's 15 per-article items (live for one day) in the history
+  log and replaced them with 5.
+- **Curation (decision 2):** tracked operations are matched automatically. New activity: `python tools/undertow.py
+  triage` on the laptop only (it refuses when `GITHUB_ACTIONS` is set) writes influence-worded articles naming no
+  tracked operation to `data/triage.jsonl` (git-ignored, never published; `check` fails if one of its headlines
+  reaches a published file). Tom promotes rows by hand into `config/register/watch.json`; each row's URL must be on a
+  host in its `reporter_hosts`, which also extends the leak scan's allowed prefixes. First run, 16 Nov (120 days): 3
+  entries, one real (DFRLab, 12 Oct 2026, coordinated inauthentic networks before Armenia's elections), two
+  CheckFirst event posts.
+- **Reporters (decision 3):** DFRLab, CheckFirst, CORRECTIV. Not Alliance4Europe (feed still since Sep 2025) or
+  Ukraine's CCD (a party to the war). VIGINUM and Canada's RRM only as hand-entered watch rows.
+- **Origin (decision 4):** a reporter lane never adds an origin. A watch row's origin counts only when `checked_by`
+  is set and `origin_evidence` is "own"; "cites-other" repeats a platform's attribution, the same line twice. Grades
+  of the counted lines go into the confidence basis; still capped Moderate. `analysis.group()` gives a watch row its
+  reporter's own independence group.
+- **Terms (decision 5):** read before building (below).
+- **Not built yet:** the baseline (match each later takedown to its earlier reports: lead time and reporting rate
+  for `UT-IND-1..2`; lead time partly measures researchers referring operations to platforms, so it is not an
+  independent warning signal); cross-suite joins through COP (Headwind sanctions listings, Verdict's election
+  calendar, Context and Watchfloor). No warning tier until the baseline exists.
 
 Outputs in `site/data/`:
 - `feed.geojson`: 425 items, 1.9 MB, linter PASS.
@@ -100,7 +145,10 @@ fails keeps its last good records, which lack the field until the lane next succ
   run), then runs `check` again so `ended.geojson` is in the leak scan before the deploy. Copied from Headwind's
   step. `permissions: contents: write`. A failing lane ends nothing. `history/` holds published feed items only,
   never `data/raw` or the snapshot. The first run writes about 2.6 MB (425 `new` lines and the state).
-- **Left for COP (its own worktree, on Tom's yes):** add Undertow's `ended` address
+- **Left for COP (its own worktree, on Tom's yes):** source rows `checkfirst-rss`, `correctiv-rss` and
+  `undertow-watch-register` in `config/sources.json` (as `dfrlab-rss`, COP `4d76f56`, on COP's main since 16 Nov);
+  check that COP's Undertow layer reads reported-activity items (they carry an `activity` block and no origin). And
+  add Undertow's `ended` address
   (`https://undertow.theintelligence.company/data/ended.geojson`) to COP's `config/programs.json`, and consider
   `source_health: true`, so COP greys a failing lane's kept items as it does Headwind's.
 
@@ -207,5 +255,11 @@ fails keeps its last good records, which lack the field until the lane next succ
   site is the Council's). Copies for noncommercial use with the Council's notices; automated access no faster than a
   person; no harvesting of personal information. robots.txt: empty `Disallow:`. Undertow keeps names, dates and
   links only and credits "Atlantic Council's Digital Forensic Research Lab".
+- CheckFirst (read 16 Nov 2026): no terms of use published (privacy policy only). Its `llms.txt`: "welcome to read,
+  index and cite this site", attributing findings to CheckFirst with a link. robots.txt allows all but admin and
+  search. Names, dates and links only, credited "CheckFirst".
+- CORRECTIV (read 16 Nov 2026): no terms of use or licence found (legal disclosure and imprint only;
+  `/en/terms-of-use/`, `/nutzungsbedingungen/` and `/en/republishing/` answer 404), so all rights reserved. robots.txt
+  does not disallow the feed. Facts only (operation named, date, link), as Tom set for Google.
 - `config/operations.json` gained the alias "Pravda Network" (DFRLab's capitalisation of "Pravda network") for
   Portal Kombat, 16 Nov 2026.

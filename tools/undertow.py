@@ -4,6 +4,7 @@
     python tools/undertow.py collect --only meta     # one or more lanes; the rest keep their last copy
     python tools/undertow.py build                   # build site/ from data/snapshot.json
     python tools/undertow.py check                   # registers, feed linter, STIX check, leak scan
+    python tools/undertow.py triage [--days 60]      # LAPTOP ONLY: list new, unnamed reported activity for Tom
 
 collect never falls back to made-up data. A lane that fails keeps its last good copy (from_previous) or stays
 empty, and the snapshot's "lanes" block says which.
@@ -23,11 +24,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 
-from undertow import analysis, dfrlab, disarm, eeas, feed, fetch, google, meta, openai_rss, stix, tiktok  # noqa: E402
+from undertow import (activity, analysis, disarm, eeas, feed, fetch, google, meta, openai_rss, reporters,  # noqa: E402
+                      stix, tiktok)
 from tic_doctrine import contract, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
 
-LANES = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab"]
+LANES = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab", "checkfirst", "correctiv", "watch"]
+REPORTER_LANES = list(reporters.REPORTERS)          # report records; folded into reported-activity items at build
+TRIAGE_PATH = ROOT / "data" / "triage.jsonl"         # private: reporters' headlines; never published, never in Actions
 
 
 def _github_headers() -> dict:
@@ -149,27 +153,40 @@ def _lane_eeas(raw_dir, prev, getter):
                                           "report": regs[-1]["report"]}}, [rec]
 
 
-def _lane_dfrlab(raw_dir, prev, getter):
-    recs = []
+def _reporter_lane(lane: str):
+    rep = reporters.REPORTERS[lane]
 
-    def page(n):
-        try:
-            b, rr = fetch.fetch("dfrlab-rss", dfrlab.page_url(n), raw_dir, "xml", getter=getter)
-        except Exception as exc:
-            if n > 1 and dfrlab.is_end(exc):
-                return None
-            raise
-        recs.append(rr)
-        return b
+    def run(raw_dir, prev, getter):
+        recs = []
 
-    pause = 0 if getter is not None else dfrlab.PAUSE_S
-    new, extra, _ = dfrlab.read(page, (prev.get("extra") or {}).get("dfrlab"), pause=pause)
-    records = dfrlab.merge(new, (prev.get("records") or {}).get("dfrlab"))
-    return {"records": records, "extra": extra}, recs
+        def page(n):
+            try:
+                b, rr = fetch.fetch(f"{lane}-rss", reporters.page_url(rep, n), raw_dir, "xml", getter=getter)
+            except Exception as exc:
+                if n > 1 and reporters.is_end(exc):
+                    return None
+                raise
+            recs.append(rr)
+            return b
+
+        pause = 0 if getter is not None else reporters.PAUSE_S
+        new, extra, _ = reporters.read(rep, page, (prev.get("extra") or {}).get(lane), pause=pause)
+        records = reporters.merge(rep, new, (prev.get("records") or {}).get(lane))
+        return {"records": records, "extra": extra}, recs
+    return run
+
+
+def _lane_watch(raw_dir, prev, getter):
+    reg = activity.load_watch()
+    errs = activity.check_watch(reg)
+    if errs:
+        raise ValueError("watch register: " + "; ".join(errs[:5]))
+    return {"records": list(reg.get("rows") or []), "extra": {"rows": len(reg.get("rows") or []),
+                                                              "reporter_hosts": reg.get("reporter_hosts") or []}}, []
 
 
 LANE_FN = {"meta": _lane_meta, "google": _lane_google, "openai": _lane_openai, "tiktok": _lane_tiktok, "eeas": _lane_eeas,
-           "dfrlab": _lane_dfrlab}
+           **{lane: _reporter_lane(lane) for lane in REPORTER_LANES}, "watch": _lane_watch}
 
 
 def collect(root: Path = ROOT, getter=None, only: list[str] | None = None) -> dict:
@@ -206,12 +223,23 @@ def collect(root: Path = ROOT, getter=None, only: list[str] | None = None) -> di
     return snap
 
 
+def _today(snap: dict):
+    return datetime.fromisoformat(snap["generated_at"].replace("Z", "+00:00")).date()
+
+
 def all_records(snap: dict) -> list[dict]:
+    """Disclosures as collected, plus reported-activity records: the reporter lanes' report records grouped by
+    (reporter, operation), and the watch register's rows. State (active or quiet) is as of the collect."""
     out = []
+    recs = snap.get("records") or {}
     for lane in LANES:
-        for r in (snap.get("records") or {}).get(lane, []):
-            r = {k: v for k, v in r.items() if not k.startswith("_")}
-            out.append(r)
+        if lane in REPORTER_LANES or lane == "watch":
+            continue
+        for r in recs.get(lane, []):
+            out.append({k: v for k, v in r.items() if not k.startswith("_")})
+    today = _today(snap)
+    out += activity.aggregate({lane: recs.get(lane, []) for lane in REPORTER_LANES}, today)
+    out += activity.watch_records({"rows": recs.get("watch", [])}, today)
     analysis.assess(out)
     return out
 
@@ -237,7 +265,8 @@ def page_data(snap: dict, records: list[dict], feed_doc: dict, events: list[dict
                      "disarm": p["disarm_mapping"], "confidence": p.get("confidence"),
                      "corroborated_by": r.get("corroborated_by") or [], "withheld": r.get("withheld", 0),
                      "url": r["url"], "disclosure": r["disclosure"], "languages": r.get("languages") or [],
-                     "orgs": [o["name"] for o in r.get("orgs") or []]})
+                     "orgs": [o["name"] for o in r.get("orgs") or []], "grade": p["sources"][0]["grade"],
+                     "reporter": p["sources"][0]["publisher"], "activity": r.get("activity")})
     ccs = {c for row in rows for c in row["origin"] + row["targets"] + row["countries_named"] + row["alignment"]}
     return {"generated_at": snap["generated_at"], "method_version": snap["method_version"],
             "disarm_version": snap["disarm_version"], "disarm_rules_status": "reviewed" if disarm.reviewed() else "proposed",
@@ -261,7 +290,7 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
     gq = [(p["year"], p["quarter"]) for p in (snap.get("extra", {}).get("google") or {}).get("pages", [])]
     tr = (snap.get("extra", {}).get("tiktok") or {}).get("reports", [])
     ep = ((snap.get("extra", {}).get("eeas") or {}).get("report") or {}).get("published")
-    today = datetime.fromisoformat(snap["generated_at"].replace("Z", "+00:00")).date()
+    today = _today(snap)
     events = analysis.expected_disclosures(records, gq, tr, ep, today)
 
     def dump(obj) -> str:
@@ -301,7 +330,14 @@ ALLOWED_URL_PREFIXES = (
     "https://github.com/DISARMFoundation/", "https://raw.githubusercontent.com/DISARMFoundation/",
     "https://docs.oasis-open.org/", "https://github.com/metacog-osint/tic-doctrine", "https://creativecommons.org/",
     "https://www.disarm.foundation/", "https://disarm.foundation/", "https://dfrlab.org/",
+    "https://checkfirst.network/", "https://correctiv.org/en/",
 )
+
+
+def allowed_prefixes() -> tuple[str, ...]:
+    """The fixed list plus the reporter hosts the watch register lists by hand (a reporter's own site, never an
+    operation's)."""
+    return ALLOWED_URL_PREFIXES + tuple(activity.load_watch().get("reporter_hosts") or [])
 URL_IN_TEXT = re.compile(r"https?://[^\s\"'<>)\]]+")
 LEAK_PATTERNS = [(re.compile(r"\[\.\]"), "a defanged value"), (re.compile(r"(?<![\w@])@[A-Za-z0-9_]{3,}(?![\w.])"), "an @handle"),
                  (re.compile(r"hxxp", re.I), "a defanged URL")]
@@ -309,11 +345,12 @@ LEAK_PATTERNS = [(re.compile(r"\[\.\]"), "a defanged value"), (re.compile(r"(?<!
 
 def leak_scan(paths: list[Path]) -> list[str]:
     errs = []
+    allowed = allowed_prefixes()
     for p in paths:
         txt = p.read_text(encoding="utf-8")
         for m in URL_IN_TEXT.finditer(txt):
             u = m.group(0)
-            if not u.startswith(ALLOWED_URL_PREFIXES):
+            if not u.startswith(allowed):
                 errs.append(f"{p.name}: URL outside the allowed publisher pages: {u[:80]}")
         for rx, what in LEAK_PATTERNS:
             for m in rx.finditer(txt):
@@ -347,7 +384,63 @@ def check_all(root: Path = ROOT) -> list[str]:
     if (data / "ended.geojson").exists():  # written by the history step (tic.py history), served beside the feed
         published.append(data / "ended.geojson")
     errs += leak_scan(published)
+    errs += [f"watch register: {e}" for e in activity.check_watch(activity.load_watch())]
+    if TRIAGE_PATH.exists():
+        # The triage list holds reporters' headlines; none may reach a published file.
+        heads = [json.loads(x).get("title") or "" for x in TRIAGE_PATH.read_text(encoding="utf-8").splitlines() if x.strip()]
+        blob = "\n".join(p.read_text(encoding="utf-8") for p in published)
+        errs += [f"triage headline in a published file: {h[:60]!r}" for h in heads if len(h) > 25 and h in blob]
     return errs
+
+
+def triage(days: int = 60, root: Path = ROOT, getter=None, pause: float | None = None) -> list[dict]:
+    """Read each reporter's feed back `days` days and list influence-worded articles that name no tracked operation
+    and are not yet on the triage list or in the watch register. Appends them to data/triage.jsonl (git-ignored,
+    never published, never run in Actions) and returns them. Tom reads the list and promotes what matters into
+    config/register/watch.json by hand."""
+    from datetime import timedelta
+    path = root / "data" / "triage.jsonl"
+    seen = set()
+    if path.exists():
+        seen = {json.loads(x)["link"] for x in path.read_text(encoding="utf-8").splitlines() if x.strip()}
+    reg = activity.load_watch(root / "config" / "register" / "watch.json")
+    for row in reg.get("rows") or []:
+        for k in ("first_report", "last_report"):
+            if (row.get(k) or {}).get("url"):
+                seen.add(row[k]["url"])
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    pause = (0 if getter is not None else reporters.PAUSE_S) if pause is None else pause
+    found = []
+    for lane, rep in reporters.REPORTERS.items():
+        items, n = [], 0
+        while n < rep.max_pages:
+            n += 1
+            if n > 1 and pause:
+                import time
+                time.sleep(pause)
+            try:
+                body, _ = fetch.fetch(f"{lane}-rss", reporters.page_url(rep, n), None, "xml", getter=getter)
+            except Exception as exc:
+                if n > 1 and reporters.is_end(exc):
+                    break
+                print(f"  {lane}: not read ({type(exc).__name__}: {exc})"[:200])
+                break
+            page = reporters.parse_page(body)
+            if not page:
+                break
+            items += page
+            if min(i["published"] for i in page) < since:
+                break
+        for c in reporters.triage_candidates(rep, items, since):
+            if c["link"] not in seen:
+                seen.add(c["link"])
+                found.append(dict(c, seen_at=fetch.now_utc()))
+    if found:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8", newline="\n") as fh:
+            for c in found:
+                fh.write(json.dumps(c, ensure_ascii=False) + "\n")
+    return found
 
 
 def main(argv=None) -> int:
@@ -357,6 +450,8 @@ def main(argv=None) -> int:
     c.add_argument("--only", nargs="*", choices=LANES, help="run only these lanes; keep the rest as they were")
     sub.add_parser("build")
     sub.add_parser("check")
+    t = sub.add_parser("triage", help="laptop only: list new, unnamed reported activity into data/triage.jsonl")
+    t.add_argument("--days", type=int, default=60)
     args = ap.parse_args(argv)
     if args.cmd == "collect":
         snap = collect(only=args.only)
@@ -375,6 +470,18 @@ def main(argv=None) -> int:
             print("  -", e)
         print(f"Undertow check: {'PASS' if not errs else f'FAIL ({len(errs)} problems)'}")
         return 1 if errs else 0
+    if args.cmd == "triage":
+        if os.environ.get("GITHUB_ACTIONS"):
+            print("triage runs on the laptop only: its list holds reporters' headlines and is never published.")
+            return 1
+        found = triage(days=args.days)
+        for c in found:
+            print(f"  {c['published'][:10]}  {c['reporter']:10s} {', '.join(c['wording'])}")
+            print(f"      {c['title']}")
+            print(f"      {c['link']}")
+        print(f"{len(found)} new for triage (added to data/triage.jsonl; private, never published). Promote a row by "
+              "hand into config/register/watch.json.")
+        return 0
     return 0
 
 

@@ -16,12 +16,47 @@ individuals. It states no probability.
 | `openai` | OpenAI news RSS feed only | `openai.com/news/rss.xml`; report pages never fetched (OpenAI's terms bar programmatic extraction) | Irregular | Operation name, origin wording, the one-line summary (scrubbed, quoted with credit) |
 | `tiktok` | TikTok's reports to the EU Code of Conduct on Disinformation | Transparency Centre JSON, `disinfocode.eu/reports/tiktok/<n>/json`; never tiktok.com (TikTok's terms bar automated extraction) | Semiannual | Origin, target audience, accounts, followers, the month where the elections chapter gives it, TikTok's description (scrubbed) |
 | `eeas` | EEAS 4th report on FIMI threats (March 2026) | Named Information Manipulation Sets entered once into `config/register/eeas-fimi-4.json`, each row cited to its printed page; the FIMI page is read each run for a newer report | Annual | Name, aliases EEAS gives, attribution wording, operators EEAS names, alignment, targets, counts, short behaviour quotes with pages |
-| `dfrlab` | Atlantic Council's Digital Forensic Research Lab (from 16 Nov 2026) | `dfrlab.org/feed/` RSS pages, one at a time with a pause; never the article pages | Several a month | Only articles that name an operation already listed: the operations named, the date, the link, countries named and platforms. No DFRLab title, text, authors or attribution. Source grade B2 (independent research, not an enforcement action); it adds DFRLab to an operation's corroborating publishers but no origin line, so it never raises a confidence level |
+| `dfrlab` | Atlantic Council's Digital Forensic Research Lab (from 16 Nov 2026) | `dfrlab.org/feed/` RSS pages, one at a time with a pause; never the article pages | Several a month | Reporter lane (below). Grade B2 |
+| `checkfirst` | CheckFirst, a Finnish research firm (from 16 Nov 2026) | `checkfirst.network/feed/` RSS pages, as DFRLab's | A few a month | Reporter lane. Grade B2 |
+| `correctiv` | CORRECTIV, a German investigative newsroom, English feed (from 16 Nov 2026) | `correctiv.org/en/feed/` RSS pages, as DFRLab's | Several a week, few on influence operations | Reporter lane. Grade B3: a newsroom often reports other researchers' findings |
+| `watch` | Undertow's watch register, `config/register/watch.json` (from 16 Nov 2026) | Entered by hand from the private triage list (below) | When Tom promotes a row | Reported activity that names no tracked operation |
+
+**Reporter lanes** keep an article only when its title or one-line description names an operation already listed in
+`config/operations.json` (by name or a publisher-given alias, case-sensitive). They keep the operations named, the
+date, the link, countries named and platforms from a fixed list. They never keep the reporter's title, text, authors
+or attribution, because headlines name individuals. A match on a name says that the reporter wrote about the
+operation, not that it found the operation running.
 
 ## What an item is
-One item per disclosed network or operation: kind `observation`, tier `routine`, `status_class: reported`, source
-grade **A2** (the publisher is reliable on its own enforcement actions; the takedown is probably true and cannot be
-confirmed from outside). No anomaly rule yet: there is no baseline of disclosures.
+Two units, kept apart (Tom, 16 Nov 2026). Both are kind `observation`, tier `routine`, `status_class: reported`.
+
+- **A disclosure:** one item per network or operation a platform or government disclosed. Source grade **A2**: the
+  publisher is reliable on its own enforcement actions; the takedown is probably true and cannot be confirmed from
+  outside. Disclosures arrive 1 to 8 months after the activity.
+- **Reported activity:** one item per operation and reporter. It says that an independent reporter has reported the
+  operation while it runs: the reporter, the first and last report, the number of reports and their links, and a
+  state. The state is **active** while the last report is no more than 180 days old, and **quiet** after that.
+  It is never "ended": a reporter falling silent is not evidence that an operation stopped. 180 days, because
+  DFRLab's 15 reports on tracked operations span 30 months. Graded by the reporter, B2 or B3.
+
+**Two ways in.**
+1. Tracked operations are matched automatically by the reporter lanes.
+2. New, unnamed activity goes to a **private triage list**. `python tools/undertow.py triage` runs on Tom's laptop
+   only (it refuses to run in GitHub Actions). It reads each reporter's feed back 60 days and writes
+   influence-worded articles that name no tracked operation to `data/triage.jsonl`, which is git-ignored and never
+   published. `check` fails if any of its headlines reaches a published file. Tom promotes what matters by hand into
+   the **watch register**: a cited row with the operation as the reporter frames it (never a person's name), the
+   countries, the first report and the reporter's attribution wording. A row can later be closed into a disclosure
+   when a platform names the network.
+
+**Origin from a reporter.** A reporter lane never adds an origin. A watch row's origin counts toward our origin
+confidence only when Tom has checked the row and the reporter shows its own evidence for the origin
+(`origin_evidence: own`). A reporter repeating a platform's or government's attribution (`cites-other`) is the same
+line counted twice, so it does not count. The cap stays Moderate.
+
+No anomaly rule and no warning tier yet. The first baseline will match each later takedown to its earlier reports,
+measuring lead time and reporting rate (`UT-IND-1..2`). Part of that lead time is the referral pipeline: platforms
+often act because researchers send them what they found, so lead time is not an independent warning signal.
 
 ## Three questions kept apart
 1. **Did the takedown happen?** The publisher's own report of its own action: A2, `reported`.
@@ -54,6 +89,7 @@ website is not read as a news site); every item says so (`disarm_rules_status`).
   none, so their geometry is on the countries named in the stance or summary (`countries_named`), and null when none
   is named.
 - `data/stix.json`: a STIX 2.1 bundle with deterministic UUIDv5 ids. Report per disclosure, campaign per network,
+  a report per reported-activity item on the operation's intrusion-set (no campaign, origin or relationship),
   location with `originates-from` and `targets`, DISARM's own attack-pattern objects (unchanged, with DISARM's CC
   BY-SA marking) with `uses`, intrusion-set with `attributed-to` for named operations, TLP:CLEAR and a statement
   marking per source licence. Never: indicator, observed-data, cyber-observables, an identity for a person.

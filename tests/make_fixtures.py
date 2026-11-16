@@ -1,7 +1,7 @@
 """Record test fixtures from the raw copies a live `collect` kept in data/raw/ (real replies, not made up).
 
     python tests/make_fixtures.py                 # every lane
-    python tests/make_fixtures.py --only dfrlab   # one lane; the other fixtures and their manifest entries stay
+    python tests/make_fixtures.py --only dfrlab checkfirst   # reporter lanes only; the other fixtures stay
 
 Large replies are cut to the parts the parsers read, and the cut is stated in tests/fixtures/MANIFEST.json with
 the URL, the fetch time and the SHA-256 of the full reply. The Meta network files are kept whole, indicator tables
@@ -38,18 +38,23 @@ def raw_bytes(rec: dict) -> bytes:
     raise FileNotFoundError(rec["url"])
 
 
-def dfrlab_fixtures(idx, save) -> None:
-    """DFRLab: every feed page the last collect read, cut to title, link, pubDate, category and description (no
-    dc:creator, no content:encoded)."""
-    from undertow import dfrlab
+def reporter_fixtures(lane, idx, save) -> None:
+    """A reporter lane (DFRLab, CheckFirst, CORRECTIV): every feed page the last collect read, cut to title, link,
+    pubDate, category and description (no dc:creator, no content:encoded)."""
+    from undertow import reporters
+    rep = reporters.REPORTERS[lane]
     n = 1
-    while dfrlab.page_url(n) in idx:
-        body = raw_bytes(idx[dfrlab.page_url(n)]).decode("utf-8")
+    while reporters.page_url(rep, n) in idx:
+        url = reporters.page_url(rep, n)
+        body = raw_bytes(idx[url]).decode("utf-8")
         body = re.sub(r"\s*<dc:creator>.*?</dc:creator>", "", body, flags=re.S)
         body = re.sub(r"\s*<content:encoded>.*?</content:encoded>", "", body, flags=re.S)
-        save(f"dfrlab_feed_{n:02d}.xml", dfrlab.page_url(n), body.encode("utf-8"),
+        save(f"{lane}_feed_{n:02d}.xml", url, body.encode("utf-8"),
              "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)")
         n += 1
+
+
+REPORTER_LANES = ("dfrlab", "checkfirst", "correctiv")
 
 
 def main() -> int:
@@ -69,11 +74,11 @@ def main() -> int:
 
     if only:
         manifest = json.loads((OUT / "MANIFEST.json").read_text(encoding="utf-8"))
-        if "dfrlab" in only:
-            for name in [k for k in manifest["files"] if k.startswith("dfrlab_")]:
+        for lane in [x for x in only if x in REPORTER_LANES]:
+            for name in [k for k in manifest["files"] if k.startswith(f"{lane}_feed_")]:
                 del manifest["files"][name]
                 (OUT / name).unlink(missing_ok=True)
-            dfrlab_fixtures(idx, save)
+            reporter_fixtures(lane, idx, save)
         (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
         print(f"updated {only}; {len(manifest['files'])} fixtures in {OUT}")
         return 0
@@ -126,7 +131,8 @@ def main() -> int:
 
     # EEAS: the FIMI page whole.
     save("eeas_fimi_page.html", eeas.FIMI_PAGE, raw_bytes(idx[eeas.FIMI_PAGE]))
-    dfrlab_fixtures(idx, save)
+    for lane in REPORTER_LANES:
+        reporter_fixtures(lane, idx, save)
 
     (OUT / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {len(manifest['files'])} fixtures to {OUT}")

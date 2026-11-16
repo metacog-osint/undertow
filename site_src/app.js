@@ -2,8 +2,9 @@
 (function () {
   "use strict";
 
-  var PUB = { meta: "Meta", google: "Google", openai: "OpenAI", tiktok: "TikTok", eeas: "EEAS", dfrlab: "DFRLab" };
-  var ORDER = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab"];
+  var PUB = { meta: "Meta", google: "Google", openai: "OpenAI", tiktok: "TikTok", eeas: "EEAS", dfrlab: "DFRLab",
+    checkfirst: "CheckFirst", correctiv: "CORRECTIV", watch: "Watch register" };
+  var ORDER = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab", "checkfirst", "correctiv", "watch"];
   var PAGE = 60;
   var T = window.TicTime;
 
@@ -48,8 +49,11 @@
     });
     var multi = Object.keys(ops).filter(function (o) { return Object.keys(ops[o]).length > 1; }).length;
     var withTech = items.filter(function (it) { return (it.disarm || []).length; }).length;
+    var act = items.filter(function (it) { return it.activity; });
     document.getElementById("tiles").innerHTML = [
-      ["Networks and operations", num(items.length)], ["Publishers", ORDER.filter(function (p) { return items.some(function (i) { return i.publisher === p; }); }).length],
+      ["Disclosed networks and operations", num(items.length - act.length)],
+      ["Reported activity (active / quiet)", num(act.filter(function (it) { return it.activity.state === "active"; }).length) + " / " +
+        num(act.filter(function (it) { return it.activity.state !== "active"; }).length)], ["Publishers", ORDER.filter(function (p) { return items.some(function (i) { return i.publisher === p; }); }).length],
       ["Origin countries stated", Object.keys(origins).length], ["Named operations with 2+ publishers", multi],
       ["With a DISARM technique", num(withTech)]
     ].map(function (t) { return '<div class="tile"><span class="k">' + esc(t[0]) + '</span><span class="v">' + esc(t[1]) + "</span></div>"; }).join("");
@@ -98,7 +102,7 @@
 
   function matrix(items) {
     var rows = {}, cols = {}, cell = {};
-    items.forEach(function (it) {
+    items.filter(function (it) { return !it.activity; }).forEach(function (it) {
       var o = (it.origin || []).length ? it.origin : ["?"];
       var t = (it.targets || []).length ? it.targets : ["-"];
       o.forEach(function (a) {
@@ -130,8 +134,9 @@
     (S.operations || []).forEach(function (o) { names[o.id] = o; });
     items.forEach(function (it) {
       (it.named_operations || []).forEach(function (o) {
-        var g = ops[o] = ops[o] || { pubs: {}, origins: {}, align: {}, conf: null, n: 0 };
+        var g = ops[o] = ops[o] || { pubs: {}, origins: {}, align: {}, conf: null, n: 0, last: null };
         g.pubs[it.publisher] = 1; g.n += 1;
+        if (it.activity && (!g.last || it.activity.last_report > g.last.date)) { g.last = { date: it.activity.last_report, who: PUB[it.publisher] === PUB.watch ? it.reporter : PUB[it.publisher], state: it.activity.state }; }
         (it.origin || []).forEach(function (c) { (g.origins[c] = g.origins[c] || {})[PUB[it.publisher]] = 1; });
         (it.alignment || []).forEach(function (c) { g.align[c] = 1; });
       });
@@ -153,7 +158,8 @@
         '<div class="small">' + ORDER.filter(function (p) { return g.pubs[p]; }).map(function (p) { return '<span class="pub pub-' + p + '">' + esc(PUB[p]) + "</span>"; }).join(" · ") +
         " · " + g.n + (g.n === 1 ? " item" : " items") +
         (origin ? " · origin stated: " + esc(origin) : " · no origin stated") + (align ? " · aligned with " + esc(align) + " (EEAS)" : "") +
-        (g.conf ? ' · <span class="badge">our confidence in origin: ' + esc(g.conf) + "</span>" : "") + "</div></div>";
+        (g.conf ? ' · <span class="badge">our confidence in origin: ' + esc(g.conf) + "</span>" : "") +
+        (g.last ? " · last reported " + esc(day(g.last.date)) + " by " + esc(g.last.who) + " (" + esc(g.last.state) + ")" : "") + "</div></div>";
     }).join("") || '<p class="small muted">No named operations.</p>';
   }
 
@@ -163,6 +169,26 @@
       ads_accounts: "Ads accounts", play_accounts: "Play accounts", news_discover_domains: "domains blocked from News and Discover",
       indicators: "indicators (count only)", websites: "websites", operations: "operations" };
     return Object.keys(c || {}).filter(function (k) { return typeof c[k] === "number"; }).map(function (k) { return num(c[k]) + " " + (w[k] || k.replace(/_/g, " ")); }).join(", ");
+  }
+
+  function activityFacts(it) {
+    var a = it.activity, who = it.publisher === "watch" ? it.reporter : PUB[it.publisher];
+    var links = (a.report_links || []).slice(0, 12).map(function (x) { return link(x.url, day(x.date)); }).join(", ") +
+      ((a.report_links || []).length > 12 ? " and " + ((a.report_links || []).length - 12) + " earlier" : "");
+    var where = (it.targets || []).length ? "targets as the reporter states them: " + places(it.targets) :
+      (it.countries_named || []).length ? "named in the reports: " + places(it.countries_named) : "none named";
+    return [
+      ["Reporter", '<span class="pub pub-' + it.publisher + '">' + esc(who) + "</span>" + (it.reporter && it.reporter !== who ? ", " + esc(it.reporter) : "") + " (grade " + esc(a.grade) + "; a reporter, not the platform that acted)"],
+      ["Reported activity", '<span class="badge' + (a.state === "active" ? "" : " badge-warn") + '">' + esc(a.state) + "</span> " +
+        esc(a.reports + (a.reports === 1 ? " report" : " reports") + ", first " + day(a.first_report) + ", last " + day(a.last_report) +
+        "; quiet after " + a.quiet_after_days + " days without a report (never \u201cended\u201d), as of " + a.state_as_of)],
+      ["Reports", links],
+      ["Countries", esc(where + ((it.target_regions || []).length ? "; " + it.target_regions.join(", ") : ""))],
+      ["Platforms", esc((it.platforms || []).join(", "))],
+      ["Origin", it.origin.length ? esc(places(it.origin)) + " (" + esc(it.origin_level) + ")" : "not read: Undertow records that " + esc(who) + " reported the operation, not its attribution"],
+      ["Our confidence in origin", it.confidence ? esc(it.confidence) : "none (a reporter corroborates that the operation was reported, not its origin)"],
+      ["DISARM", (it.disarm || []).map(function (d) { return esc(d.id + " " + d.name) + " (rule " + esc(d.rule) + ")"; }).join("; ") || "no rule matched"]
+    ].filter(function (f) { return f[1]; });
   }
 
   function row(it) {
@@ -179,6 +205,7 @@
       ["Our confidence in origin", it.confidence ? esc(it.confidence) + (it.corroborated_by.length ? " (also named by " + esc(it.corroborated_by.map(function (p) { return p === "eu-eeas" ? "EEAS" : PUB[p] || p; }).join(", ")) + ")" : " (one publisher)") : it.publisher === "dfrlab" ? "none (corroborates that the operation was reported, not its origin)" : "none (no origin stated)"],
       ["DISARM", (it.disarm || []).map(function (d) { return esc(d.id + " " + d.name) + (d.phrase ? ' (rule ' + esc(d.rule) + ': "' + esc(d.phrase) + '")' : " (rule " + esc(d.rule) + ")"); }).join("; ") || "no rule matched"]
     ].filter(function (f) { return f[1]; });
+    if (it.activity) { facts = activityFacts(it); }
     var body = "<p>" + esc(it.summary) + "</p>" +
       (it.publisher_text ? "<blockquote>" + esc(it.publisher_text) + "<br><span class=\"small\">" + esc(it.publisher_text_note) + "</span></blockquote>" : "") +
       ((it.behaviours || []).length ? "<blockquote>" + it.behaviours.map(function (b) { return '"' + esc(b.text) + '" (p. ' + esc(b.page) + ")"; }).join("<br>") + '<br><span class="small">Source: European External Action Service, 4th report on FIMI threats.</span></blockquote>' : "") +
@@ -186,7 +213,7 @@
       (it.withheld ? '<p class="small muted">' + it.withheld + " name or link span" + (it.withheld === 1 ? "" : "s") + " withheld from the publisher's text.</p>" : "") +
       '<p class="small muted">Item ' + esc(it.id) + "</p>";
     return '<details class="op" id="' + esc(it.id) + '"><summary><span class="small muted">' + esc(itemDate(it).slice(0, 7)) + '</span><span class="pub pub-' + it.publisher + '">' + esc(PUB[it.publisher]) +
-      '</span><span class="t">' + esc(it.title) + ' <span class="small muted">' + esc(it.origin.length ? "origin " + places(it.origin) : "no origin stated") + "</span> " + tech + "</span></summary><div class=\"body\">" + body + "</div></details>";
+      '</span><span class="t">' + esc(it.title) + ' <span class="small muted">' + esc(it.activity ? it.activity.reports + (it.activity.reports === 1 ? " report" : " reports") : it.origin.length ? "origin " + places(it.origin) : "no origin stated") + "</span> " + tech + "</span></summary><div class=\"body\">" + body + "</div></details>";
   }
 
   function applyFilter() {
@@ -221,7 +248,9 @@
     document.getElementById("rules").innerHTML = "<thead><tr><th scope=\"col\">Rule</th><th scope=\"col\">Technique</th><th scope=\"col\">Reads</th><th scope=\"col\">Items</th></tr></thead><tbody>" +
       S.rules.map(function (r) { return "<tr><td>" + esc(r.id) + "</td><td>" + esc(r.technique) + "</td><td>" + esc(r.about) + "</td><td>" + (used[r.id] || 0) + "</td></tr>"; }).join("") + "</tbody>";
     var labels = { meta: "Meta threat-research repository", google: "Google Influence Operations Bulletin", openai: "OpenAI news RSS",
-      tiktok: "TikTok via the EU Code of Conduct Transparency Centre", eeas: "EEAS FIMI report (register) and FIMI page", dfrlab: "DFRLab RSS feed (corroboration)" };
+      tiktok: "TikTok via the EU Code of Conduct Transparency Centre", eeas: "EEAS FIMI report (register) and FIMI page", dfrlab: "DFRLab RSS feed (reported activity)",
+      checkfirst: "CheckFirst RSS feed (reported activity)", correctiv: "CORRECTIV English RSS feed (reported activity)",
+      watch: "Watch register (hand-kept)" };
     document.getElementById("lanes").innerHTML = ORDER.map(function (k) {
       var l = (S.lanes || {})[k] || {}, ok = l.status === "ok";
       var note = ok ? "collected " + when(l.fetched_at) + ", " + (l.items || 0) + " items" : (l.from_previous && l.fetched_at ? "failed; showing the copy from " + when(l.fetched_at) : "failed; no data");
@@ -232,7 +261,8 @@
       }
       if (k === "tiktok" && ex.reports) { note += ". Reports read: " + ex.reports.map(function (r) { return r.name + " (" + r.networks + " networks)"; }).join(", "); }
       if (k === "eeas" && ex.page) { note += ". 4th report still listed: " + (ex.page.listed ? "yes" : "no") + (ex.page.newer_report ? "; a newer report (" + ex.page.newer_report + "th) is listed: its register needs extracting" : "; no newer report listed"); }
-      if (k === "dfrlab" && ex.items_read) { note += ". " + ex.items_read + " feed items read this run (" + ex.pages_read + " pages); only articles naming a tracked operation are kept"; }
+      if (k === "watch") { note = ok ? (ex.rows || 0) + " rows, entered by hand after Tom's review" : note; }
+      if ((k === "dfrlab" || k === "checkfirst" || k === "correctiv") && ex.items_read) { note += ". " + ex.items_read + " feed items read this run (" + ex.pages_read + (ex.pages_read === 1 ? " page" : " pages") + "); only articles naming a tracked operation are kept"; }
       if (k === "openai" && ex.roundups) { note += ". " + ex.roundups.length + " report round-ups kept as disclosures, not operations"; }
       return '<p class="small"><strong>' + esc(labels[k]) + '</strong> <span class="badge' + (ok ? "" : " badge-warn") + '">' + (ok ? "current" : "not current") + "</span><br>" + esc(note) + "</p>";
     }).join("");
