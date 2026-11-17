@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 
-from undertow import (activity, analysis, disarm, eeas, feed, fetch, google, meta, openai_rss, reporters,  # noqa: E402
+from undertow import (activity, analysis, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters,  # noqa: E402
                       stix, tiktok)
 from tic_doctrine import contract, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
@@ -268,6 +268,7 @@ def page_data(snap: dict, records: list[dict], feed_doc: dict, events: list[dict
                      "corroborated_by": r.get("corroborated_by") or [], "withheld": r.get("withheld", 0),
                      "url": r["url"], "disclosure": r["disclosure"], "languages": r.get("languages") or [],
                      "orgs": [o["name"] for o in r.get("orgs") or []], "grade": p["sources"][0]["grade"],
+                     "listed_by": p["operation"]["listed_by"],
                      "reporter": p["sources"][0]["publisher"], "activity": r.get("activity")})
     ccs = {c for row in rows for c in row["origin"] + row["targets"] + row["countries_named"] + row["alignment"]}
     return {"generated_at": snap["generated_at"], "method_version": snap["method_version"],
@@ -339,7 +340,8 @@ ALLOWED_URL_PREFIXES = (
 def allowed_prefixes() -> tuple[str, ...]:
     """The fixed list plus the reporter hosts the watch register lists by hand (a reporter's own site, never an
     operation's)."""
-    return ALLOWED_URL_PREFIXES + tuple(activity.load_watch().get("reporter_hosts") or [])
+    return (ALLOWED_URL_PREFIXES + tuple(activity.load_watch().get("reporter_hosts") or [])
+            + listings.notice_urls())
 URL_IN_TEXT = re.compile(r"https?://[^\s\"'<>)\]]+")
 LEAK_PATTERNS = [(re.compile(r"\[\.\]"), "a defanged value"), (re.compile(r"(?<![\w@])@[A-Za-z0-9_]{3,}(?![\w.])"), "an @handle"),
                  (re.compile(r"hxxp", re.I), "a defanged URL")]
@@ -387,6 +389,7 @@ def check_all(root: Path = ROOT) -> list[str]:
         published.append(data / "ended.geojson")
     errs += leak_scan(published)
     errs += [f"watch register: {e}" for e in activity.check_watch(activity.load_watch())]
+    errs += [f"listings: {e}" for e in listings.check(root, known=stix.named_organisations())]
     if TRIAGE_PATH.exists():
         # The triage list holds reporters' headlines; none may reach a published file.
         heads = [json.loads(x).get("title") or "" for x in TRIAGE_PATH.read_text(encoding="utf-8").splitlines() if x.strip()]

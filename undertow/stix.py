@@ -175,9 +175,13 @@ def build_bundle(records: list[dict], generated: str) -> dict:
             if org.get("name") not in named_organisations():
                 continue   # only a hand-kept organisation name, never free text
             aid = sid("threat-actor", org["name"])
-            add({"type": "threat-actor", "spec_version": "2.1", "id": aid, "created_by_ref": SUITE,
-                 "created": EPOCH, "modified": EPOCH, "name": org["name"], "threat_actor_types": ["unknown"],
-                 "resource_level": "organization", "description": ORG_NOTE, "object_marking_refs": [tlp["id"]]})
+            ta = {"type": "threat-actor", "spec_version": "2.1", "id": aid, "created_by_ref": SUITE,
+                  "created": EPOCH, "modified": EPOCH, "name": org["name"], "threat_actor_types": ["unknown"],
+                  "resource_level": "organization", "description": ORG_NOTE, "object_marking_refs": [tlp["id"]]}
+            refs_ext = listing_references(org["name"])
+            if refs_ext:
+                ta["external_references"] = refs_ext
+            add(ta)
             refs.append(aid)
             rel("attributed-to", aid, f"{SOURCES[lane]['publisher']} names this organisation in its disclosure.")
             if org.get("country"):
@@ -214,6 +218,15 @@ def build_bundle(records: list[dict], generated: str) -> dict:
 
 ORG_NOTE = ("An organisation that a publisher names in its disclosure of an influence operation. Undertow records the "
             "name as the publisher gives it; it is not Undertow's finding of who directed the operation.")
+
+
+def listing_references(name: str) -> list[dict]:
+    """A hand-kept organisation's standing listings as STIX external references: the notice, nothing more. A listing
+    corroborates the operator; it adds no relationship, no origin and no confidence."""
+    from . import listings
+    return [{"source_name": f"{r['list_publisher']}: {r['list_name']}", "url": r["notice"],
+             "description": f"Listed {r['listed']} under {r['programme']} ({r['notice_title']}). {listings.NOTE}"}
+            for r in listings.for_org(name)]
 
 
 @lru_cache(maxsize=1)

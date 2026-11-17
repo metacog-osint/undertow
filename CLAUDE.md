@@ -62,7 +62,7 @@ python tools/undertow.py build                 # build site/ from data/snapshot.
 python tools/undertow.py check                 # registers, feed linter, STIX check, leak scan
 python tools/undertow.py triage [--days 180]   # LAPTOP ONLY: new, unnamed reported activity -> data/triage.jsonl
 python tools/undertow.py closing [--months 12] # LAPTOP ONLY: watch rows against later disclosures -> data/closing.json
-python -m unittest discover -s tests           # 43 offline tests on recorded real replies
+python -m unittest discover -s tests           # 51 offline tests on recorded real replies
 python tests/make_fixtures.py                  # re-record fixtures from the raw copies of the last collect
 python tools/serve.py                          # site/ on http://127.0.0.1:8781 with _headers (CSP); launch entry `undertow-site`
 python doctrine/kit/tic.py lint site/data/feed.geojson --doctrine doctrine
@@ -170,8 +170,26 @@ snapshot; the feed shows them only as reported-activity items.
   - Triage's default window is 180 days (was 60).
   - Volume: hand-entered VIGINUM and RRM rows as they publish. No new reporter lane until one shows current,
     on-topic output.
-- **Not built yet:** cross-suite joins through COP (Headwind sanctions listings, Verdict's election calendar, Context
-  and Watchfloor).
+- **Cross-suite joins** (Tom's "Yes, as recommended", 16 Nov 2026, to
+  `_ideas\drafts\2026-11-16-undertow-cross-suite-joins.md`):
+  - **Standing listings (built 16 Nov 2026, not committed):** `config/operations.json` `organisations.entries`, one
+    entry per hand-kept organisation, each `listings` row read from the publisher's own notice on 16 Nov 2026: list
+    (Headwind's ids `ofac-sdn`, `eu-fsf`, `uk-sanctions`, `france-gels`, `canada-sema`), programme, listing date,
+    notice URL and title, and where in the notice. SDA, ANO Dialog and Struktura: EU 28 Jul 2023 (Implementing Reg.
+    2023/1563, entries 245-247), OFAC 20 Mar 2024 (SDA, Struktura; RUSSIA-EO14024) and 4 Sep 2024 (ANO Dialog), UK
+    28 Oct 2024 (Financial Sanctions Notice, RUS2292-2294), Canada 21 Feb 2025 (SOR/2025-33, items 690-692). France's
+    register only restates the EU act ((UE) 2023/1563), so no France row. Struktura's identity: the EU's entry 246
+    gives "Struktura" as an alias and its TIN is the tax ID in OFAC's entry (`identity_note`). Haimai and CGTN are on
+    none of the five lists. `undertow/listings.py`: `for_org`, `sentence`, `notice_urls` (the leak scan allows these
+    exact addresses), `check` (run by `check`: hand-kept organisation, known list, ISO date, notice on the list
+    publisher's own site, no extra fields such as a person's name). Shown as `operation.listed_by` on items whose
+    publisher names the organisation (3 on 16 Nov), a "<org> is listed by EU (2023-07-28), ..." sentence in the
+    summary, a "Listed by" row on the page, and STIX `external_references` on the threat-actor (no relationship).
+    Confidence and origin unchanged (a test builds the feed with and without listings).
+  - **Sanctions join:** in COP (branch `undertow/sanctions-join`, `tools/undertow_sanctions.py`), published off.
+  - **Elections:** ElectionGuide's calendar is "for non-commercial use" and its Data Use Policy was not found, so
+    fallback (a): hand-entered national elections in Verdict's calendar, kind `election`. Countries are Tom's call.
+  - **Press join:** set aside until a narrative lane exists.
 
 Outputs in `site/data/`:
 - `feed.geojson`: 425 items, 1.9 MB, linter PASS.
