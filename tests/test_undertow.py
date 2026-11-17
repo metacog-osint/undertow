@@ -218,6 +218,51 @@ class Pipeline(unittest.TestCase):
         self.assertNotIn("Jane Example", [o.get("name") for o in b["objects"]])
         self.assertEqual(stix.validate(b), [])
 
+    def test_standing_listings_show_as_listed_by_and_external_references(self):
+        sda = [f["properties"] for f in self.feed["features"]
+               if "Social Design Agency" in f["properties"]["operation"]["sponsor"]]
+        self.assertTrue(sda, "the recorded replies name the Social Design Agency")
+        for p in sda:
+            lists = {(x["organisation"], x["list"]) for x in p["operation"]["listed_by"]}
+            self.assertIn(("Social Design Agency", "ofac-sdn"), lists)
+            self.assertIn("Social Design Agency is listed by", p["summary"])
+            self.assertIn("not an origin and changes no confidence", p["summary"])
+        rows = [r for r in self.page["items"] if "Social Design Agency" in r["orgs"]]
+        self.assertTrue(rows and all(r["listed_by"] for r in rows))
+        unlisted = [f["properties"] for f in self.feed["features"] if f["properties"]["operation"]["sponsor"]
+                    and not set(f["properties"]["operation"]["sponsor"]) & {"Social Design Agency", "ANO Dialog", "Struktura"}]
+        for p in unlisted:
+            self.assertEqual(p["operation"]["listed_by"], [])
+            self.assertNotIn("is listed by", p["summary"])
+        tas = {o["name"]: o for o in self.stix["objects"] if o["type"] == "threat-actor"}
+        refs = tas["Social Design Agency"]["external_references"]
+        self.assertIn("https://ofac.treasury.gov/recent-actions/20240320", [r["url"] for r in refs])
+        for name in ("Haimai", "China Global Television Network"):
+            if name in tas:
+                self.assertNotIn("external_references", tas[name])
+        # A listing adds a reference only: the threat-actor's relationships are still attributed-to and located-at.
+        kinds = {o["relationship_type"] for o in self.stix["objects"] if o["type"] == "relationship"
+                 and tas["Social Design Agency"]["id"] in (o["source_ref"], o["target_ref"])}
+        self.assertLessEqual(kinds, {"attributed-to", "located-at"})
+
+    def test_listings_change_no_confidence_or_origin(self):
+        from unittest import mock
+        from undertow import listings
+        recs = cli.all_records(self.snap)
+        with_l = feed.build_feed(recs, self.snap["generated_at"], {})
+        with mock.patch.object(listings, "_by_name", return_value={}):
+            without = feed.build_feed(recs, self.snap["generated_at"], {})
+        a = {f["properties"]["id"]: f["properties"] for f in with_l["features"]}
+        b = {f["properties"]["id"]: f["properties"] for f in without["features"]}
+        self.assertEqual(set(a), set(b))
+        changed = 0
+        for k in a:
+            for field in ("confidence", "confidence_basis", "actors", "countries", "tier", "kind"):
+                self.assertEqual(a[k].get(field), b[k].get(field), f"{k}: {field}")
+            self.assertEqual(a[k]["operation"]["origin"], b[k]["operation"]["origin"])
+            changed += a[k]["summary"] != b[k]["summary"]
+        self.assertGreater(changed, 0)
+
     def test_stix_disarm_objects_unchanged_with_cc_by_sa(self):
         vendored = {o["id"]: o for o in disarm.bundle()["objects"]}
         for o in self.stix["objects"]:
@@ -681,6 +726,35 @@ class Lanes(unittest.TestCase):
 
 
 class Guards(unittest.TestCase):
+    def test_listings_table_passes_its_check(self):
+        from undertow import listings
+        self.assertEqual(listings.check(known=stix.named_organisations()), [])
+        # Organisations only: every listed name is a hand-kept organisation, and the three Russian ones are listed.
+        self.assertEqual({e for e in listings._by_name() if listings._by_name()[e]},
+                         {"Social Design Agency", "ANO Dialog", "Struktura"})
+
+    def test_listings_check_refuses_bad_rows(self):
+        from undertow import listings
+        tmp = Path(tempfile.mkdtemp(prefix="undertow-listings-"))
+        try:
+            (tmp / "config").mkdir()
+            good = {"list": "ofac-sdn", "programme": "RUSSIA-EO14024", "listed": "2024-03-20",
+                    "notice": "https://ofac.treasury.gov/recent-actions/20240320", "notice_title": "t"}
+            rows = [{"name": "Jane Example", "listings": [good]},
+                    {"name": "Social Design Agency", "listings": [
+                        dict(good, list="xx-list"), dict(good, listed="20 Mar 2024"),
+                        dict(good, list="eu-fsf", notice="https://example.org/notice"),
+                        dict(good, list="uk-sanctions", notice="https://www.gov.uk/government/news/x", individual="A B"),
+                        dict(good), dict(good)]}]
+            (tmp / "config" / "operations.json").write_text(
+                json.dumps({"operations": [], "organisations": {"entries": rows}}), encoding="utf-8")
+            errs = " | ".join(listings.check(tmp, known=frozenset({"Social Design Agency"})))
+            for want in ("'Jane Example': not an organisation", "unknown list", "listed must be YYYY-MM-DD",
+                         "not on the publisher's own site", "fields not allowed", "list given twice"):
+                self.assertIn(want, errs)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
     def test_scrub_links_and_handles(self):
         t, n = text.scrub("see http://tiktok[.]com/@garrygarr950, rrn.com.tr, `x[.]com` and @someone_here")
         self.assertNotIn("garrygarr950", t)

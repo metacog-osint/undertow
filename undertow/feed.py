@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 from tic_doctrine import CONTRACT, geo  # noqa: E402
 
-from . import activity, disarm, text  # noqa: E402
+from . import activity, disarm, listings, text  # noqa: E402
 
 SITE = "https://undertow.theintelligence.company"
 METHOD = "undertow-1.0"
@@ -193,6 +193,9 @@ def summary(r: dict) -> str:
         bits.append(f"Counts: {ct}.")
     if r["publisher"] == "meta":
         bits.append(f"Meta lists {r['counts'].get('indicators', 0)} indicators; Undertow keeps the count only.")
+    listed = listings.sentence(r.get("orgs"))
+    if listed:
+        bits.append(listed)
     bits.append("Origin is where the operators were, never a finding of who directed it.")
     return " ".join(bits)
 
@@ -273,6 +276,7 @@ def feature(r: dict, generated: str) -> dict:
             "origin_level_stated": r.get("origin_level"),
             "alignment": r.get("alignment") or [],
             "sponsor": [o["name"] for o in r.get("orgs") or []],
+            "listed_by": listings.for_orgs(r.get("orgs")),
             "targets": r.get("targets") or [],
             "target_regions": r.get("target_regions") or [],
             "countries_named": r.get("countries_named") or [],
