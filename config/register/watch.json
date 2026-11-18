@@ -246,6 +246,34 @@
       "promoted_on": "2026-11-18",
       "note": "Hand-entered (candidate 6); the page shows no publication date (Date modified 2026-05-11), so the date is Global Affairs Canada's news release of 17 Apr 2026. Monitoring Nov 2024 to Oct 2025, months only (election 28 Sep 2025). Also names Operation Undercut, which Undertow does not track, and calls Doppelg\u00e4nger 'Russian state-directed'; neither is recorded as origin. The report says Undercut's X network was removed on 22 Sep 2025, by an unnamed party. 'State-aligned' is recorded as alignment, never origin.",
       "label_starts_with_name": true
+    },
+    {
+      "id": "poland-airspace-g7-rrm-2026",
+      "operation": "Information operations exploiting the aerial object over Polish airspace of 30 July 2026",
+      "tracked_operations": [
+        "portal-kombat"
+      ],
+      "reporter": {
+        "name": "G7 Rapid Response Mechanism (Global Affairs Canada)",
+        "grade": "B2",
+        "terms": "canada.ca terms, read 16 Nov 2026: non-commercial reproduction allowed with the complete title, the author and the original URL; no commercial redistribution without permission. Undertow keeps the label, date and link only",
+        "source_type": "government"
+      },
+      "first_report": {
+        "date": "2026-08-20",
+        "url": "https://international.canada.ca/en/global-affairs/corporate/reports/rapid-response-mechanism/news/2026-08-20-polish-airspace"
+      },
+      "countries": [
+        "PL"
+      ],
+      "activity_period": {
+        "from": "2026-07-30",
+        "to": "2026-08-20"
+      },
+      "attribution_wording": "known to spread manipulated content favourable to Russia's political aims",
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-18",
+      "note": "Hand-entered (read 18 Nov 2026). A G7 RRM Secretariat statement relaying the Government of Poland's investigations; it names the Pravda Network (Portal Kombat) only, and no platforms or takedowns. The period starts on 30 Jul 2026, the night of the incident; its end is the statement's date, not a reported end. 'Favourable to Russia's political aims' is not recorded as alignment or origin."
     }
   ]
 }
