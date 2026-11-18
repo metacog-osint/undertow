@@ -303,6 +303,30 @@
     document.getElementById("events").innerHTML = (S.events || []).map(function (e) { return "<li>" + esc(e.date) + ": " + esc(e.title) + "</li>"; }).join("");
   }
 
+  // Elsewhere today (tic-related.js from the hub): the target countries the publishers state, strongest first: those
+  // targeted by reported activity that is active, then by how many disclosed networks name them, then the newest.
+  // Stated targets only, as on the map; origins and countries a report merely mentions are left out.
+  function related() {
+    var box = document.getElementById("tic-related");
+    if (!box || !window.TicRelated) { return; }
+    var score = {};
+    S.items.forEach(function (it) {
+      (it.targets || []).forEach(function (c) {
+        var s = score[c] = score[c] || { cc: c, active: 0, n: 0, last: "" };
+        if (it.activity) { s.active += it.activity.state === "active" ? 1 : 0; } else { s.n += 1; }
+        var d = itemDate(it);
+        if (d > s.last) { s.last = d; }
+      });
+    });
+    var ranked = Object.keys(score).map(function (c) { return score[c]; }).sort(function (a, b) {
+      return (b.active - a.active) || (b.n - a.n) || (a.last < b.last ? 1 : a.last > b.last ? -1 : 0);
+    }).map(function (s) { return s.cc; });
+    if (!ranked.length) { return; }
+    var names = {};
+    ranked.forEach(function (c) { names[c] = cname(c); });
+    window.TicRelated.render(box, { countries: ranked, here: "undertow", names: names, level: 2 });
+  }
+
   function render() {
     NAMES = S.country_names || {};
     document.getElementById("asof").textContent = "Collected " + when(S.generated_at) + ". Method " + S.method_version + ", DISARM v" + S.disarm_version + ".";
@@ -312,6 +336,7 @@
     namedOps(S.items);
     method();
     drawRows();
+    related();
   }
 
   fetch("data/snapshot.json")
