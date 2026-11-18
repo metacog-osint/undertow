@@ -190,8 +190,11 @@ snapshot; the feed shows them only as reported-activity items.
   - **Elections:** ElectionGuide's calendar is "for non-commercial use" and its Data Use Policy was not found, so
     fallback (a): hand-entered national elections in Verdict's calendar, kind `election`. Tom chose all 40 stated
     target countries (18 Nov 2026). 48 votes, 1 Nov 2024 to 31 Dec 2027, each from the electoral body's own page,
-    9 unverified (Verdict branch `calendar/elections`; research and the not-yet-set dates in
-    `D:\Projects\_ideas\drafts\2026-11-18-election-research\`). The join is COP's `tools/undertow_elections.py`
+    8 entered unverified (Verdict branch `calendar/elections`; research and the not-yet-set dates in
+    `D:\Projects\_ideas\drafts\2026-11-18-election-research\`). A re-read in Chrome on 18 Nov afternoon verified
+    BG's runoff (cik.bg decision 441-PVR), MT (electoral.gov.mt voting notice), CO's runoff (Registraduría) and
+    TD (ange.td calendar); `reread_patch.py` there. Still unverified: RU (cikrf.ru, kremlin.ru and pravo.gov.ru
+    show error pages), CM (decree 2026/345 not on prc.cm), FR's two rounds (convocation decree not yet in the JO). The join is COP's `tools/undertow_elections.py`
     (branch `undertow/election-join`, published off): it uses `activity.activity_period` or the disclosure's
     `operation.period`, never a report date, so keep both filled.
   - **Press join:** set aside until a narrative lane exists.
