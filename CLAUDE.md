@@ -137,10 +137,15 @@ snapshot; the feed shows them only as reported-activity items.
     - Bulgaria, DFRLab, 9 Jun: Portal Kombat; the vote was 19 Apr.
     - Roska Bridge, CheckFirst, 2 Jul: Portal Kombat; targets DE, FR, UA, US.
     - Armenia, G7 RRM, 26 Oct: the three operations, alignment RU.
+  - **Row on 18 Nov 2026 (Tom's "Yes, enter and push" to
+    `_ideas\drafts\2026-11-18-undertow-rrm-moldova-candidate.md`):** Moldova, G7 RRM, 17 Apr 2026 (the news
+    release; the page shows only Date modified 2026-05-11): Operation Overload, Portal Kombat, Storm-1516 and
+    Doppelganger, alignment RU, activity 2024-11 to 2025-10 (election 28 Sep 2025). Operation Undercut (untracked)
+    and "Russian state-directed" for Doppelganger stay in the note, never origin. The Doppelganger test's publisher
+    set gained "watch".
   - **Waiting:**
     - The RRM's Poland statement: the page names no operation as read, though a search summary said the Pravda
       Network. Tom reads it first.
-    - The RRM's Moldova report: not read yet.
     - VIGINUM's Rokh Solis: SGDSN's terms are unread because its site shows a browser check.
 - **Reporters (decision 3):** DFRLab, CheckFirst, CORRECTIV. Not Alliance4Europe (feed still since Sep 2025) or
   Ukraine's CCD (a party to the war). VIGINUM and Canada's RRM only as hand-entered watch rows.

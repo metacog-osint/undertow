@@ -303,7 +303,8 @@ class Pipeline(unittest.TestCase):
     def test_doppelganger_corroborated_moderate(self):
         dop = [f["properties"] for f in self.feed["features"] if "doppelganger" in f["properties"]["operation"]["named_operations"]]
         pubs = {p["operation"]["publisher"] for p in dop}
-        self.assertEqual(pubs, {"meta", "openai", "eeas", "dfrlab", "correctiv"})
+        # "watch": the G7 RRM's Moldova row names Doppelganger (Tom, 18 Nov 2026).
+        self.assertEqual(pubs, {"meta", "openai", "eeas", "dfrlab", "correctiv", "watch"})
         self.assertTrue(all(p["confidence"] == "moderate" for p in dop if "activity" not in p))
         self.assertTrue(all("confidence" not in p for p in dop if "activity" in p))
         eeas_dop = next(p for p in dop if p["operation"]["publisher"] == "eeas")
