@@ -8,7 +8,9 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="tic-time.css">
 <link rel="stylesheet" href="tic-nav.css">
+<link rel="stylesheet" href="tic-tabs.css">
 <script src="tic-time.js"></script>
+<script src="tic-tabs.js" defer></script>
 <script src="tic-nav.js" defer data-current="undertow" data-health="on"></script>
 </head>
 <body>
@@ -37,6 +39,9 @@
     <div class="tiles" id="tiles" aria-live="polite"></div>
   </section>
 
+  <!-- Sections row (tic-tabs.js from the hub): one group at a time on a phone, a jumping row wider -->
+  <div data-tic-tabs>
+  <div id="sec-overview" data-tab-label="Overview">
   <section class="card" aria-labelledby="tl-h">
     <div class="card-head"><h2 id="tl-h">Disclosures over time</h2>
       <p class="muted small">One mark per disclosure (a report, bulletin or announcement), sized by how many networks it lists.
@@ -49,9 +54,11 @@
       <p class="muted small">Networks counted by the origin the publisher states (rows) and the target countries it names
         (columns). Google and OpenAI name no targets, so they count under "none named". Regions such as "Sub-Saharan
         Africa" are in the table below.</p></div>
-    <div class="scroll"><table id="matrix" class="matrix"></table></div>
+    <div class="scroll" tabindex="0" role="region" aria-labelledby="mx-h"><table id="matrix" class="matrix"></table></div>
   </section>
+  </div>
 
+  <div id="sec-operations" data-tab-label="Operations">
   <section class="card" aria-labelledby="ops-h">
     <div class="card-head"><h2 id="ops-h">Named operations</h2>
       <p class="muted small">Operations a publisher names (Doppelganger, Storm-1516, Spamouflage...). Our confidence is about
@@ -59,7 +66,9 @@
         Moderate. Origin is easy to fake, so nothing here is High.</p></div>
     <div id="ops"></div>
   </section>
+  </div>
 
+  <div id="sec-networks" data-tab-label="Networks">
   <section class="card" aria-labelledby="tb-h">
     <div class="card-head"><h2 id="tb-h">All disclosed networks</h2></div>
     <div class="filters">
@@ -70,7 +79,9 @@
     <div id="rows"></div>
     <button type="button" id="more" class="more-btn" hidden>Show more</button>
   </section>
+  </div>
 
+  <div id="sec-method" data-tab-label="Method">
   <section class="card" id="method" aria-labelledby="me-h">
     <div class="card-head"><h2 id="me-h">Method and licences</h2></div>
     <div class="prose">
@@ -89,13 +100,13 @@
       <p>Indicator values, account handles, URLs and domains, and the names of individuals. Meta's indicator tables are
         read only to count their rows. Every sentence kept from a publisher is scrubbed: links become "[link withheld]"
         and likely personal names "[name withheld]". The rule leans towards withholding. <span id="withheld-n"></span></p>
-      <h3>DISARM techniques</h3>
+      <h3 id="dis-h">DISARM techniques</h3>
       <p>DISARM Framework v<span id="disarm-v"></span> (DISARM Foundation, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>).
         A technique is attached only when a rule below matches the publisher's own words. It is Undertow's reading
         ("mapped"), not the publisher's claim. <strong id="rules-status"></strong></p>
-      <div class="scroll"><table id="rules" class="plain"></table></div>
-      <h3>Sources and their terms</h3>
-      <div class="scroll"><table class="plain">
+      <div class="scroll" tabindex="0" role="region" aria-labelledby="dis-h"><table id="rules" class="plain"></table></div>
+      <h3 id="src-h">Sources and their terms</h3>
+      <div class="scroll" tabindex="0" role="region" aria-labelledby="src-h"><table class="plain">
         <thead><tr><th scope="col">Publisher</th><th scope="col">Read how</th><th scope="col">Terms</th></tr></thead>
         <tbody>
           <tr><td>Meta</td><td>Threat-research repository on GitHub: README table and network files</td><td>MIT. Network summaries quoted with the notice: Copyright (c) Meta Platforms, Inc. and affiliates</td></tr>
@@ -115,6 +126,8 @@
       <ul id="events" class="small"></ul>
     </div>
   </section>
+  </div>
+  </div>
 </main>
 
 <footer class="wrap foot small muted">
