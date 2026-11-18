@@ -205,6 +205,47 @@
       "promoted_on": "2026-11-16",
       "note": "Hand-entered (candidate 4); the page shows no publication date, only Date modified 2026-10-26, which is used. Monitoring 1 Jan to 10 Jun 2026 (election 7 June). The report says platform moderators removed several Operation Overload videos, undated. 'State-aligned' is recorded as alignment, never origin. Not the activity of armenia-election-war-fears-2026.",
       "label_starts_with_name": true
+    },
+    {
+      "id": "moldova-election-g7-rrm-2025",
+      "operation": "Russian state-aligned operations around Moldova's 2025 parliamentary elections, in joint G7 monitoring",
+      "tracked_operations": [
+        "operation-overload",
+        "portal-kombat",
+        "storm-1516",
+        "doppelganger"
+      ],
+      "reporter": {
+        "name": "G7 Rapid Response Mechanism (Global Affairs Canada)",
+        "grade": "B2",
+        "terms": "canada.ca terms, read 16 Nov 2026: non-commercial reproduction allowed with the complete title, the author and the original URL; no commercial redistribution without permission. Undertow keeps the label, date and link only",
+        "source_type": "government"
+      },
+      "first_report": {
+        "date": "2026-04-17",
+        "url": "https://international.canada.ca/en/global-affairs/corporate/reports/rapid-response-mechanism/news/2025-moldovan-election"
+      },
+      "countries": [
+        "MD"
+      ],
+      "activity_period": {
+        "from": "2024-11",
+        "to": "2025-10"
+      },
+      "platforms": [
+        "Bluesky",
+        "Telegram",
+        "TikTok",
+        "X"
+      ],
+      "alignment": [
+        "RU"
+      ],
+      "attribution_wording": "Russian state-aligned",
+      "promoted_by": "Tom",
+      "promoted_on": "2026-11-18",
+      "note": "Hand-entered (candidate 6); the page shows no publication date (Date modified 2026-05-11), so the date is Global Affairs Canada's news release of 17 Apr 2026. Monitoring Nov 2024 to Oct 2025, months only (election 28 Sep 2025). Also names Operation Undercut, which Undertow does not track, and calls Doppelg\u00e4nger 'Russian state-directed'; neither is recorded as origin. The report says Undercut's X network was removed on 22 Sep 2025, by an unnamed party. 'State-aligned' is recorded as alignment, never origin.",
+      "label_starts_with_name": true
     }
   ]
 }
