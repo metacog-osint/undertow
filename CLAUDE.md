@@ -110,7 +110,7 @@ G7 RRM (B2, government) and VIGINUM enter only as rows.
   no warning tier before 10 closed rows**; even then described, never rated. Every item: kind observation, tier
   routine, `reported`, grade A2.
 - Never edit `doctrine/kit/` (sync: `python <tic-doctrine>/tools/sync.py D:/Projects/undertow`, Tom's yes) or
-  `site_src/tic-nav.js`/`tic-time.js` (copy from the hub's `site/shared/`).
+  `site_src/tic-*` (nav, time, tabs, related: copy from the hub's `site/shared/`).
 
 ## Outputs (`site/data/`) and suite use
 `feed.geojson` (~1.9 MB; the hub reads it whole), `stix.json`, `events.json` (expected disclosures, each "not a

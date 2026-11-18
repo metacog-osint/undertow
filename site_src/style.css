@@ -81,7 +81,7 @@ body {
 .pub-tiktok { color: var(--p-tiktok); } .pub-eeas { color: var(--p-eeas); } .pub-dfrlab { color: var(--p-dfrlab); }
 .foot { padding: 24px 0; border-top: 1px solid var(--border); margin-top: 24px; }
 main a { color: var(--link); text-decoration: none; }
-.prose p a { text-decoration: underline; } /* links inside a sentence (WCAG link-in-text-block) */
+.prose p a, main .tic-rel a { text-decoration: underline; } /* links inside a sentence (WCAG link-in-text-block) */
 main a:hover, main a:focus { text-decoration: underline; }
 .scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
