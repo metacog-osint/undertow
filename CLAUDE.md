@@ -188,7 +188,12 @@ snapshot; the feed shows them only as reported-activity items.
     Confidence and origin unchanged (a test builds the feed with and without listings).
   - **Sanctions join:** in COP (branch `undertow/sanctions-join`, `tools/undertow_sanctions.py`), published off.
   - **Elections:** ElectionGuide's calendar is "for non-commercial use" and its Data Use Policy was not found, so
-    fallback (a): hand-entered national elections in Verdict's calendar, kind `election`. Countries are Tom's call.
+    fallback (a): hand-entered national elections in Verdict's calendar, kind `election`. Tom chose all 40 stated
+    target countries (18 Nov 2026). 48 votes, 1 Nov 2024 to 31 Dec 2027, each from the electoral body's own page,
+    9 unverified (Verdict branch `calendar/elections`; research and the not-yet-set dates in
+    `[local path]`). The join is COP's `tools/undertow_elections.py`
+    (branch `undertow/election-join`, published off): it uses `activity.activity_period` or the disclosure's
+    `operation.period`, never a report date, so keep both filled.
   - **Press join:** set aside until a narrative lane exists.
 
 Outputs in `site/data/`:
