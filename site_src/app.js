@@ -5,7 +5,8 @@
   var PUB = { meta: "Meta", google: "Google", openai: "OpenAI", tiktok: "TikTok", eeas: "EEAS", dfrlab: "DFRLab",
     checkfirst: "CheckFirst", correctiv: "CORRECTIV", watch: "Watch register" };
   var ORDER = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab", "checkfirst", "correctiv", "watch"];
-  var PAGE = 60;
+  // A phone starts the network list at 20 rows (each row is tall there); wider screens at 60. "Show more" adds as many.
+  var PAGE = window.matchMedia && window.matchMedia("(max-width: 760px)").matches ? 20 : 60;
   var T = window.TicTime;
 
   function esc(v) {
@@ -161,6 +162,34 @@
         (g.conf ? ' · <span class="badge">our confidence in origin: ' + esc(g.conf) + "</span>" : "") +
         (g.last ? " · last reported " + esc(day(g.last.date)) + " by " + esc(g.last.who) + " (" + esc(g.last.state) + ")" : "") + "</div></div>";
     }).join("") || '<p class="small muted">No named operations.</p>';
+    var opsBox = document.getElementById("ops");
+    foldLong(opsBox, opsBox.querySelectorAll(":scope > .oprow"));
+  }
+
+  // On a phone a list or table of more than FOLD + 2 entries shows its first FOLD (each puts the most-reported or
+  // the rule order first) and a "Show all" button; wider screens show every entry. The fold is CSS (style.css,
+  // .fold-box), so nothing is hidden from a wide screen or a printout. Same rule as Cordon, Elements, Headwind and
+  // Launch. The network list has its own "Show more" paging and is left.
+  var FOLD = 10;
+  function foldLong(box, items) {
+    var old = box.nextElementSibling;
+    if (old && old.classList.contains("fold-more")) { old.remove(); }
+    box.classList.remove("fold-box", "open");
+    if (items.length <= FOLD + 2) { return; }
+    Array.prototype.forEach.call(items, function (it, n) { it.classList.toggle("fold", n >= FOLD); });
+    box.classList.add("fold-box");
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "fold-more";
+    btn.setAttribute("aria-expanded", "false");
+    btn.textContent = "Show all " + items.length;
+    btn.addEventListener("click", function () {
+      var open = box.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(open));
+      btn.textContent = open ? "Show the first " + FOLD : "Show all " + items.length;
+      if (!open) { box.scrollIntoView({ block: "nearest" }); }
+    });
+    box.insertAdjacentElement("afterend", btn);
   }
 
   function counts(c) {
@@ -250,6 +279,8 @@
     S.items.forEach(function (it) { (it.disarm || []).forEach(function (d) { used[d.rule] = (used[d.rule] || 0) + 1; }); });
     document.getElementById("rules").innerHTML = "<thead><tr><th scope=\"col\">Rule</th><th scope=\"col\">Technique</th><th scope=\"col\">Reads</th><th scope=\"col\">Items</th></tr></thead><tbody>" +
       S.rules.map(function (r) { return "<tr><td>" + esc(r.id) + "</td><td>" + esc(r.technique) + "</td><td>" + esc(r.about) + "</td><td>" + (used[r.id] || 0) + "</td></tr>"; }).join("") + "</tbody>";
+    var rulesBox = document.getElementById("rules").parentElement;
+    foldLong(rulesBox, rulesBox.querySelectorAll("#rules > tbody > tr"));
     var labels = { meta: "Meta threat-research repository", google: "Google Influence Operations Bulletin", openai: "OpenAI news RSS",
       tiktok: "TikTok via the EU Code of Conduct Transparency Centre", eeas: "EEAS FIMI report (register) and FIMI page", dfrlab: "DFRLab RSS feed (reported activity)",
       checkfirst: "CheckFirst RSS feed (reported activity)", correctiv: "CORRECTIV English RSS feed (reported activity)",
@@ -302,6 +333,9 @@
         if (i >= shown) { shown = i + 1; drawRows(); }
         var el = document.getElementById(h);
         if (el && el.tagName === "DETAILS") { el.open = true; }
+        // A link to a network opens its section on a phone (the rows are drawn after the sections row is set up).
+        var grp = el && el.closest("[data-tab-label]"), tabs = grp && window.TicTabs && window.TicTabs.setup(grp.parentElement);
+        if (tabs) { tabs.show(grp.id); }
         if (el) { el.scrollIntoView(); }
       }
       if (T) {

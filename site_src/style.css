@@ -81,6 +81,7 @@ body {
 .pub-tiktok { color: var(--p-tiktok); } .pub-eeas { color: var(--p-eeas); } .pub-dfrlab { color: var(--p-dfrlab); }
 .foot { padding: 24px 0; border-top: 1px solid var(--border); margin-top: 24px; }
 main a { color: var(--link); text-decoration: none; }
+.prose p a { text-decoration: underline; } /* links inside a sentence (WCAG link-in-text-block) */
 main a:hover, main a:focus { text-decoration: underline; }
 .scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.86rem; font-variant-numeric: tabular-nums; }
@@ -93,7 +94,7 @@ table.matrix th.rowh { text-align: left; }
 table.matrix td.c { border-radius: 3px; min-width: 30px; }
 table.matrix td.c1 { background: rgba(var(--cell), 0.16); } table.matrix td.c2 { background: rgba(var(--cell), 0.3); }
 table.matrix td.c3 { background: rgba(var(--cell), 0.46); } table.matrix td.c4 { background: rgba(var(--cell), 0.64); }
-table.matrix td.c5 { background: rgba(var(--cell), 0.85); color: var(--panel); font-weight: 600; }
+table.matrix td.c5 { background: rgb(var(--cell)); color: var(--panel); font-weight: 600; } /* solid, so its figure keeps 4.5:1 */
 .timeline .dot { fill-opacity: 0.5; stroke-width: 1.2; }
 .dot-meta { fill: var(--p-meta); stroke: var(--p-meta); } .dot-google { fill: var(--p-google); stroke: var(--p-google); }
 .dot-openai { fill: var(--p-openai); stroke: var(--p-openai); } .dot-tiktok { fill: var(--p-tiktok); stroke: var(--p-tiktok); }
@@ -124,6 +125,16 @@ dl.facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .oprow { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .oprow:last-child { border-bottom: none; }
 .oprow .n { font-weight: 600; margin-right: 6px; }
+/* Long lists on a phone: the first entries and a "Show all" button (app.js foldLong()). */
+.fold-more { display: none; }
+@media (max-width: 760px) {
+  .fold-box:not(.open) .fold { display: none; }
+  .fold-more { display: inline-block; margin: 8px 0 2px; min-height: 44px; padding: 8px 14px; font: inherit; font-size: 0.88rem;
+    font-weight: 600; color: var(--link); background: var(--panel); border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer; }
+  .fold-more:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+}
+@media print { .fold-box:not(.open) .fold { display: revert; } .fold-more { display: none; } }
 @media (max-width: 640px) {
   .hero h1 { font-size: 1.3rem; }
   details.op > summary { grid-template-columns: 1fr; }
