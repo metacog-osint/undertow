@@ -1,0 +1,15 @@
+Undertow: Copyright © 2026 Thomas Brummer, The Intelligence Company.
+The code is licensed under the GNU Affero General Public License v3.0 (LICENSE).
+
+Third-party and shared files in this repository keep their own licences:
+
+- doctrine/kit/        The Intelligence Company doctrine kit, MIT (doctrine/kit/LICENSE)
+- site_src/tic-time.js, site_src/tic-time.css
+  The Intelligence Company shared time display, MIT (SPDX line at the top of tic-time.js)
+- config/disarm/       A cut of the DISARM Framework v1.6.1 STIX bundle, CC BY-SA 4.0 (DISARM Foundation;
+  marking kept in the file)
+
+Data keeps its sources' terms. Each source's licence is recorded in doctrine/sources.json and credited on the
+site.
+Meta's network summaries are quoted under MIT with the notice "Copyright (c) Meta Platforms, Inc. and
+affiliates".
