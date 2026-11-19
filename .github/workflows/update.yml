@@ -107,3 +107,22 @@ jobs:
           fi
           npx --yes wrangler@4.151.3 pages deploy site --project-name undertow --branch main \
             --commit-hash "$GITHUB_SHA" --commit-message "update $GITHUB_SHA" --commit-dirty=true
+      # Private archive (19 Nov 2026, retention rule: no data lost). OpenAI's RSS and the reporter pages roll off and
+      # publishers edit pages, so the raw replies go to the PRIVATE repo metacog-osint/tic-archive as release assets
+      # (tools/tic_archive.py, release undertow-raw-YYYY-MM: a snapshot per run, only changed replies uploaded).
+      # Operation level only still holds (Tom, 19 Nov 2026): Meta's per-network files (indicator values) and the
+      # reporter lanes' pages (reporter text) are left out, one --exclude per lane in undertow/reporters.py
+      # (tests/test_private_archive.py holds it). Never to this public repo's releases, artifacts or logs.
+      # After the deploy, so a failure turns the run red but never holds the live site. Token: TIC_ARCHIVE_TOKEN,
+      # contents:write on tic-archive only.
+      - name: Private archive (raw replies, to tic-archive)
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ secrets.TIC_ARCHIVE_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::secret TIC_ARCHIVE_TOKEN is not set, so nothing went to the private archive"; exit 1
+          fi
+          python tools/tic_archive.py put --program undertow --lane raw --src data/raw \
+            --exclude 'meta-network/*' \
+            --exclude 'dfrlab-rss/*' --exclude 'checkfirst-rss/*' --exclude 'correctiv-rss/*'
