@@ -5,8 +5,6 @@
   var PUB = { meta: "Meta", google: "Google", openai: "OpenAI", tiktok: "TikTok", eeas: "EEAS", dfrlab: "DFRLab",
     checkfirst: "CheckFirst", correctiv: "CORRECTIV", watch: "Watch register" };
   var ORDER = ["meta", "google", "openai", "tiktok", "eeas", "dfrlab", "checkfirst", "correctiv", "watch"];
-  // A phone starts the network list at 20 rows (each row is tall there); wider screens at 60. "Show more" adds as many.
-  var PAGE = window.matchMedia && window.matchMedia("(max-width: 760px)").matches ? 20 : 60;
   var T = window.TicTime;
 
   function esc(v) {
@@ -33,7 +31,7 @@
   function num(n) { return Number(n).toLocaleString("en-US"); }
   function link(url, label) { return '<a href="' + esc(url) + '" rel="noopener">' + esc(label) + "</a>"; }
 
-  var S, NAMES, filtered = [], shown = PAGE;
+  var S, NAMES, BY = {}, filtered = [];
   function cname(c) { return NAMES[c] || c; }
   function places(list) { return (list || []).map(cname).join(", "); }
 
@@ -187,35 +185,11 @@
         (g.conf ? ' · <span class="badge">our confidence in origin: ' + esc(g.conf) + "</span>" : "") +
         (g.last ? " · last reported " + esc(day(g.last.date)) + " by " + esc(g.last.who) + " (" + esc(g.last.state) + ")" : "") + "</div></div>";
     }).join("") || '<p class="small muted">No named operations.</p>';
-    var opsBox = document.getElementById("ops");
-    foldLong(opsBox, opsBox.querySelectorAll(":scope > .oprow"));
   }
 
-  // On a phone a list or table of more than FOLD + 2 entries shows its first FOLD (each puts the most-reported or
-  // the rule order first) and a "Show all" button; wider screens show every entry. The fold is CSS (style.css,
-  // .fold-box), so nothing is hidden from a wide screen or a printout. Same rule as Cordon, Elements, Headwind and
-  // Launch. The network list has its own "Show more" paging and is left.
-  var FOLD = 10;
-  function foldLong(box, items) {
-    var old = box.nextElementSibling;
-    if (old && old.classList.contains("fold-more")) { old.remove(); }
-    box.classList.remove("fold-box", "open");
-    if (items.length <= FOLD + 2) { return; }
-    Array.prototype.forEach.call(items, function (it, n) { it.classList.toggle("fold", n >= FOLD); });
-    box.classList.add("fold-box");
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "fold-more";
-    btn.setAttribute("aria-expanded", "false");
-    btn.textContent = "Show all " + items.length;
-    btn.addEventListener("click", function () {
-      var open = box.classList.toggle("open");
-      btn.setAttribute("aria-expanded", String(open));
-      btn.textContent = open ? "Show the first " + FOLD : "Show all " + items.length;
-      if (!open) { box.scrollIntoView({ block: "nearest" }); }
-    });
-    box.insertAdjacentElement("afterend", btn);
-  }
+  // Long lists and tables fold with the hub's tic-fold.js (data-tic-fold in index.html): the first 10 entries on a
+  // phone and 15 wider, in the order drawn here (most-reported operations, rule order, newest network first), then
+  // "Show all". A link to a network (#UT-...) opens its fold, its section and its row.
 
   function counts(c) {
     var w = { facebook_accounts: "Facebook accounts", instagram_accounts: "Instagram accounts", facebook_pages: "Pages",
@@ -247,8 +221,7 @@
     ].filter(function (f) { return f[1]; });
   }
 
-  function row(it) {
-    var tech = (it.disarm || []).map(function (d) { return '<span class="badge" title="' + esc(d.name + (d.phrase ? ': "' + d.phrase + '"' : "")) + '">' + esc(d.id) + "</span>"; }).join("");
+  function rowBody(it) {
     var target = places(it.targets) + ((it.target_regions || []).length ? (it.targets.length ? "; " : "") + it.target_regions.join(", ") : "");
     var facts = [
       ["Publisher", '<span class="pub pub-' + it.publisher + '">' + esc(PUB[it.publisher]) + "</span>, " + link(it.url, it.disclosure.title) + (it.page ? " (p. " + esc(it.page) + ")" : "")],
@@ -269,8 +242,15 @@
       '<dl class="facts">' + facts.map(function (f) { return "<dt>" + esc(f[0]) + "</dt><dd>" + f[1] + "</dd>"; }).join("") + "</dl>" +
       (it.withheld ? '<p class="small muted">' + it.withheld + " name or link span" + (it.withheld === 1 ? "" : "s") + " withheld from the publisher's text.</p>" : "") +
       '<p class="small muted">Item ' + esc(it.id) + "</p>";
+    return body;
+  }
+
+  // Every network is drawn (tic-fold.js shows the first ones); each row's details are built on first opening, so a
+  // filter redraws only summaries.
+  function row(it) {
+    var tech = (it.disarm || []).map(function (d) { return '<span class="badge" title="' + esc(d.name + (d.phrase ? ': "' + d.phrase + '"' : "")) + '">' + esc(d.id) + "</span>"; }).join("");
     return '<details class="op" id="' + esc(it.id) + '"><summary><span class="small muted">' + esc(itemDate(it).slice(0, 7)) + '</span><span class="pub pub-' + it.publisher + '">' + esc(PUB[it.publisher]) +
-      '</span><span class="t">' + esc(it.title) + ' <span class="small muted">' + esc(it.activity ? it.activity.reports + (it.activity.reports === 1 ? " report" : " reports") : it.origin.length ? "origin " + places(it.origin) : "no origin stated") + "</span> " + tech + "</span></summary><div class=\"body\">" + body + "</div></details>";
+      '</span><span class="t">' + esc(it.title) + ' <span class="small muted">' + esc(it.activity ? it.activity.reports + (it.activity.reports === 1 ? " report" : " reports") : it.origin.length ? "origin " + places(it.origin) : "no origin stated") + "</span> " + tech + "</span></summary><div class=\"body\"></div></details>";
   }
 
   function applyFilter() {
@@ -283,14 +263,20 @@
         (it.named_operations || []).join(" ")].join(" ").toLowerCase();
       return hay.indexOf(q) >= 0;
     }).sort(function (a, b) { return itemDate(b) < itemDate(a) ? -1 : itemDate(b) > itemDate(a) ? 1 : 0; });
-    shown = PAGE;
     drawRows();
   }
   function drawRows() {
-    document.getElementById("rows").innerHTML = filtered.slice(0, shown).map(row).join("") || '<p class="small muted">Nothing matches.</p>';
-    document.getElementById("f-count").textContent = Math.min(shown, filtered.length) + " of " + filtered.length + " shown";
-    var more = document.getElementById("more");
-    more.hidden = filtered.length <= shown;
+    document.getElementById("rows").innerHTML = filtered.map(row).join("") || '<p class="small muted">Nothing matches.</p>';
+    document.getElementById("f-count").textContent = filtered.length === S.items.length ? S.items.length + " networks" :
+      filtered.length + " of " + S.items.length + " match";
+  }
+  function fillRow(e) {
+    var d = e.target;
+    if (d.tagName !== "DETAILS" || !d.open || d.getAttribute("data-filled")) { return; }
+    var it = BY[d.id], b = d.querySelector(":scope > .body");
+    if (!it || !b) { return; }
+    b.innerHTML = rowBody(it);
+    d.setAttribute("data-filled", "1");
   }
 
   function method() {
@@ -304,8 +290,6 @@
     S.items.forEach(function (it) { (it.disarm || []).forEach(function (d) { used[d.rule] = (used[d.rule] || 0) + 1; }); });
     document.getElementById("rules").innerHTML = "<thead><tr><th scope=\"col\">Rule</th><th scope=\"col\">Technique</th><th scope=\"col\">Reads</th><th scope=\"col\">Items</th></tr></thead><tbody>" +
       S.rules.map(function (r) { return "<tr><td>" + esc(r.id) + "</td><td>" + esc(r.technique) + "</td><td>" + esc(r.about) + "</td><td>" + (used[r.id] || 0) + "</td></tr>"; }).join("") + "</tbody>";
-    var rulesBox = document.getElementById("rules").parentElement;
-    foldLong(rulesBox, rulesBox.querySelectorAll("#rules > tbody > tr"));
     var labels = { meta: "Meta threat-research repository", google: "Google Influence Operations Bulletin", openai: "OpenAI news RSS",
       tiktok: "TikTok via the EU Code of Conduct Transparency Centre", eeas: "EEAS FIMI report (register) and FIMI page", dfrlab: "DFRLab RSS feed (reported activity)",
       checkfirst: "CheckFirst RSS feed (reported activity)", correctiv: "CORRECTIV English RSS feed (reported activity)",
@@ -374,21 +358,13 @@
       ORDER.forEach(function (p) { var o = document.createElement("option"); o.value = p; o.textContent = PUB[p]; sel.append(o); });
       sel.addEventListener("change", applyFilter);
       document.getElementById("f-q").addEventListener("input", applyFilter);
-      document.getElementById("more").addEventListener("click", function () { shown += PAGE; drawRows(); });
+      S.items.forEach(function (it) { BY[it.id] = it; });
+      // "toggle" does not bubble; a capturing listener on the list still hears every row open.
+      document.getElementById("rows").addEventListener("toggle", fillRow, true);
       filtered = S.items.slice();
       applyFilter();
       render();
-      var h = location.hash.slice(1);
-      if (h) {
-        var i = filtered.findIndex(function (it) { return it.id === h; });
-        if (i >= shown) { shown = i + 1; drawRows(); }
-        var el = document.getElementById(h);
-        if (el && el.tagName === "DETAILS") { el.open = true; }
-        // A link to a network opens its section on a phone (the rows are drawn after the sections row is set up).
-        var grp = el && el.closest("[data-tab-label]"), tabs = grp && window.TicTabs && window.TicTabs.setup(grp.parentElement);
-        if (tabs) { tabs.show(grp.id); }
-        if (el) { el.scrollIntoView(); }
-      }
+      // A link to a network (#UT-...): tic-fold.js opens its fold, its section and the row, then scrolls to it.
       if (T) {
         var slot = document.getElementById("time-settings");
         if (slot) { T.mountSettings(slot); }
