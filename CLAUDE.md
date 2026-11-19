@@ -88,7 +88,8 @@ G7 RRM (B2, government) and VIGINUM enter only as rows.
   publisher alias) with the same origin. One is Low, two Moderate. **No High** (origin easy to fake; no scored
   Verdict record).
 - **DISARM** (`config/disarm_rules.json`): 17 phrase rules, each one v1.6.1 technique, basis `mapped`; reviewed by
-  Tom 14 Nov 2026. A technique is Undertow's reading of the publisher's words, not the publisher's claim. Bundle cut
+  Tom 14 Nov 2026, each rule `review: accepted` 19 Nov (a rule without it turns the table "proposed"). A technique
+  is Undertow's reading of the publisher's words, not the publisher's claim. Bundle cut
   vendored in `config/disarm/DISARM-1.6.1-cut.json` with its CC BY-SA 4.0 marking.
 - **STIX:** UUIDv5 ids from `uuid5(DNS, "undertow.theintelligence.company")` and a stable key; timestamps from the
   disclosure, so rebuilds are byte-identical. TLP:CLEAR from OASIS `cti-stix-common-objects`. A `threat-actor`
