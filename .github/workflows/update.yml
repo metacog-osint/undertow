@@ -73,6 +73,9 @@ jobs:
         run: |
           git fetch -q --depth=1 origin main && git checkout -q FETCH_HEAD -- history 2>/dev/null \
             || echo "::warning::could not take history/ from main's tip; using this checkout's"
+          # Retention archive (history/reports.jsonl): the reporter lanes' report records, append-only, written
+          # on top of main's tip just taken and committed below with the rest of history/.
+          python tools/undertow.py archive || echo "::warning::archive step failed; this run is missing from reports.jsonl"
           python doctrine/kit/tic.py history site/data/feed.geojson --dir history --ended site/data/ended.geojson \
             || { echo "::warning::history step failed; this run is missing from history/"; exit 0; }
           git config user.name "undertow-bot"
