@@ -119,22 +119,11 @@ blockquote { margin: 6px 0 8px; padding: 6px 10px; border-left: 3px solid var(--
 dl.facts { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 6px 0; }
 dl.facts dt { color: var(--muted); }
 dl.facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.more-btn { margin-top: 10px; font: inherit; font-size: 0.88rem; color: var(--link); background: none; border: 1px solid var(--border); border-radius: 4px; padding: 6px 12px; cursor: pointer; }
 .prose h3 { font-size: 0.98rem; margin: 16px 0 4px; }
 .prose p, .prose ol { max-width: 860px; }
 .oprow { padding: 8px 0; border-bottom: 1px solid var(--border); }
 .oprow:last-child { border-bottom: none; }
 .oprow .n { font-weight: 600; margin-right: 6px; }
-/* Long lists on a phone: the first entries and a "Show all" button (app.js foldLong()). */
-.fold-more { display: none; }
-@media (max-width: 760px) {
-  .fold-box:not(.open) .fold { display: none; }
-  .fold-more { display: inline-block; margin: 8px 0 2px; min-height: 44px; padding: 8px 14px; font: inherit; font-size: 0.88rem;
-    font-weight: 600; color: var(--link); background: var(--panel); border: 1px solid var(--border); border-radius: 4px;
-    cursor: pointer; }
-  .fold-more:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-}
-@media print { .fold-box:not(.open) .fold { display: revert; } .fold-more { display: none; } }
 @media (max-width: 640px) {
   .hero h1 { font-size: 1.3rem; }
   details.op > summary { grid-template-columns: 1fr; }
