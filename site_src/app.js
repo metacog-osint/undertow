@@ -60,6 +60,31 @@
     ].map(function (t) { return '<div class="tile"><span class="k">' + esc(t[0]) + '</span><span class="v">' + esc(t[1]) + "</span></div>"; }).join("");
   }
 
+  // Today's reading (tic-shell): one sentence from the data, no fixed counts. It counts reported-activity records, as
+  // the tile does; "active" means a report within the quiet window, never that an operation is running.
+  function dmy(iso) {
+    try { return new Date(String(iso).slice(0, 10) + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }); }
+    catch (e) { return day(iso); }
+  }
+  function reading(items) {
+    var all = items.filter(function (it) { return it.activity; });
+    var act = all.filter(function (it) { return it.activity.state === "active"; }).map(function (it) { return it.activity; });
+    var last = act.slice().sort(function (a, b) { return String(b.last_report).localeCompare(String(a.last_report)); })[0];
+    var take = items.filter(function (it) { return !it.activity && it.disclosed_at && it.publisher !== "watch"; })
+      .sort(function (a, b) { return String(b.disclosed_at).localeCompare(String(a.disclosed_at)); })[0];
+    var days = (last && last.quiet_after_days) || 180, parts = [];
+    if (last) {
+      parts.push("<b>" + num(act.length) + "</b> of the " + num(all.length) + " reported activities tracked here had a report in the last " +
+        num(days) + " days; the latest is " + esc(last.reporter_name) + "'s, on " + esc(last.operation_name) + ", " + esc(dmy(last.last_report)) + ".");
+    } else if (all.length) {
+      parts.push("None of the " + num(all.length) + " reported activities tracked here had a report in the last " + num(days) + " days.");
+    }
+    if (take) {
+      parts.push("The newest takedown disclosure is " + esc(PUB[take.publisher] || take.publisher) + "'s, " + esc(dmy(take.disclosed_at)) + ".");
+    }
+    document.getElementById("reading").innerHTML = parts.length ? '<span class="tic-reading-k">Today’s reading</span>' + parts.join(" ") : "";
+  }
+
   function timeline(items) {
     var groups = {};
     items.forEach(function (it) {
@@ -330,6 +355,7 @@
   function render() {
     NAMES = S.country_names || {};
     document.getElementById("asof").textContent = "Collected " + when(S.generated_at) + ". Method " + S.method_version + ", DISARM v" + S.disarm_version + ".";
+    reading(S.items);
     tiles(S.items);
     timeline(S.items);
     matrix(S.items);
