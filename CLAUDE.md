@@ -8,9 +8,8 @@ no probability. Spec: `D:\Projects\_ideas\drafts\2026-11-14-influence-ops-step12
 `_ideas\new-programs.md`. Site https://undertow.theintelligence.company; repo `metacog-osint/undertow`, **public**
 (since 15 Nov 2026).
 
-**Slimmed 18 Nov 2026** from 32.6 KB. Full earlier text (shas, run ids, counts, decision narrative):
-`.claude/notes-archive-2026-11-18.md`. **Current state and open items: `.claude/HANDOFF.md`**, read it first.
-`.claude/` is kept out of git by `.git/info/exclude`. Keep this file under 12 KB; state goes in the handoff.
+Earlier text: `.claude/notes-archive-2026-11-18.md`. **State and open items: `.claude/HANDOFF.md`**, read it first
+(`.claude/` is in `.git/info/exclude`). Keep this file under 12 KB.
 
 ## Commands
 ```bash
@@ -18,6 +17,7 @@ python tools/undertow.py collect [--only meta]  # lanes into data/snapshot.json;
 python tools/undertow.py build | check          # site/; registers, linter, STIX check, leak scan
 python tools/undertow.py triage [--days 180]    # LAPTOP ONLY -> data/triage.jsonl
 python tools/undertow.py closing [--months 12]  # LAPTOP ONLY -> data/closing.json
+python tools/undertow.py tagbackfill            # LAPTOP ONLY: Google TAG 2024-25 counts register
 python -m unittest discover -s tests            # offline, recorded real replies (tests/make_fixtures.py re-records)
 python tools/serve.py                           # http://127.0.0.1:8781 with _headers; launch entry `undertow-site`
 python doctrine/kit/tic.py kitcheck             # also: tic.py lint site/data/feed.geojson --doctrine doctrine
@@ -32,8 +32,7 @@ brings a new disclosure (about monthly). `triage` and `closing` refuse when `GIT
   check, history, check, `wrangler pages deploy`. Secret `CLOUDFLARE_PAGES_TOKEN`, variable `CLOUDFLARE_ACCOUNT_ID`
   (set with `--body`; a PowerShell pipe's BOM broke Headwind's).
 - The workflow commits `history/` to main after each run (its token starts no run): **fetch before working**.
-- Each commit and push needs Tom's yes. Push by named commit (`git push origin <sha>:refs/heads/main`) after listing
-  what is ahead; ask for each push by its sha (auto mode refused pushes until Tom said "Push <sha>").
+- Ships under the suite's standing yes (global CLAUDE.md): PR, `git log origin/main..<sha>` first, merge.
 - Pages project `undertow` (`undertow-cm3.pages.dev`), Squarespace CNAME. History (kit `tic-history/1`) writes
   `history/` (published items only) and `site/data/ended.geojson`; a failing lane ends nothing.
 - `feed.health()` is **keyed by the source id items carry** (`google-iob`, `eeas-fimi-4`, ...), not lane name.
@@ -42,7 +41,7 @@ brings a new disclosure (about monthly). `triage` and `closing` refuse when `GIT
 ## Lanes
 | Lane | Module | Source, how read, what is kept |
 |---|---|---|
-| `meta` | `meta.py` | `github.com/meta/threat-research`: README table, each network's Markdown, one GitHub API commits call for when each file was added (`GITHUB_TOKEN` if set, never recorded; can postdate the report). Kept: title, period, origin, targets, counts, summary (≤1,400 chars, scrubbed), indicator **counts** only |
+| `meta` | `meta.py` | `github.com/meta/threat-research`: README table, each network's Markdown, one commits call for when each file was added (`GITHUB_TOKEN` if set, never recorded; can postdate the report). Kept: title, period, origin, targets, counts, summary (≤1,400 chars, scrubbed), indicator **counts** only |
 | `google` | `google.py` | `blog.google/security/influence-operations-bulletin-qN-YYYY/` from Q1 2026 plus its RSS; 404 = not yet out. Facts and counts only; stance read for DISARM, never kept. Keys positional (`google:2026-q3:2026-07:01`): an edited bulletin logs ended+new |
 | `openai` | `openai_rss.py` | `openai.com/news/rss.xml` ONLY (`fetch_allowed()` refuses other openai.com URLs; a test holds it). "influence" in title or summary = operation; round-ups are disclosures. Since 1 Jan 2024 |
 | `tiktok` | `tiktok.py` | `disinfocode.eu/reports/tiktok/<n>/json`, probing two ahead. NEVER tiktok.com. Commitment 14 TTP 6, crisis and elections chapters, merged on (origin, accounts, followers) |
@@ -52,13 +51,13 @@ brings a new disclosure (about monthly). `triage` and `closing` refuse when `GIT
 
 **Reporter lanes** (`REPORTERS`): WordPress RSS pages (`?paged=N`, 2 s apart), never an article page. Kept only when
 title or description names an operation in `config/operations.json` (case-sensitive): operations, time, link,
-countries named, platforms from a fixed list. **Never kept:** the reporter's title or description (they name
-individuals), `dc:creator`, author categories, attribution. First run back to 2024-01-01; later runs stop 30 days
-before the newest item read last time; a change to names or aliases (`ops_fingerprint`) re-reads the whole feed.
+countries, platforms. **Never kept:** the reporter's title or description, `dc:creator`, authors, attribution.
+First run back to 2024-01-01; later runs stop 30 days before the newest item read last time; a change to names
+or aliases (`ops_fingerprint`) re-reads the whole feed.
 
 **Reported activity** (`activity.py`, Tom 16 Nov): one item per (reporter, operation), key `<lane>:activity:<op>`;
-state **active** (last report within `QUIET_DAYS` = 180) or **quiet**, never "ended". Title says "reported by", since
-a name match means the reporter wrote about the operation, not that it found it running. `data_as_of` is the last
+state **active** (last report within `QUIET_DAYS` = 180) or **quiet**, never "ended". Title says
+"reported by" (a name match is writing about the operation, not finding it running). `data_as_of` is the last
 report. STIX: a `report` on the operation's intrusion-set, no campaign.
 
 **Watch register** rules: Tom promotes triage rows by hand. Each row's URL must be on a host in its
@@ -87,35 +86,34 @@ G7 RRM (B2, government) and VIGINUM enter only as rows.
 - **Confidence** (tic-confidence-1.0, origin only): independent publishers naming the same operation (name or
   publisher alias) with the same origin. One is Low, two Moderate. **No High** (origin easy to fake; no scored
   Verdict record).
-- **DISARM** (`config/disarm_rules.json`): 17 phrase rules, each one v1.6.1 technique, basis `mapped`; reviewed by
-  Tom 14 Nov 2026, each rule `review: accepted` 19 Nov (a rule without it turns the table "proposed"). A technique
-  is Undertow's reading of the publisher's words, not the publisher's claim. Bundle cut
-  vendored in `config/disarm/DISARM-1.6.1-cut.json` with its CC BY-SA 4.0 marking.
+- **DISARM** (`config/disarm_rules.json`): 17 phrase rules, one v1.6.1 technique each, basis `mapped` (Undertow's
+  reading of the publisher's words); each `review: accepted` by Tom 19 Nov (one without it makes the table
+  "proposed"). Bundle cut `config/disarm/DISARM-1.6.1-cut.json`, CC BY-SA 4.0.
 - **STIX:** UUIDv5 ids from `uuid5(DNS, "undertow.theintelligence.company")` and a stable key; timestamps from the
   disclosure, so rebuilds are byte-identical. TLP:CLEAR from OASIS `cti-stix-common-objects`. A `threat-actor`
-  (types ["unknown"], resource_level "organization", nothing more) only for a name hand-kept in
-  `config/operations.json` or `config/register/` (`stix.named_organisations()`; `validate()` refuses any other).
+  (types ["unknown"], resource_level "organization") only for a name hand-kept in `config/operations.json` or
+  `config/register/` (`validate()` refuses any other).
   Never emitted: indicator, observed-data, cyber-observables, identity for a person.
 - **Standing listings** (`undertow/listings.py`, `organisations.entries[].listings`): each row read from the list
   publisher's own notice (Headwind's list ids). `check` refuses unknown lists, non-ISO dates, notices off the
-  publisher's site, extra fields such as a person's name. Shown as `listed_by`; never changes confidence or origin
-  (a test builds with and without).
-- **Only stated targets are marked on the map** (Tom, 16 Nov). Google and OpenAI name no target, so they are off
-  the map; countries their text names stay in `countries`/`countries_named`, labelled not targets. A reporter's item
-  is marked where a disclosure of the same operation records a target (`activity.place`).
+  publisher's site, extra fields. Shown as `listed_by`; never changes confidence or origin.
+- **Only stated targets go on the map** (Tom, 16 Nov): Google and OpenAI name none (countries their text names stay
+  in `countries_named`, labelled not targets); a reporter's item goes where a disclosure records one (`activity.place`).
 - **Dates:** `data_as_of` is the publisher's date; `data_as_of_precision` `day` (Google, EEAS, TikTok report 8,
   OpenAI at midnight) or `month` (OpenAI case studies dated midnight on the 1st, `openai_rss.date_precision`).
-- **Baseline** (Tom 16 Nov): name-matched lead time set aside (platforms coin most names in the disclosure). The
-  baseline is the watch register's closing: `UT-IND-3` lead days to the takedown a row is `closed_into`; `UT-IND-4`
-  share closed within 12 months. `UT-IND-1..2`: corroboration; target-country quarterly count. **No anomaly rule and
-  no warning tier before 10 closed rows**; even then described, never rated. Every item: kind observation, tier
-  routine, `reported`, grade A2.
+- **Baseline per layer** (Tom 19 Nov; `baseline.py` -> `data/baseline.json`; described, never rated). *Dismantled:*
+  items per period by publisher and origin vs its own trailing 8 periods; grain Google bulletin, Meta and TikTok
+  report, OpenAI quarter; Google 2024-25 from the counts-only TAG register (not feed items). Only layer that may get
+  tier `anomaly` ("unusual enforcement against its own record", never activity); no threshold yet. *Ongoing:* per
+  operation, active or quiet at 6 months, never "ended". *Emerging:* watch closing (`UT-IND-3`, `UT-IND-4`); no
+  anomaly before 10 closed rows. *Across:* half-year DISARM share per publisher. No name-match lead-time baseline;
+  no warning tier anywhere. Items: observation, routine, `reported`, A2.
 - Never edit `doctrine/kit/` (sync: `python <tic-doctrine>/tools/sync.py D:/Projects/undertow`, Tom's yes) or
   `site_src/tic-*` (copies of the hub's `site/shared/` files).
 
 ## Outputs (`site/data/`) and suite use
-`feed.geojson` (~1.9 MB; the hub reads it whole), `stix.json`, `events.json` (expected disclosures, each "not a
-published date"), `snapshot.json` (the page), `ended.geojson` (COP). Registry row in tic-doctrine
+`feed.geojson` (~2 MB; the hub reads it whole), `stix.json`, `events.json` (expected disclosures, each "not a
+published date"), `snapshot.json` (the page), `baseline.json`, `ended.geojson` (COP). Registry row in tic-doctrine
 `vocab/programs.json`; hub Programs menu after Context; COP halos target countries (Information preset, `#CD00A0`).
 COP's joins: sanctions (`tools/undertow_sanctions.py`) and elections (`tools/undertow_elections.py`, uses
 `activity_period` or `operation.period`, never a report date, so keep both filled). Election dates: hand-entered in
@@ -128,5 +126,5 @@ Verdict's calendar, kind `election` (ElectionGuide is non-commercial). Press joi
 - DFRLab (16 Nov): Atlantic Council terms, noncommercial, no faster than a person; credit "Atlantic Council's
   Digital Forensic Research Lab". CheckFirst: `llms.txt` welcomes citing with attribution. CORRECTIV: no terms found,
   all rights reserved, facts only. G7 RRM (canada.ca): non-commercial with full title, author and URL.
-- Not built: Alliance4Europe (feed still since Sep 2025); Ukraine's CCD (a party to the war). VIGINUM: SGDSN terms
-  unread. No new reporter lane until one shows current, on-topic output.
+- Not built: Alliance4Europe (feed still since Sep 2025); Ukraine's CCD (a party to the war). VIGINUM: terms unread. No new
+  reporter lane until one shows current, on-topic output.
