@@ -28,7 +28,7 @@ _spec = importlib.util.spec_from_file_location("undertow_cli", ROOT / "tools" / 
 cli = importlib.util.module_from_spec(_spec)   # tools/undertow.py (its name clashes with the package)
 _spec.loader.exec_module(cli)
 
-from undertow import (activity, analysis, disarm, eeas, feed, google, meta, openai_rss, reporters,  # noqa: E402
+from undertow import (activity, analysis, archive, disarm, eeas, feed, google, meta, openai_rss, reporters,  # noqa: E402
                       stix, text, tiktok)
 from tic_doctrine import contract, history, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
@@ -803,6 +803,62 @@ class Guards(unittest.TestCase):
         self.assertEqual(feed.item_id("meta:x"), feed.item_id("meta:x"))
         self.assertEqual(stix.sid("campaign", "meta:x"), stix.sid("campaign", "meta:x"))
         self.assertTrue(feed.item_id("meta:x").startswith("UT-META-"))
+
+
+class Retention(unittest.TestCase):
+    """history/reports.jsonl keeps the reporter lanes' report records, append-only."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = Path(tempfile.mkdtemp(prefix="undertow-ret-"))
+        cls.snap = cli.collect(root=cls.tmp, getter=getter)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def setUp(self):
+        self.hist = Path(tempfile.mkdtemp(prefix="undertow-hist-"))
+        self.addCleanup(shutil.rmtree, self.hist, True)
+        self.path = self.hist / "reports.jsonl"
+
+    def test_every_report_record_archived_once(self):
+        recs = [r for lane in cli.REPORTER_LANES for r in self.snap["records"][lane]]
+        self.assertTrue(recs, "recorded replies give report records")
+        n = archive.run(self.snap, self.hist, cli.REPORTER_LANES)
+        self.assertEqual(n, len(recs))
+        rows = [json.loads(x) for x in self.path.read_text(encoding="utf-8").splitlines()]
+        self.assertEqual({r["id"] for r in rows}, {r["key"] for r in recs})
+        self.assertEqual(len(rows), len(recs))
+
+    def test_no_reporter_text_in_archive(self):
+        archive.run(self.snap, self.hist, cli.REPORTER_LANES)
+        for row in map(json.loads, self.path.read_text(encoding="utf-8").splitlines()):
+            rec = row["record"]
+            for f in ("title", "description", "author", "creator", "summary"):
+                self.assertNotIn(f, rec)
+            self.assertTrue(all(d.get("phrase") is None for d in rec.get("disarm") or []))
+
+    def test_second_run_writes_nothing_and_change_appends(self):
+        archive.run(self.snap, self.hist, cli.REPORTER_LANES)
+        before = self.path.read_bytes()
+        self.assertEqual(archive.run(self.snap, self.hist, cli.REPORTER_LANES), 0)
+        self.assertEqual(self.path.read_bytes(), before)
+        lane = next(l for l in cli.REPORTER_LANES if self.snap["records"][l])
+        snap = json.loads(json.dumps(self.snap))
+        snap["records"][lane][0]["countries_named"] = ["XX"]
+        snap["generated_at"] = "2026-11-19T00:00:00Z"
+        self.assertEqual(archive.run(snap, self.hist, cli.REPORTER_LANES), 1)
+        self.assertTrue(self.path.read_bytes().startswith(before))
+
+    def test_report_gone_from_feed_stays_in_archive(self):
+        archive.run(self.snap, self.hist, cli.REPORTER_LANES)
+        snap = json.loads(json.dumps(self.snap))
+        for lane in cli.REPORTER_LANES:
+            snap["records"][lane] = []
+        before = self.path.read_bytes()
+        self.assertEqual(archive.run(snap, self.hist, cli.REPORTER_LANES), 0)
+        self.assertEqual(self.path.read_bytes(), before)
 
 
 if __name__ == "__main__":

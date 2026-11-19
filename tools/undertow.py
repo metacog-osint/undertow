@@ -4,6 +4,7 @@
     python tools/undertow.py collect --only meta     # one or more lanes; the rest keep their last copy
     python tools/undertow.py build                   # build site/ from data/snapshot.json
     python tools/undertow.py check                   # registers, feed linter, STIX check, leak scan
+    python tools/undertow.py archive                 # append reporter report records to history/reports.jsonl
     python tools/undertow.py triage [--days 180]     # LAPTOP ONLY: list new, unnamed reported activity for Tom
     python tools/undertow.py closing [--months 12]   # LAPTOP ONLY: watch rows against later disclosures (UT-IND-3..4)
 
@@ -25,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 
-from undertow import (activity, analysis, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters,  # noqa: E402
+from undertow import (activity, analysis, archive, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters,  # noqa: E402
                       stix, tiktok)
 from tic_doctrine import contract, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
@@ -469,6 +470,7 @@ def main(argv=None) -> int:
     c.add_argument("--only", nargs="*", choices=LANES, help="run only these lanes; keep the rest as they were")
     sub.add_parser("build")
     sub.add_parser("check")
+    sub.add_parser("archive", help="append the reporter lanes' report records to history/reports.jsonl")
     t = sub.add_parser("triage", help="laptop only: list new, unnamed reported activity into data/triage.jsonl")
     t.add_argument("--days", type=int, default=180)    # Tom, 16 Nov 2026: 180 days, to raise the register's volume
     k = sub.add_parser("closing", help="laptop only: watch rows against later disclosures into data/closing.json")
@@ -481,6 +483,10 @@ def main(argv=None) -> int:
             print(f"  {lane:7s} {st.get('status')} {st.get('items', '')}{' [last good copy]' if st.get('from_previous') else ''}{extra}")
         print(f"Collected {sum(len(v) for v in snap['records'].values())} operation records.")
         return 0 if any(s.get("status") == "ok" for s in snap["lanes"].values()) else 1
+    if args.cmd == "archive":
+        snap = json.loads((ROOT / "data" / "snapshot.json").read_text(encoding="utf-8"))
+        print(f"  history/reports.jsonl: {archive.run(snap, ROOT / 'history', REPORTER_LANES)} new lines")
+        return 0
     if args.cmd == "build":
         files = build_site(ROOT)
         print(f"Built site/ ({len(files)} files).")
