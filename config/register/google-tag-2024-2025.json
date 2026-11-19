@@ -1,0 +1,3627 @@
+{
+ "register": "google-tag-2024-2025",
+ "note": "Counts only, from Google's TAG Bulletin pages (the Influence Operations Bulletin's earlier name), read by tools/undertow.py tagbackfill. Per entry: month, the linked-to country code as the lane's parser reads it, asset counts, ongoing. No bulletin text kept. Used only by the baseline (site/data/baseline.json), not as feed items.",
+ "licence": "Google; facts and counts only (Tom's decision, 14 Nov 2026)",
+ "read_at": "2026-11-19T16:30:00Z",
+ "pages": [
+  {
+   "year": 2024,
+   "quarter": 1,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q1-2024/",
+   "updated": "2024-07-08",
+   "updated_note": null,
+   "sha256": "5cffe0a5af26c422c54658333cc9f5f6e11ebb0da269e20c1772efe626167658",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2024-q1:2024-01:01",
+     "month": "2024-01",
+     "origin": [
+      "IT"
+     ],
+     "assets": {
+      "news_discover_domains": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-01:02",
+     "month": "2024-01",
+     "origin": [
+      "IL"
+     ],
+     "assets": {
+      "ads_accounts": 1,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-01:03",
+     "month": "2024-01",
+     "origin": [
+      "TR"
+     ],
+     "assets": {
+      "ads_accounts": 2,
+      "blogger_blogs": 2,
+      "play_accounts": 1,
+      "news_discover_domains": 42
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-01:04",
+     "month": "2024-01",
+     "origin": [
+      "KW"
+     ],
+     "assets": {
+      "ads_accounts": 1,
+      "news_discover_domains": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-01:05",
+     "month": "2024-01",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 134
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-01:06",
+     "month": "2024-01",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 5306
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q1:2024-02:01",
+     "month": "2024-02",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:02",
+     "month": "2024-02",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 33,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:03",
+     "month": "2024-02",
+     "origin": [
+      "PK"
+     ],
+     "assets": {
+      "youtube_channels": 3,
+      "adsense_accounts": 1,
+      "blogger_blogs": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:04",
+     "month": "2024-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 5
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:05",
+     "month": "2024-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 73
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:06",
+     "month": "2024-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:07",
+     "month": "2024-02",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 11
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:08",
+     "month": "2024-02",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 31,
+      "ads_accounts": 2,
+      "adsense_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:09",
+     "month": "2024-02",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 15
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-02:10",
+     "month": "2024-02",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 1341,
+      "blogger_blogs": 48
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q1:2024-03:01",
+     "month": "2024-03",
+     "origin": [
+      "AF"
+     ],
+     "assets": {
+      "youtube_channels": 40,
+      "adsense_accounts": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:02",
+     "month": "2024-03",
+     "origin": [
+      "AR"
+     ],
+     "assets": {
+      "youtube_channels": 7
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:03",
+     "month": "2024-03",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 22,
+      "blogger_blogs": 3,
+      "adsense_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:04",
+     "month": "2024-03",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 48
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:05",
+     "month": "2024-03",
+     "origin": [
+      "TW"
+     ],
+     "assets": {
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:06",
+     "month": "2024-03",
+     "origin": [
+      "CM"
+     ],
+     "assets": {
+      "youtube_channels": 33,
+      "adsense_accounts": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:07",
+     "month": "2024-03",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "news_discover_domains": 107
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:08",
+     "month": "2024-03",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 3066,
+      "blogger_blogs": 540
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q1:2024-03:09",
+     "month": "2024-03",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 16,
+      "news_discover_domains": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:10",
+     "month": "2024-03",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 140,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q1:2024-03:11",
+     "month": "2024-03",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 147
+     },
+     "ongoing": false
+    }
+   ]
+  },
+  {
+   "year": 2024,
+   "quarter": 2,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q2-2024/",
+   "updated": "2024-09-23",
+   "updated_note": null,
+   "sha256": "7d2fadf7ea2169ab3f12bbb255e0caa620d7f3796a0b3f3dc150652e344bb22e",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2024-q2:2024-04:01",
+     "month": "2024-04",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "ads_accounts": 1,
+      "adsense_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:02",
+     "month": "2024-04",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "blogger_blogs": 37
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:03",
+     "month": "2024-04",
+     "origin": [
+      "MM"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:04",
+     "month": "2024-04",
+     "origin": [
+      "PH"
+     ],
+     "assets": {
+      "adsense_accounts": 1,
+      "news_discover_domains": 10
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:05",
+     "month": "2024-04",
+     "origin": [
+      "PK"
+     ],
+     "assets": {
+      "youtube_channels": 59
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:06",
+     "month": "2024-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 11
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:07",
+     "month": "2024-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 378
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:08",
+     "month": "2024-04",
+     "origin": [
+      "FR"
+     ],
+     "assets": {
+      "youtube_channels": 11
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:09",
+     "month": "2024-04",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 1320,
+      "blogger_blogs": 1177
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q2:2024-04:10",
+     "month": "2024-04",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 123,
+      "ads_accounts": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:11",
+     "month": "2024-04",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 88
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:12",
+     "month": "2024-04",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 13
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:13",
+     "month": "2024-04",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 304
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:14",
+     "month": "2024-04",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 124
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-04:15",
+     "month": "2024-04",
+     "origin": [
+      "IN"
+     ],
+     "assets": {
+      "youtube_channels": 82
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:01",
+     "month": "2024-05",
+     "origin": [
+      "MX"
+     ],
+     "assets": {
+      "youtube_channels": 20
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:02",
+     "month": "2024-05",
+     "origin": [
+      "MX"
+     ],
+     "assets": {
+      "youtube_channels": 28
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:03",
+     "month": "2024-05",
+     "origin": [
+      "AR"
+     ],
+     "assets": {
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:04",
+     "month": "2024-05",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2357
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:05",
+     "month": "2024-05",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 21
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:06",
+     "month": "2024-05",
+     "origin": [
+      "BD"
+     ],
+     "assets": {
+      "youtube_channels": 12
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:07",
+     "month": "2024-05",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:08",
+     "month": "2024-05",
+     "origin": [
+      "IL"
+     ],
+     "assets": {
+      "youtube_channels": 2,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-05:09",
+     "month": "2024-05",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 1595,
+      "blogger_blogs": 32
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q2:2024-06:01",
+     "month": "2024-06",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1253
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-06:02",
+     "month": "2024-06",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 9
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-06:03",
+     "month": "2024-06",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "news_discover_domains": 112
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q2:2024-06:04",
+     "month": "2024-06",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 3931
+     },
+     "ongoing": true
+    }
+   ]
+  },
+  {
+   "year": 2024,
+   "quarter": 3,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q3-2024/",
+   "updated": "2025-01-14",
+   "updated_note": null,
+   "sha256": "5322327edbef246a1a7322e9fd5968b8312dee4fcceac961a1097c7df6898f56",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2024-q3:2024-07:01",
+     "month": "2024-07",
+     "origin": [
+      "EC"
+     ],
+     "assets": {
+      "youtube_channels": 89
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:02",
+     "month": "2024-07",
+     "origin": [
+      "US"
+     ],
+     "assets": {
+      "news_discover_domains": 10
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:03",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 27
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:04",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 25
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:05",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 26
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:06",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:07",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 34,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:08",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 18
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:09",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 5
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:10",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:11",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 7319
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:12",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 13
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:13",
+     "month": "2024-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 7
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:14",
+     "month": "2024-07",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 583
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-07:15",
+     "month": "2024-07",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 5554,
+      "blogger_blogs": 15,
+      "news_discover_domains": 4
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q3:2024-08:01",
+     "month": "2024-08",
+     "origin": [],
+     "assets": {
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:02",
+     "month": "2024-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 99
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:03",
+     "month": "2024-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 806
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:04",
+     "month": "2024-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 25
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:05",
+     "month": "2024-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4253
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:06",
+     "month": "2024-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 49
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:07",
+     "month": "2024-08",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 1232
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:08",
+     "month": "2024-08",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "news_discover_domains": 498
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-08:09",
+     "month": "2024-08",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 7767,
+      "blogger_blogs": 1004
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q3:2024-09:01",
+     "month": "2024-09",
+     "origin": [
+      "FR"
+     ],
+     "assets": {
+      "youtube_channels": 103
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:02",
+     "month": "2024-09",
+     "origin": [
+      "GB"
+     ],
+     "assets": {
+      "other_accounts": 124
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:03",
+     "month": "2024-09",
+     "origin": [
+      "CM"
+     ],
+     "assets": {
+      "blogger_blogs": 1,
+      "news_discover_domains": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:04",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4164
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:05",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 16
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:06",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 60
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:07",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 21,
+      "ads_accounts": 7,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:08",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:09",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:10",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "blogger_blogs": 7,
+      "news_discover_domains": 116
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:11",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 26,
+      "ads_accounts": 5
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:12",
+     "month": "2024-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:13",
+     "month": "2024-09",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 1877
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:14",
+     "month": "2024-09",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:15",
+     "month": "2024-09",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 11,
+      "ads_accounts": 1,
+      "adsense_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:16",
+     "month": "2024-09",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 4,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:17",
+     "month": "2024-09",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "news_discover_domains": 22
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:18",
+     "month": "2024-09",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q3:2024-09:19",
+     "month": "2024-09",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 6019,
+      "blogger_blogs": 1432
+     },
+     "ongoing": true
+    }
+   ]
+  },
+  {
+   "year": 2024,
+   "quarter": 4,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q4-2024/",
+   "updated": "2025-02-19",
+   "updated_note": "the page's 'last updated' date (2024-02-19) falls before the quarter; date from the page's dateModified",
+   "sha256": "eaa9743c1201261330dfbbe43f2c6b1e06a8af656b5d2891fb16a2164c495ec5",
+   "unparsed": 2,
+   "entries": [
+    {
+     "key": "google:2024-q4:2024-10:01",
+     "month": "2024-10",
+     "origin": [
+      "MD"
+     ],
+     "assets": {
+      "youtube_channels": 11
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:02",
+     "month": "2024-10",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "news_discover_domains": 27
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:03",
+     "month": "2024-10",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "adsense_accounts": 1,
+      "blogger_blogs": 4,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:04",
+     "month": "2024-10",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 15
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:05",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 7
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:06",
+     "month": "2024-10",
+     "origin": [],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:07",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 33
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:08",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 10
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:09",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 101
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:10",
+     "month": "2024-10",
+     "origin": [
+      "GH"
+     ],
+     "assets": {
+      "youtube_channels": 28,
+      "adsense_accounts": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:11",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 191
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:12",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 547,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:13",
+     "month": "2024-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4065
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:14",
+     "month": "2024-10",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 2282
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:16",
+     "month": "2024-10",
+     "origin": [],
+     "assets": {
+      "news_discover_domains": 206
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-10:17",
+     "month": "2024-10",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 6318
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q4:2024-11:01",
+     "month": "2024-11",
+     "origin": [
+      "UA"
+     ],
+     "assets": {
+      "ads_accounts": 1,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:02",
+     "month": "2024-11",
+     "origin": [
+      "DE"
+     ],
+     "assets": {
+      "youtube_channels": 21
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:03",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:04",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:05",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 25
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:06",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 6
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:07",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2,
+      "ads_accounts": 2,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:08",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 51
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:09",
+     "month": "2024-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1903
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:10",
+     "month": "2024-11",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 3868
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:11",
+     "month": "2024-11",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-11:12",
+     "month": "2024-11",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 5028,
+      "blogger_blogs": 2
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2024-q4:2024-12:02",
+     "month": "2024-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:03",
+     "month": "2024-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:04",
+     "month": "2024-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:05",
+     "month": "2024-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12,
+      "news_discover_domains": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:06",
+     "month": "2024-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 5
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:07",
+     "month": "2024-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2471
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:08",
+     "month": "2024-12",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 4167
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2024-q4:2024-12:09",
+     "month": "2024-12",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 10291
+     },
+     "ongoing": true
+    }
+   ]
+  },
+  {
+   "year": 2025,
+   "quarter": 1,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q1-2025/",
+   "updated": "2025-05-15",
+   "updated_note": null,
+   "sha256": "d199db566c90ea6fe937d3e779f94b2e404d7d5b1201e9cf684b8b6c27d3d68f",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2025-q1:2025-01:01",
+     "month": "2025-01",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:02",
+     "month": "2025-01",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 81
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:03",
+     "month": "2025-01",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 57
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:04",
+     "month": "2025-01",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:05",
+     "month": "2025-01",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:06",
+     "month": "2025-01",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1263
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:07",
+     "month": "2025-01",
+     "origin": [
+      "US"
+     ],
+     "assets": {
+      "news_discover_domains": 21
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:08",
+     "month": "2025-01",
+     "origin": [
+      "RO"
+     ],
+     "assets": {
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:09",
+     "month": "2025-01",
+     "origin": [
+      "NG"
+     ],
+     "assets": {
+      "youtube_channels": 31
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:10",
+     "month": "2025-01",
+     "origin": [
+      "IL"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:11",
+     "month": "2025-01",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 20,
+      "ads_accounts": 1,
+      "news_discover_domains": 6
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:12",
+     "month": "2025-01",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 1562
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:13",
+     "month": "2025-01",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "news_discover_domains": 25
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-01:14",
+     "month": "2025-01",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 11697
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q1:2025-02:01",
+     "month": "2025-02",
+     "origin": [],
+     "assets": {
+      "news_discover_domains": 72
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:02",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 13
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:03",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 47
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:04",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:05",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 13
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:06",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 177
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:07",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 32
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:08",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:09",
+     "month": "2025-02",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1482
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:10",
+     "month": "2025-02",
+     "origin": [
+      "DE"
+     ],
+     "assets": {
+      "youtube_channels": 3,
+      "ads_accounts": 1,
+      "adsense_accounts": 1,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:11",
+     "month": "2025-02",
+     "origin": [
+      "DE"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:12",
+     "month": "2025-02",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 9,
+      "news_discover_domains": 6
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:13",
+     "month": "2025-02",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 787
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-02:14",
+     "month": "2025-02",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 1707,
+      "blogger_blogs": 1736,
+      "news_discover_domains": 2
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q1:2025-03:01",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:02",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12,
+      "ads_accounts": 3,
+      "blogger_blogs": 1,
+      "news_discover_domains": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:03",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:04",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:05",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:06",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 63
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:07",
+     "month": "2025-03",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1377,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:08",
+     "month": "2025-03",
+     "origin": [
+      "RO"
+     ],
+     "assets": {
+      "youtube_channels": 64
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:09",
+     "month": "2025-03",
+     "origin": [
+      "RO"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:10",
+     "month": "2025-03",
+     "origin": [
+      "IL"
+     ],
+     "assets": {
+      "blogger_blogs": 1,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:11",
+     "month": "2025-03",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 542
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:12",
+     "month": "2025-03",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "blogger_blogs": 1,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q1:2025-03:13",
+     "month": "2025-03",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 2472,
+      "blogger_blogs": 1
+     },
+     "ongoing": true
+    }
+   ]
+  },
+  {
+   "year": 2025,
+   "quarter": 2,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q2-2025/",
+   "updated": "2025-07-21",
+   "updated_note": null,
+   "sha256": "3507f6fd458d1881750bf9d19511f1cf53f0f32ef7fa7fe7e0f5d53b34d9dc0b",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2025-q2:2025-04:01",
+     "month": "2025-04",
+     "origin": [
+      "TR"
+     ],
+     "assets": {
+      "youtube_channels": 43
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:02",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 6
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:03",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 37
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:04",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 22
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:05",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:06",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:07",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 3,
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:08",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1045,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:09",
+     "month": "2025-04",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:10",
+     "month": "2025-04",
+     "origin": [
+      "RO"
+     ],
+     "assets": {
+      "youtube_channels": 12,
+      "ads_accounts": 1,
+      "adsense_accounts": 1,
+      "news_discover_domains": 9
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:11",
+     "month": "2025-04",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:12",
+     "month": "2025-04",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 12
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:13",
+     "month": "2025-04",
+     "origin": [
+      "GH"
+     ],
+     "assets": {
+      "ads_accounts": 1,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:14",
+     "month": "2025-04",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 356
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:15",
+     "month": "2025-04",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-04:16",
+     "month": "2025-04",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 1545
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q2:2025-05:01",
+     "month": "2025-05",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 20,
+      "ads_accounts": 4,
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-05:02",
+     "month": "2025-05",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 6,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-05:03",
+     "month": "2025-05",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-05:04",
+     "month": "2025-05",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 507
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-05:05",
+     "month": "2025-05",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 457
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-05:06",
+     "month": "2025-05",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 3592
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q2:2025-06:01",
+     "month": "2025-06",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-06:02",
+     "month": "2025-06",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-06:03",
+     "month": "2025-06",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 392
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-06:04",
+     "month": "2025-06",
+     "origin": [
+      "IL"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-06:05",
+     "month": "2025-06",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 228
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q2:2025-06:06",
+     "month": "2025-06",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 2598,
+      "news_discover_domains": 1
+     },
+     "ongoing": true
+    }
+   ]
+  },
+  {
+   "year": 2025,
+   "quarter": 3,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q3-2025/",
+   "updated": "2025-11-13",
+   "updated_note": null,
+   "sha256": "bc75daeecb665765c9ecd81dbaa0c61ed4fdd7d30e81021364d1ef0268000497",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2025-q3:2025-07:01",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 5
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:02",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 382
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:03",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 132
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:04",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 13
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:05",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 12,
+      "ads_accounts": 1,
+      "news_discover_domains": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:06",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 39
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:07",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 114
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:08",
+     "month": "2025-07",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 10
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:09",
+     "month": "2025-07",
+     "origin": [
+      "TR"
+     ],
+     "assets": {
+      "youtube_channels": 501
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:10",
+     "month": "2025-07",
+     "origin": [
+      "TR"
+     ],
+     "assets": {
+      "youtube_channels": 28,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:11",
+     "month": "2025-07",
+     "origin": [
+      "TR"
+     ],
+     "assets": {
+      "youtube_channels": 85
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:12",
+     "month": "2025-07",
+     "origin": [
+      "PL"
+     ],
+     "assets": {
+      "youtube_channels": 12
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:13",
+     "month": "2025-07",
+     "origin": [
+      "PH"
+     ],
+     "assets": {
+      "youtube_channels": 183
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:14",
+     "month": "2025-07",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 88
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-07:15",
+     "month": "2025-07",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 2497,
+      "blogger_blogs": 1,
+      "news_discover_domains": 3
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q3:2025-08:01",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "ads_accounts": 4,
+      "news_discover_domains": 5
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:02",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 247
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:03",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 185
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:04",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 14,
+      "ads_accounts": 2,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:05",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 11
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:06",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 9
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:07",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:08",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:09",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:10",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:11",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 20
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:12",
+     "month": "2025-08",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 376
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:13",
+     "month": "2025-08",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 69,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:14",
+     "month": "2025-08",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 69,
+      "news_discover_domains": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:15",
+     "month": "2025-08",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 13
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:16",
+     "month": "2025-08",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 2533
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q3:2025-08:17",
+     "month": "2025-08",
+     "origin": [
+      "GB"
+     ],
+     "assets": {
+      "news_discover_domains": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:18",
+     "month": "2025-08",
+     "origin": [
+      "TR"
+     ],
+     "assets": {
+      "youtube_channels": 42,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:19",
+     "month": "2025-08",
+     "origin": [
+      "AL"
+     ],
+     "assets": {
+      "youtube_channels": 5,
+      "ads_accounts": 2,
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-08:20",
+     "month": "2025-08",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 79
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:01",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 9,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:02",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 69
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:03",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 40
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:04",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 30
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:05",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 133,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:06",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:07",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 118
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:08",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:09",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 5,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:10",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:11",
+     "month": "2025-09",
+     "origin": [
+      "UA"
+     ],
+     "assets": {
+      "youtube_channels": 5,
+      "news_discover_domains": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:12",
+     "month": "2025-09",
+     "origin": [
+      "MD"
+     ],
+     "assets": {
+      "youtube_channels": 8,
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:13",
+     "month": "2025-09",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 3269
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:14",
+     "month": "2025-09",
+     "origin": [
+      "RO"
+     ],
+     "assets": {
+      "news_discover_domains": 66
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:15",
+     "month": "2025-09",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 15
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:16",
+     "month": "2025-09",
+     "origin": [
+      "IR"
+     ],
+     "assets": {
+      "youtube_channels": 27
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:17",
+     "month": "2025-09",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 6484
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q3:2025-09:18",
+     "month": "2025-09",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 445
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:19",
+     "month": "2025-09",
+     "origin": [],
+     "assets": {
+      "youtube_channels": 27
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:20",
+     "month": "2025-09",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 17
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:21",
+     "month": "2025-09",
+     "origin": [],
+     "assets": {
+      "youtube_channels": 66
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:22",
+     "month": "2025-09",
+     "origin": [],
+     "assets": {
+      "youtube_channels": 63
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q3:2025-09:23",
+     "month": "2025-09",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 1119
+     },
+     "ongoing": false
+    }
+   ]
+  },
+  {
+   "year": 2025,
+   "quarter": 4,
+   "url": "https://blog.google/threat-analysis-group/tag-bulletin-q4-2025/",
+   "updated": "2026-01-29",
+   "updated_note": null,
+   "sha256": "dcc13d4bdce05f2dea21c78ea462891db6b5260ed1194e2cf38eb4dfcc6ffe89",
+   "unparsed": 0,
+   "entries": [
+    {
+     "key": "google:2025-q4:2025-10:01",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:02",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 5,
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:03",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 29
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:04",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 26
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:05",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:06",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:07",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "blogger_blogs": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:08",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:09",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 22
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:10",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:11",
+     "month": "2025-10",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1054
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:12",
+     "month": "2025-10",
+     "origin": [
+      "PK"
+     ],
+     "assets": {
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:13",
+     "month": "2025-10",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 445
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:14",
+     "month": "2025-10",
+     "origin": [
+      "GB"
+     ],
+     "assets": {
+      "youtube_channels": 34
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:15",
+     "month": "2025-10",
+     "origin": [
+      "IL"
+     ],
+     "assets": {
+      "youtube_channels": 2,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:16",
+     "month": "2025-10",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 387
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:17",
+     "month": "2025-10",
+     "origin": [
+      "NG"
+     ],
+     "assets": {
+      "youtube_channels": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:18",
+     "month": "2025-10",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-10:19",
+     "month": "2025-10",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 3715
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q4:2025-11:01",
+     "month": "2025-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 7
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:02",
+     "month": "2025-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 31,
+      "ads_accounts": 10
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:03",
+     "month": "2025-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 20,
+      "ads_accounts": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:04",
+     "month": "2025-11",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 226
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:05",
+     "month": "2025-11",
+     "origin": [
+      "TH"
+     ],
+     "assets": {
+      "youtube_channels": 56
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:06",
+     "month": "2025-11",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 799
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:07",
+     "month": "2025-11",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 27,
+      "ads_accounts": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:08",
+     "month": "2025-11",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 155,
+      "ads_accounts": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:09",
+     "month": "2025-11",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 138
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:10",
+     "month": "2025-11",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 105
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:11",
+     "month": "2025-11",
+     "origin": [
+      "BD"
+     ],
+     "assets": {
+      "youtube_channels": 64
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:12",
+     "month": "2025-11",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-11:13",
+     "month": "2025-11",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 105
+     },
+     "ongoing": true
+    },
+    {
+     "key": "google:2025-q4:2025-12:01",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:02",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4,
+      "news_discover_domains": 11
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:03",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 4,
+      "blogger_blogs": 4,
+      "news_discover_domains": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:04",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:05",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 3
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:06",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 29
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:07",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 2
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:08",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 85
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:09",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 18
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:10",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 16
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:11",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "news_discover_domains": 1
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:12",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:13",
+     "month": "2025-12",
+     "origin": [
+      "RU"
+     ],
+     "assets": {
+      "youtube_channels": 1256
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:14",
+     "month": "2025-12",
+     "origin": [
+      "PK"
+     ],
+     "assets": {
+      "youtube_channels": 170
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:15",
+     "month": "2025-12",
+     "origin": [
+      "MM"
+     ],
+     "assets": {
+      "youtube_channels": 8
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:16",
+     "month": "2025-12",
+     "origin": [
+      "ID"
+     ],
+     "assets": {
+      "youtube_channels": 2584
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:17",
+     "month": "2025-12",
+     "origin": [
+      "BY"
+     ],
+     "assets": {
+      "youtube_channels": 10
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:18",
+     "month": "2025-12",
+     "origin": [
+      "BD"
+     ],
+     "assets": {
+      "youtube_channels": 27
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:19",
+     "month": "2025-12",
+     "origin": [
+      "AZ"
+     ],
+     "assets": {
+      "youtube_channels": 422
+     },
+     "ongoing": false
+    },
+    {
+     "key": "google:2025-q4:2025-12:20",
+     "month": "2025-12",
+     "origin": [
+      "CN"
+     ],
+     "assets": {
+      "youtube_channels": 6280
+     },
+     "ongoing": true
+    }
+   ]
+  }
+ ]
+}
