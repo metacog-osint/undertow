@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 
-from undertow import (activity, analysis, archive, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters,  # noqa: E402
+from undertow import (activity, analysis, archive, baseline, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters,  # noqa: E402
                       stix, tiktok)
 from tic_doctrine import contract, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
@@ -306,6 +306,7 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
         "data/events.json": dump({"source": "undertow", "note": "Expected dates on each publisher's past pattern. "
                                   "Dates only, no probabilities; none is a published schedule.", "events": events}),
         "data/snapshot.json": dump(page_data(snap, records, feed_doc, events)),
+        "data/baseline.json": dump(baseline.build(records, today)),
     }
     src_dir = root / "site_src"
     if src_dir.exists():
@@ -329,6 +330,7 @@ ALLOWED_URL_PREFIXES = (
     "https://raw.githubusercontent.com/meta/threat-research/", "https://api.github.com/repos/meta/threat-research/",
     "https://openai.com/news/rss.xml", "https://blog.google/security/rss/",
     "https://transparency.meta.com/", "https://blog.google/security/", "https://openai.com/index/",
+    "https://blog.google/threat-analysis-group/tag-bulletin-",
     "https://openai.com/news/", "https://openai.com/global-affairs/", "https://disinfocode.eu/",
     "https://www.eeas.europa.eu/", "https://undertow.theintelligence.company", "https://theintelligence.company",
     "https://github.com/DISARMFoundation/", "https://raw.githubusercontent.com/DISARMFoundation/",
@@ -364,7 +366,7 @@ def leak_scan(paths: list[Path]) -> list[str]:
 
 
 def check_all(root: Path = ROOT) -> list[str]:
-    errs = registers.check(root / "doctrine")
+    errs = registers.check(root / "doctrine") + baseline.check_register(baseline.load_register())
     regs = registers.ids(root / "doctrine")
     data = root / "site" / "data"
     feed_path = data / "feed.geojson"
@@ -385,7 +387,8 @@ def check_all(root: Path = ROOT) -> list[str]:
             errs.append(f"{fid}: confidence High is not possible in this slice (no scored Verdict record)")
     bundle = json.loads((data / "stix.json").read_text(encoding="utf-8"))
     errs += [f"stix: {e}" for e in stix.validate(bundle)]
-    published = [data / "feed.geojson", data / "stix.json", data / "events.json", data / "snapshot.json"]
+    published = [data / "feed.geojson", data / "stix.json", data / "events.json", data / "snapshot.json",
+                 data / "baseline.json"]
     if (data / "ended.geojson").exists():  # written by the history step (tic.py history), served beside the feed
         published.append(data / "ended.geojson")
     errs += leak_scan(published)
@@ -463,6 +466,35 @@ def closing_list(root: Path = ROOT, months: int = activity.CLOSE_MONTHS) -> dict
     return out
 
 
+def tag_backfill(getter=None, raw_dir: Path | None = None, pause: float = 2.0) -> dict:
+    """Read Google's TAG Bulletin pages for the quarters before the lane's first, keep counts only (Tom's default
+    for ideas#16, 19 Nov 2026). The full replies go to data/raw/ only, never committed."""
+    import time
+    raw_dir = raw_dir if raw_dir is not None else ROOT / "data" / "raw"
+    pages = []
+    for i, (y, q) in enumerate(baseline.TAG_QUARTERS):
+        if i and pause:
+            time.sleep(pause)
+        url = baseline.TAG_URL.format(q=q, y=y)
+        body, rec = fetch.fetch("google-tag", url, raw_dir, "html", getter=getter)
+        parsed = google.parse_page(body, y, q)
+        if not parsed["entries"]:
+            raise ValueError(f"TAG Q{q} {y} parsed to no entries")
+        pages.append(baseline.page_entry(parsed, body, rec["sha256"]))
+    reg = {"register": "google-tag-2024-2025",
+           "note": ("Counts only, from Google's TAG Bulletin pages (the Influence Operations Bulletin's earlier name), "
+                    "read by tools/undertow.py tagbackfill. Per entry: month, the linked-to country code as the lane's "
+                    "parser reads it, asset counts, ongoing. No bulletin text kept. Used only by the baseline "
+                    "(site/data/baseline.json), not as feed items."),
+           "licence": "Google; facts and counts only (Tom's decision, 14 Nov 2026)",
+           "read_at": fetch.now_utc(), "pages": pages}
+    errs = baseline.check_register(reg)
+    if errs:
+        raise ValueError("; ".join(errs))
+    baseline.REGISTER.write_text(json.dumps(reg, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
+    return reg
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Undertow: attributed influence-operation takedowns, at operation level.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -475,6 +507,7 @@ def main(argv=None) -> int:
     t.add_argument("--days", type=int, default=180)    # Tom, 16 Nov 2026: 180 days, to raise the register's volume
     k = sub.add_parser("closing", help="laptop only: watch rows against later disclosures into data/closing.json")
     k.add_argument("--months", type=int, default=activity.CLOSE_MONTHS)
+    sub.add_parser("tagbackfill", help="laptop only: Google's TAG bulletins Q1 2024-Q4 2025 into a counts-only register")
     args = ap.parse_args(argv)
     if args.cmd == "collect":
         snap = collect(only=args.only)
@@ -497,6 +530,16 @@ def main(argv=None) -> int:
             print("  -", e)
         print(f"Undertow check: {'PASS' if not errs else f'FAIL ({len(errs)} problems)'}")
         return 1 if errs else 0
+    if args.cmd == "tagbackfill":
+        if os.environ.get("GITHUB_ACTIONS"):
+            print("tagbackfill runs on the laptop only: its register is reviewed before it is committed.")
+            return 1
+        reg = tag_backfill()
+        for pg in reg["pages"]:
+            print(f"  Q{pg['quarter']} {pg['year']}: {len(pg['entries'])} entries, {pg['unparsed']} unparsed, "
+                  f"updated {pg['updated']}{' (' + pg['updated_note'] + ')' if pg['updated_note'] else ''}")
+        print(f"Wrote {baseline.REGISTER.relative_to(ROOT)}; check it, then commit it.")
+        return 0
     if args.cmd == "triage":
         if os.environ.get("GITHUB_ACTIONS"):
             print("triage runs on the laptop only: its list holds reporters' headlines and is never published.")
