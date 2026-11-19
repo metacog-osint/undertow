@@ -784,6 +784,11 @@ class Guards(unittest.TestCase):
         self.assertEqual(disarm.bundle()["source_sha256"],
                          "f372a5b70e540022c5ffae41d1e1bd04fb79dd6b94aa0ea2fcce4712d600bf3f")
 
+    def test_rules_each_accepted(self):
+        self.assertTrue(disarm.reviewed())
+        self.assertEqual({r["review"] for r in disarm.rules()["rules"]}, {"accepted"})
+        self.assertEqual(sorted(r["id"] for r in disarm.rules()["rules"] if r.get("changed")), ["dr-04", "dr-10"])
+
     def test_confidence_rules(self):
         recs = [{"publisher": "meta", "origin": ["RU"], "named_operations": ["x"]},
                 {"publisher": "openai", "origin": ["RU"], "named_operations": ["x"]},

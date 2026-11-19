@@ -31,7 +31,11 @@ def name(tid: str) -> str | None:
 
 
 def reviewed() -> bool:
-    return (rules().get("review") or {}).get("status") == "reviewed"
+    """True only when the table is marked reviewed and every rule carries review "accepted" (Tom, 19 Nov 2026):
+    a rule added later without Tom's review turns the whole table back to "proposed"."""
+    r = rules()
+    return ((r.get("review") or {}).get("status") == "reviewed"
+            and all(x.get("review") == "accepted" for x in r["rules"]))
 
 
 @lru_cache(maxsize=1)
