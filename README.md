@@ -11,4 +11,10 @@ python -m unittest discover -s tests
 ```
 
 Method: `doctrine/method.md`. Confidence: `doctrine/confidence-mapping.md`. Working notes: `CLAUDE.md`.
-Standard library only (Python 3.12+). Private repository; the site is public.
+Standard library only (Python 3.12+).
+
+## Licence
+
+Copyright © 2026 Thomas Brummer, The Intelligence Company. Undertow's code is licensed under the GNU Affero General Public License
+v3.0 (`LICENSE`). Third-party and shared files keep their own licences, and data keeps its sources'
+terms; both are listed in `NOTICE`.
