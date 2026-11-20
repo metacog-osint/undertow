@@ -312,6 +312,74 @@
     document.getElementById("events").innerHTML = (S.events || []).map(function (e) { return "<li>" + esc(e.date) + ": " + esc(e.title) + "</li>"; }).join("");
   }
 
+  // Baseline per layer (baseline.json, Tom 19 Nov 2026): described, never rated. Dismantled, Ongoing, technique mix,
+  // and the name-match pairs ("reported before this takedown"), which are listed, never scored.
+  function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
+  function topOrigins(o) {
+    return Object.keys(o || {}).sort(function (a, b) { return o[b] - o[a] || (a < b ? -1 : 1); }).slice(0, 4)
+      .map(function (c) { return c === "none" ? "none stated " + o[c] : c + " " + o[c]; }).join(", ");
+  }
+  function nameMatchPairs() {
+    var rep = {}, out = [];
+    S.items.forEach(function (it) {
+      if (!it.activity) { return; }
+      (it.named_operations || []).forEach(function (o) {
+        (rep[o] = rep[o] || []).push({ who: PUB[it.publisher] || it.publisher, first: day(it.activity.first_report), op: it.activity.operation_name || o });
+      });
+    });
+    S.items.forEach(function (it) {
+      if (it.activity || ["meta", "google", "openai", "tiktok"].indexOf(it.publisher) < 0 || !it.disclosed_at) { return; }
+      (it.named_operations || []).forEach(function (o) {
+        (rep[o] || []).forEach(function (r) {
+          if (r.first && r.first < day(it.disclosed_at)) { out.push({ op: r.op, who: r.who, first: r.first, pub: PUB[it.publisher], at: day(it.disclosed_at), id: it.id }); }
+        });
+      });
+    });
+    return out.sort(function (a, b) { return a.at < b.at ? 1 : a.at > b.at ? -1 : 0; });
+  }
+  function baseline(B) {
+    var box = document.getElementById("baseline");
+    if (!box) { return; }
+    var html = "";
+    html += "<h4>Dismantled: takedowns per period</h4>";
+    html += '<p class="small muted">Items each publisher disclosed in a period, against its own trailing 8 periods. “8 earlier periods” says whether a full trailing record exists yet; where it does not, the range is shown for context only.</p>';
+    ["meta", "google", "openai", "tiktok"].forEach(function (p) {
+      var d = (B.dismantled || {})[p];
+      if (!d) { return; }
+      html += '<h5><span class="pub pub-' + p + '">' + esc(PUB[p]) + '</span> <span class="small muted">per ' + esc(d.grain) + "</span></h5>";
+      html += '<div class="scroll" tabindex="0" role="region" aria-label="' + esc(PUB[p]) + ' takedowns per period"><table class="plain"><thead><tr><th scope="col">Period</th><th scope="col">Items</th><th scope="col">Top origins</th><th scope="col">Trailing 8: min / max / mean</th><th scope="col">8 earlier periods</th></tr></thead><tbody>' +
+        d.periods.slice().reverse().map(function (r) {
+          var t = r.trailing || {};
+          return "<tr><td>" + esc(r.period) + "</td><td>" + r.items + "</td><td>" + esc(topOrigins(r.origin)) + "</td><td>" +
+            (t.periods ? esc(t.min + " / " + t.max + " / " + t.mean) + ' <span class="small muted">(' + plural(t.periods, "period") + ")</span>" : "none yet") + "</td><td>" + (r.ready ? "yes" : "no") + "</td></tr>";
+        }).join("") + "</tbody></table></div>";
+    });
+    html += '<p class="small muted">Google’s 2024 and 2025 bulletins come from a counts-only register (the bulletin’s month, linked-to country and asset counts; no bulletin text). Counts of what the publisher chose to disclose, not of activity.</p>';
+    var ops = (B.ongoing || {}).operations || [];
+    html += "<h4>Ongoing: named operations</h4>";
+    html += '<p class="small muted">Active means a disclosure or report in the last ' + esc((B.ongoing || {}).quiet_after_months || 6) + ' months; quiet means none since. Never “ended”: a quiet operation may simply not have been reported on.</p>';
+    html += '<div class="scroll" tabindex="0" role="region" aria-label="Named operations, persistence"><table class="plain"><thead><tr><th scope="col">Operation</th><th scope="col">Publishers acting</th><th scope="col">Disclosures</th><th scope="col">Reports</th><th scope="col">Last sighting</th><th scope="col">State</th></tr></thead><tbody>' +
+      ops.map(function (o) {
+        return "<tr><td>" + esc(o.operation) + "</td><td>" + esc((o.publishers_acting || []).map(function (x) { return PUB[x] || x; }).join(", ") || "none") + "</td><td>" + o.disclosures + "</td><td>" + o.reports + "</td><td>" + esc(o.last_sighting) + " (" + plural(o.months_since, "month") + " ago)</td><td><span class=\"badge" + (o.state === "active" ? "" : " badge-warn") + '">' + esc(o.state) + "</span></td></tr>";
+      }).join("") + "</tbody></table></div>";
+    var mix = B.technique_mix || [];
+    html += "<h4>Technique mix, per half-year</h4>";
+    html += '<p class="small muted">Share of a publisher’s items in the half-year on which each DISARM technique was mapped (Undertow’s reading of the publisher’s words). The top three are shown.</p>';
+    html += '<div class="scroll" tabindex="0" role="region" aria-label="Technique mix per half-year"><table class="plain"><thead><tr><th scope="col">Half-year</th><th scope="col">Publisher</th><th scope="col">Items</th><th scope="col">Most-mapped techniques (share of items)</th></tr></thead><tbody>' +
+      mix.slice().sort(function (a, b) { return a.half < b.half ? 1 : a.half > b.half ? -1 : (a.publisher < b.publisher ? -1 : 1); }).map(function (m) {
+        var tops = Object.keys(m.techniques).sort(function (a, b) { return m.techniques[b].items - m.techniques[a].items || (a < b ? -1 : 1); }).slice(0, 3)
+          .map(function (t) { return t + " " + Math.round(m.techniques[t].share * 100) + "%"; }).join(", ");
+        return "<tr><td>" + esc(m.half) + "</td><td>" + esc(PUB[m.publisher] || m.publisher) + "</td><td>" + m.items + "</td><td>" + esc(tops || "none mapped") + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+    var pairs = nameMatchPairs();
+    html += "<h4>Reported before this takedown</h4>";
+    html += '<p class="small muted">Where a reporter (DFRLab, CheckFirst, CORRECTIV) wrote about an operation by name before a platform disclosed a takedown of the same operation. A name match is a report about the operation, not a finding that it was running, and it is not scored: no lead time, no rate.</p>';
+    html += pairs.length ? '<div class="scroll" tabindex="0" role="region" aria-label="Reported before this takedown"><table class="plain"><thead><tr><th scope="col">Operation</th><th scope="col">Reporter, first report</th><th scope="col">Platform, disclosure</th></tr></thead><tbody>' +
+      pairs.map(function (r) { return "<tr><td>" + esc(r.op) + "</td><td>" + esc(r.who) + ", " + esc(r.first) + "</td><td>" + esc(r.pub) + ", " + esc(r.at) + "</td></tr>"; }).join("") + "</tbody></table></div>" :
+      '<p class="small">No operation has both a reporter’s report and a later platform disclosure on file.</p>';
+    box.innerHTML = html;
+  }
+
   // Elsewhere today (tic-related.js from the hub): the target countries the publishers state, strongest first: those
   // targeted by reported activity that is active, then by how many disclosed networks name them, then the newest.
   // Stated targets only, as on the map; origins and countries a report merely mentions are left out.
@@ -347,10 +415,16 @@
     method();
     drawRows();
     related();
+    if (BL) { baseline(BL); } else { document.getElementById("baseline").innerHTML = '<p class="small muted">The baseline is not available right now.</p>'; }
   }
 
+  var BL = null;
   fetch("data/snapshot.json")
     .then(function (r) { return r.json(); })
+    .then(function (s) {
+      return fetch("data/baseline.json").then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+        .then(function (b) { BL = b; return s; });
+    })
     .then(function (s) {
       S = s;
       NAMES = S.country_names || {};
