@@ -5,7 +5,7 @@ Third-party and shared files in this repository keep their own licences:
 
 - doctrine/kit/        The Intelligence Company doctrine kit, MIT (doctrine/kit/LICENSE)
 - tic-*.js, tic-*.css in site_src/
-  The Intelligence Company's shared site scripts (tic-nav, tic-related, tic-tabs, tic-time), MIT.
+  The Intelligence Company's shared site scripts (tic-nav, tic-related, tic-tabs, tic-time) and the stylesheet tic-shell.css, MIT.
   Canonical copies: site/shared/ in github.com/metacog-osint/theintelligence-company.
 - config/disarm/       A cut of the DISARM Framework v1.6.1 STIX bundle, CC BY-SA 4.0 (DISARM Foundation;
   marking kept in the file)
