@@ -119,9 +119,9 @@ def main() -> int:
     save("openai_rss.xml", openai_rss.RSS_URL, (head + "".join(keep) + tail).encode("utf-8"),
          "the influence items, the report round-ups and the first 15 other items")
 
-    # TikTok: reports 8 and 9, cut to the chapters that hold network entries (Integrity of Services; Crisis and
+    # TikTok: reports 5, 6, 8 and 9, cut to the chapters that hold network entries (Integrity of Services; Crisis and
     # Elections Response).
-    for n in (8, 9):
+    for n in (5, 6, 8, 9):
         url = tiktok.REPORT_URL.format(n=n)
         doc = json.loads(raw_bytes(idx[url]))
         doc["chapters"] = [c for c in doc["chapters"] if c.get("name") in ("Integrity of Services",

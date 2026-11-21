@@ -22,14 +22,14 @@ from . import disarm, text
 
 REPORT_URL = "https://disinfocode.eu/reports/tiktok/{n}/json"
 REPORT_PAGE = "https://disinfocode.eu/reports/tiktok/{n}"
-KNOWN_REPORTS = [8, 9]
+KNOWN_REPORTS = [5, 6, 8, 9]    # 7 is not published (404); 5 holds no network entries in its JSON (TTP 6 is in a PDF)
 PROBE_AHEAD = 2
 LICENCE = "EU Code of Conduct on Disinformation Transparency Centre (TikTok's report); no terms of use stated"
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
           "November", "December"]
 
 TTP6_RE = re.compile(r"(?m)^(?P<label>[A-Z][\w’' \-]{1,40}?) - (?P<acc>\d[\d,]*) Accounts?; (?P<fol>\d[\d,]*) Followers?\.\s*(?P<desc>[^\n]+)")
-CRISIS_RE = re.compile(r"Network Origin: (?P<origin>[^\n]+?)\s*\n\s*(?:\n\s*)*Description: (?P<desc>.+?)\s*Accounts (?:Removed|in network): "
+CRISIS_RE = re.compile(r"Network Origin: (?P<origin>[^\n]+?)\s*\n\s*(?:\n\s*)*(?:Description: )?(?P<desc>.+?)\s*Accounts (?:Removed|in network): "
                        r"(?P<acc>\d[\d,]*)\s*Followers(?: of network)?: (?P<fol>\d[\d,]*)", re.S)
 ELECTION_RE = re.compile(r"(?:assessed to be operating from (?P<origin>[A-Z][\w ]+?) and targeting (?P<target>an? [\w ]+? audiences?|[\w ]+? audiences?)"
                          r", included (?P<acc>\d[\d,]*) accounts with (?P<fol>\d[\d,]*) followers)")
