@@ -96,7 +96,7 @@ class Pipeline(unittest.TestCase):
         counts = {k: len(v) for k, v in self.snap["records"].items()}
         self.assertEqual(counts["meta"], 22)
         self.assertEqual(counts["eeas"], 9)
-        self.assertEqual(counts["tiktok"], 25)
+        self.assertEqual(counts["tiktok"], 33)        # 25 from reports 8-9, 8 from report 6 (report 5 holds none)
         self.assertGreater(counts["google"], 240)     # Q2 158 + Q3 93 recorded; Q1 not recorded
         self.assertGreater(counts["openai"], 20)
         self.assertEqual(counts["dfrlab"], 15)        # report records, folded into reported-activity items at build
@@ -697,6 +697,17 @@ class Lanes(unittest.TestCase):
         self.assertTrue(any("October 2025" in r["title"] for r in roundups))
         dcb = next(r for r in ops if r["operation_name"] == "Data Center Bandwagon")
         self.assertEqual((dcb["origin"], dcb["origin_wording"]), (["CN"], "likely PRC-origin"))
+
+    def test_tiktok_reports_5_and_6(self):
+        rep5 = tiktok.parse_report(json.loads((FIX / "tiktok_report_5.json").read_text(encoding="utf-8")))
+        self.assertEqual(rep5["entries"], [])           # TTP 6 data is in a PDF, not in the JSON
+        rep6 = tiktok.parse_report(json.loads((FIX / "tiktok_report_6.json").read_text(encoding="utf-8")))
+        self.assertEqual(rep6["window"], ("2025-01-01", "2025-06-30"))
+        got = sorted((e["origin"][0], e["accounts"], e["followers"]) for e in rep6["entries"])
+        # Two blocks carry no "Description:" label (28,713 and 116 accounts); both must still be read.
+        self.assertIn(("UA", 28713, 300456), got)
+        self.assertIn(("RU", 116, 4372), got)
+        self.assertEqual(len(got), 8)
 
     def test_tiktok_parse(self):
         rep = tiktok.parse_report(json.loads((FIX / "tiktok_report_9.json").read_text(encoding="utf-8")))
