@@ -420,6 +420,20 @@
       "sha256_full": "f6df7a4687828ff8ebb832e688af057a6cbfe3f17c804061fd4ae1966cb38bae",
       "bytes_full": 114942,
       "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+    },
+    "tiktok_report_5.json": {
+      "url": "https://disinfocode.eu/reports/tiktok/5/json",
+      "fetched_at": "2026-11-21T04:59:00Z",
+      "sha256_full": "91cfc116f6ec29c61faafc89af0511307ac796794eeaa8e22b0cedc5c740f99d",
+      "bytes_full": 994992,
+      "cut": "chapters 'Integrity of Services' and 'Crisis and Elections Response' only"
+    },
+    "tiktok_report_6.json": {
+      "url": "https://disinfocode.eu/reports/tiktok/6/json",
+      "fetched_at": "2026-11-21T04:59:00Z",
+      "sha256_full": "c0597c1598e68d63d2f22376b0a7b9384b07f4eb2bfcfd51112a38e5f8f9af97",
+      "bytes_full": 944669,
+      "cut": "chapters 'Integrity of Services' and 'Crisis and Elections Response' only"
     }
   }
 }
