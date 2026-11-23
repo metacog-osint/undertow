@@ -76,7 +76,7 @@ jobs:
           # Retention archive (history/reports.jsonl): the reporter lanes' report records, append-only, written
           # on top of main's tip just taken and committed below with the rest of history/.
           python tools/undertow.py archive || echo "::warning::archive step failed; this run is missing from reports.jsonl"
-          python doctrine/kit/tic.py history site/data/feed.geojson --dir history --ended site/data/ended.geojson \
+          python doctrine/kit/tic.py history site/data/feed.geojson --dir history --ended site/data/ended.geojson --fill-last-change \
             || { echo "::warning::history step failed; this run is missing from history/"; exit 0; }
           git config user.name "undertow-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

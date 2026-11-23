@@ -289,7 +289,7 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
         snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
     snap = snapshot
     records = all_records(snap)
-    feed_doc = feed.build_feed(records, snap["generated_at"], feed.health(snap.get("lanes") or {}, records))
+    feed_doc = feed.build_feed(records, snap["generated_at"], feed.health(snap.get("lanes") or {}, records, snap["generated_at"]))
     bundle = stix.build_bundle(records, snap["generated_at"])
     gq = [(p["year"], p["quarter"]) for p in (snap.get("extra", {}).get("google") or {}).get("pages", [])]
     tr = (snap.get("extra", {}).get("tiktok") or {}).get("reports", [])
