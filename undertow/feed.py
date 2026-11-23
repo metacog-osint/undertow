@@ -18,9 +18,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
-from tic_doctrine import CONTRACT, geo  # noqa: E402
+from tic_doctrine import CONTRACT, __version__ as KIT_VERSION, geo  # noqa: E402
 
-from . import activity, disarm, listings, text  # noqa: E402
+from . import activity, disarm, eventtime, listings, text  # noqa: E402
 
 SITE = "https://undertow.theintelligence.company"
 METHOD = "undertow-1.0"
@@ -233,6 +233,7 @@ def feature(r: dict, generated: str) -> dict:
     props = {
         "contract": CONTRACT,
         "id": item_id(r["key"]),
+        "subject_id": item_id(r["key"]),   # a hash of the operation's key, with no date or run stamp
         "program": "undertow",
         "title": r["title"],
         "summary": summary(r),
@@ -248,6 +249,7 @@ def feature(r: dict, generated: str) -> dict:
         "published_at": generated,
         **({"data_as_of_precision": r["disclosed_precision"]}
            if r.get("disclosed_at") and r.get("disclosed_precision") else {}),
+        **eventtime.fields(r),
         "countries": countries,
         "pmesii_pt": ["information", "political"],
         "ie_aspect": ["informational", "human"],
@@ -297,7 +299,7 @@ def feature(r: dict, generated: str) -> dict:
     return {"type": "Feature", "geometry": _geometry(places), "properties": props}
 
 
-def health(lanes: dict, records: list[dict]) -> dict:
+def health(lanes: dict, records: list[dict], generated: str | None = None) -> dict:
     """The feed's per-source health record, keyed by the source id the lane's items carry (the key the kit's history
     log and COP's ledger read), in Cordon's and Headwind's shape: state, last_ok, last_error, failures, checked_at,
     detail, plus lane and data_as_of (the newest disclosure date among the lane's items).
@@ -325,11 +327,11 @@ def health(lanes: dict, records: list[dict]) -> dict:
         else:
             detail = "not run yet"
         out[src["id"]] = {
-            "state": "up" if ok else "failing",
+            "state": "up" if ok else "failing" if failed else "never",
             "last_ok": st.get("fetched_at"),
             "last_error": st.get("error") if failed else None,
             "failures": int(st.get("failures") or 0) if (ok or failed) else 0,
-            "checked_at": st.get("failed_at") if failed else st.get("fetched_at"),
+            "checked_at": (st.get("failed_at") if failed else st.get("fetched_at")) or generated,
             "detail": detail,
             "lane": lane,
             "data_as_of": newest.get(lane),
@@ -343,6 +345,8 @@ def build_feed(records: list[dict], generated: str, health_record: dict | None =
     doc = {
         "type": "FeatureCollection",
         "contract": CONTRACT,
+        "contract_rev": "2.1",
+        "kit": KIT_VERSION,
         "program": "undertow",
         "generated_at": generated,
         "method_version": METHOD,
