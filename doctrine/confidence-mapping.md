@@ -1,6 +1,6 @@
 # Confidence mapping (Undertow, `undertow-1.0`)
 
-Published as the plan's section 4 promised (`_ideas/drafts/2026-11-14-influence-ops-step12.md`).
+Published as the plan's section 4 promised (the private planning notes).
 
 ## Three questions, kept apart
 1. **Did the takedown happen?** The publisher reports its own enforcement action. Source grade **A2** (reliable on

@@ -1,11 +1,11 @@
-# Undertow (`D:\Projects\undertow`)
+# Undertow
 
 Influence operations for The Intelligence Company (`tic-feed/2`, program id `undertow`, prefix `UT`): covert
 influence operations that Meta, Google, OpenAI, TikTok and the EEAS have publicly disrupted or named, at
 **operation level only**, tagged with DISARM v1.6.1 techniques and exported as STIX 2.1; kept apart, reports by
 independent researchers (DFRLab, CheckFirst, CORRECTIV) and the G7 RRM. Measurements and publishers' reports only:
-no probability. Spec: `D:\Projects\_ideas\drafts\2026-11-14-influence-ops-step12.md` section 6; row in
-`_ideas\new-programs.md`. Site https://undertow.theintelligence.company; repo `metacog-osint/undertow`, **public**
+no probability. Spec: the private planning notes section 6; row in
+the private planning notes. Site https://undertow.theintelligence.company; repo `metacog-osint/undertow`, **public**
 (since 15 Nov 2026).
 
 Earlier text: `.claude/notes-archive-2026-11-18.md`. **State and open items: `.claude/HANDOFF.md`**, read it first
@@ -108,7 +108,7 @@ G7 RRM (B2, government) and VIGINUM enter only as rows.
   operation, active or quiet at 6 months, never "ended". *Emerging:* watch closing (`UT-IND-3`, `UT-IND-4`); no
   anomaly before 10 closed rows. *Across:* half-year DISARM share per publisher. No name-match lead-time baseline;
   no warning tier anywhere. Items: observation, routine, `reported`, A2.
-- Never edit `doctrine/kit/` (sync: `python <tic-doctrine>/tools/sync.py D:/Projects/undertow`, Tom's yes) or
+- Never edit `doctrine/kit/` (sync: `python <tic-doctrine>/tools/sync.py .`, Tom's yes) or
   `site_src/tic-*` (copies of the hub's `site/shared/` files).
 
 ## Outputs (`site/data/`) and suite use
