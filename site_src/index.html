@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="tic-related.css">
 <link rel="stylesheet" href="tic-shell.css">
 <link rel="stylesheet" href="tic-fold.css">
+<link rel="alternate" type="application/geo+json" title="Undertow feed (GeoJSON)" href="data/feed.geojson">
 <script src="tic-time.js"></script>
 <script src="tic-related.js"></script>
 <script src="tic-tabs.js" defer></script>
@@ -23,9 +24,6 @@
   <div class="wrap top-row">
     <div class="brand"><strong>Undertow</strong><a class="tic-layer" href="https://theintelligence.company/#layers">Human layer</a><span class="muted">The Intelligence Company</span></div>
     <nav class="top-nav" aria-label="Data and method">
-      <a href="data/feed.geojson">Feed</a>
-      <a href="data/stix.json">STIX 2.1</a>
-      <a href="data/events.json">Calendar</a>
       <a href="#method">Method</a>
       <span id="time-settings"></span>
     </nav>
@@ -181,7 +179,12 @@
 
 <footer class="wrap foot small muted">
   <p>Undertow, The Intelligence Company. Public information only, non-commercial. A STIX 2.1 bundle and a tic-feed/2 feed
-    are linked at the top. Not affiliated with any publisher named here.</p>
+    are linked below. Not affiliated with any publisher named here.</p>
+  <nav class="tic-data" aria-label="Data and downloads"><span class="tic-data-k">Data and downloads</span>
+    <a href="data/feed.geojson">Feed (GeoJSON)</a>
+    <a href="data/stix.json">STIX 2.1 (JSON)</a>
+    <a href="data/events.json">Calendar (JSON)</a>
+    <a href="https://github.com/metacog-osint/undertow">Source code</a></nav>
 </footer>
 <script src="app.js"></script>
 </body>
