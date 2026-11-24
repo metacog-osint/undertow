@@ -139,7 +139,7 @@
     var max = 1;
     R.forEach(function (a) { C.forEach(function (b) { max = Math.max(max, cell[a + "|" + b] || 0); }); });
     function lab(c) { return c === "?" ? "no origin stated" : c === "-" ? "none named" : cname(c); }
-    var h = "<thead><tr><th scope=\"col\" class=\"rowh\">Origin \\ target</th>" + C.map(function (c) { return '<th scope="col" title="' + esc(lab(c)) + '">' + esc(c === "-" ? "none" : c === "?" ? "?" : c) + "</th>"; }).join("") + "</tr></thead><tbody>";
+    var h = "<thead><tr><th scope=\"col\" class=\"rowh\">Origin \\ target</th>" + C.map(function (c) { return '<th scope="col" class="colh">' + esc(c === "-" ? "none named" : lab(c)) + "</th>"; }).join("") + "</tr></thead><tbody>";
     R.forEach(function (a) {
       h += '<tr><th scope="row" class="rowh">' + esc(lab(a)) + "</th>";
       C.forEach(function (b) {
@@ -317,7 +317,7 @@
   function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
   function topOrigins(o) {
     return Object.keys(o || {}).sort(function (a, b) { return o[b] - o[a] || (a < b ? -1 : 1); }).slice(0, 4)
-      .map(function (c) { return c === "none" ? "none stated " + o[c] : c + " " + o[c]; }).join(", ");
+      .map(function (c) { return c === "none" ? "none stated " + o[c] : cname(c) + " " + o[c]; }).join(", ");
   }
   function nameMatchPairs() {
     var rep = {}, out = [];
@@ -362,13 +362,14 @@
       ops.map(function (o) {
         return "<tr><td>" + esc(o.operation) + "</td><td>" + esc((o.publishers_acting || []).map(function (x) { return PUB[x] || x; }).join(", ") || "none") + "</td><td>" + o.disclosures + "</td><td>" + o.reports + "</td><td>" + esc(o.last_sighting) + " (" + plural(o.months_since, "month") + " ago)</td><td><span class=\"badge" + (o.state === "active" ? "" : " badge-warn") + '">' + esc(o.state) + "</span></td></tr>";
       }).join("") + "</tbody></table></div>";
-    var mix = B.technique_mix || [];
+    var mix = B.technique_mix || [], TECH = {};   // technique id -> DISARM name, from the items' own tags
+    S.items.forEach(function (it) { (it.disarm || []).forEach(function (d) { if (d.name) { TECH[d.id] = d.name; } }); });
     html += "<h4>Technique mix, per half-year</h4>";
     html += '<p class="small muted">Share of a publisher’s items in the half-year on which each DISARM technique was mapped (Undertow’s reading of the publisher’s words). The top three are shown.</p>';
     html += '<div class="scroll" tabindex="0" role="region" aria-label="Technique mix per half-year"><table class="plain"><thead><tr><th scope="col">Half-year</th><th scope="col">Publisher</th><th scope="col">Items</th><th scope="col">Most-mapped techniques (share of items)</th></tr></thead><tbody>' +
       mix.slice().sort(function (a, b) { return a.half < b.half ? 1 : a.half > b.half ? -1 : (a.publisher < b.publisher ? -1 : 1); }).map(function (m) {
         var tops = Object.keys(m.techniques).sort(function (a, b) { return m.techniques[b].items - m.techniques[a].items || (a < b ? -1 : 1); }).slice(0, 3)
-          .map(function (t) { return t + " " + Math.round(m.techniques[t].share * 100) + "%"; }).join(", ");
+          .map(function (t) { return t + (TECH[t] ? " " + TECH[t] : "") + " " + Math.round(m.techniques[t].share * 100) + "%"; }).join("; ");
         return "<tr><td>" + esc(m.half) + "</td><td>" + esc(PUB[m.publisher] || m.publisher) + "</td><td>" + m.items + "</td><td>" + esc(tops || "none mapped") + "</td></tr>";
       }).join("") + "</tbody></table></div>";
     var pairs = nameMatchPairs();

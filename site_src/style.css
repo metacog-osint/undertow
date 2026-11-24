@@ -91,6 +91,12 @@ tr:last-child td { border-bottom: none; }
 table.plain td { vertical-align: top; min-width: 120px; }
 table.matrix th, table.matrix td { text-align: center; white-space: nowrap; padding: 4px 6px; font-size: 0.8rem; }
 table.matrix th.rowh { text-align: left; }
+table.matrix th.colh { white-space: normal; min-width: 56px; max-width: 84px; vertical-align: bottom; line-height: 1.2; }
+.terms { max-width: 72ch; margin: 0 0 16px; font-size: 14px; }
+.terms summary { cursor: pointer; padding: 6px 0; min-height: 24px; }
+.terms dl { margin: 4px 0 0; }
+.terms dt { font-weight: 600; margin-top: 8px; }
+.terms dd { margin: 2px 0 0 0; color: var(--muted); }
 table.matrix td.c { border-radius: 3px; min-width: 30px; }
 table.matrix td.c1 { background: rgba(var(--cell), 0.16); } table.matrix td.c2 { background: rgba(var(--cell), 0.3); }
 table.matrix td.c3 { background: rgba(var(--cell), 0.46); } table.matrix td.c4 { background: rgba(var(--cell), 0.64); }
