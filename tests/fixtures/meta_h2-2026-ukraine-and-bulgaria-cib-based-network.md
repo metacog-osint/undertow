@@ -14,29 +14,28 @@ The network employed sophisticated grassroots impersonation tactics, creating a 
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `britpanorama[.]co[.]uk` |
-| Domain | `klarfocus[.]de` |
-| Domain | `24brussels[.]online` |
-| Domain | `toptribune[.]today` |
-| Domain | `worldsignal[.]world` |
-| Domain | `oglavnom[.]top` |
-| Domain | `latviatoday[.]info` |
-| Domain | `attuale[.]info` |
-| Domain | `nieuwsimpuls[.]online` |
-| Social Media Account | `https://x[.]com/24brussels` |
-| Social Media Account | `https://t[.]me/NieuwsImpuls` |
-| Social Media Account | `https://www[.]tiktok[.]com/@toptribune` |
-| Social Media Account | `https://t[.]me/toptribune` |
-| Social Media Account | `https://t[.]me/britpanorama` |
-| Social Media Account | `https://t[.]me/news24brussels` |
-| Social Media Account | `https://t[.]me/oglavnomtop` |
-| Social Media Account | `https://www[.]tiktok[.]com/@24brussels[.]online` |
-| Social Media Account | `https://www[.]tiktok[.]com/@klarfocus` |
-| Social Media Account | `https://www[.]tiktok[.]com/@worldsignalusa` |
-| Social Media Account | `https://x[.]com/britpanorama` |
-| Social Media Account | `https://x[.]com/nieuwsimpus` |
-| Social Media Account | `https://x[.]com/weltstimme` |
-
+| Domain | `fixture-6d1be9-1[.]invalid` |
+| Domain | `fixture-6d1be9-2[.]invalid` |
+| Domain | `fixture-6d1be9-3[.]invalid` |
+| Domain | `fixture-6d1be9-4[.]invalid` |
+| Domain | `fixture-6d1be9-5[.]invalid` |
+| Domain | `fixture-6d1be9-6[.]invalid` |
+| Domain | `fixture-6d1be9-7[.]invalid` |
+| Domain | `fixture-6d1be9-8[.]invalid` |
+| Domain | `fixture-6d1be9-9[.]invalid` |
+| Social Media Account | `https://x[.]com/fixture_6d1be9_10` |
+| Social Media Account | `https://t[.]me/fixture_6d1be9_11` |
+| Social Media Account | `https://www[.]tiktok[.]com/@fixture_6d1be9_12` |
+| Social Media Account | `https://t[.]me/fixture_6d1be9_13` |
+| Social Media Account | `https://t[.]me/fixture_6d1be9_14` |
+| Social Media Account | `https://t[.]me/fixture_6d1be9_15` |
+| Social Media Account | `https://t[.]me/fixture_6d1be9_16` |
+| Social Media Account | `https://www[.]tiktok[.]com/@fixture_6d1be9_17` |
+| Social Media Account | `https://www[.]tiktok[.]com/@fixture_6d1be9_18` |
+| Social Media Account | `https://www[.]tiktok[.]com/@fixture_6d1be9_19` |
+| Social Media Account | `https://x[.]com/fixture_6d1be9_20` |
+| Social Media Account | `https://x[.]com/fixture_6d1be9_21` |
+| Social Media Account | `https://x[.]com/fixture_6d1be9_22` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

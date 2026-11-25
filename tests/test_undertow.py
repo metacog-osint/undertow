@@ -2,8 +2,9 @@
 
     python -m unittest discover -s tests
 
-The leak tests take the indicator values and handles from Meta's real indicator tables in the fixtures and check
-that none of them, and none of the personal names the publishers quote, reaches any published file.
+The leak tests take the indicator values and handles from Meta's indicator tables in the fixtures (made-up values of
+the real types since 25 Nov 2026, tests/make_fixtures.py) and check that none of them, and none of the personal names
+the publishers quote, reaches any published file.
 """
 from __future__ import annotations
 
@@ -661,7 +662,7 @@ class Lanes(unittest.TestCase):
         self.assertEqual(net["indicator_count"], 0)
         dop = meta.parse_network((FIX / "meta_meta-h2-2026-russia-cib-based-network-4.md").read_text(encoding="utf-8"))
         self.assertEqual(dop["indicators_by_type"], {"domain": 9, "social_media_account": 5})
-        self.assertNotIn("garrygarr950", json.dumps(dop["indicators_by_type"]))
+        self.assertNotIn("fixture_", json.dumps(dop["indicators_by_type"]))     # counts only, never a value
 
     def test_meta_readme_rows(self):
         rows = meta.parse_readme((FIX / "meta_readme.md").read_text(encoding="utf-8"))

@@ -26,14 +26,13 @@ This network represents a notable volume and range of AI use for influence opera
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `thebalochistandiaries[.]com` |
-| Social Media Account | `https://x[.]com/auroraapricus/` |
-| Social Media Account | `https://x[.]com/BalochDiaries` |
-| Social Media Account | `https://x[.]com/shaziia_tweets` |
-| Social Media Account | `https://x[.]com/Abbasbugti52` |
-| Social Media Account | `https://www.youtube[.]com/@Baloch5225` |
-| Social Media Account | `https://www.youtube[.]com/channel/UCQ8TUByC9EmbhoUDaInIGeA` |
-
+| Domain | `fixture-81078a-1[.]invalid` |
+| Social Media Account | `https://x[.]com/fixture_81078a_2` |
+| Social Media Account | `https://x[.]com/fixture_81078a_3` |
+| Social Media Account | `https://x[.]com/fixture_81078a_4` |
+| Social Media Account | `https://x[.]com/fixture_81078a_5` |
+| Social Media Account | `https://www.youtube[.]com/@fixture_81078a_6` |
+| Social Media Account | `https://www.youtube[.]com/fixture_81078a_7` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H1 2026](TBD)

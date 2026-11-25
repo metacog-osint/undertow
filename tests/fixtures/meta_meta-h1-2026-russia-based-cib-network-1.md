@@ -14,12 +14,11 @@ The operation, which began in August 2025, promoted primarily authentic, off-pla
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| URL | `www[.]change[.]org/p/joão-lourenço-demita-se-do-cargo-de-presidente-da-república-já?recruiter=1368271402&recruited_by_id=8dce6f60-013b-11f0-9bb1-a938b470633d` |
-| URL | `www[.]iol[.]co[.]za/sundayindependent/analysis/2025-06-25-us-africa-business-summit-a-showdown-in-luanda/` |
-| URL | `www[.]iol[.]co[.]za/sundayindependent/dispatch/2025-07-01-angola-must-get-its-house-to-benefit-from-the-us-africa-business-summit` |
-| URL | `www[.]angola24horas[.]com/opiniao/item/32323-a-retorica-de-trump-na-africa-anula-todo-o-progresso-joe-biden` |
-| URL | `www[.]pulselive[.]co[.]ke/articles/news/local/batuk-laughs-at-rape-victims-why-is-agnes-wanjirus-murderer-still-not-in-jail-opinion-2025100914013150883` |
-
+| URL | `hxxps://fixture-ab92a2-1[.]invalid/page-1` |
+| URL | `hxxps://fixture-ab92a2-2[.]invalid/page-2` |
+| URL | `hxxps://fixture-ab92a2-3[.]invalid/page-3` |
+| URL | `hxxps://fixture-ab92a2-4[.]invalid/page-4` |
+| URL | `hxxps://fixture-ab92a2-5[.]invalid/page-5` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H1 2026](TBD)

@@ -75,7 +75,7 @@ G7 RRM (B2, government) and VIGINUM enter only as rows.
   Wrongly withheld organisation -> `known_phrases` in `config/operations.json`. `check` scans published files for
   defanged values, @handles and URLs outside `ALLOWED_URL_PREFIXES`. Tests assert no Meta indicator value leaks.
 - `data/raw/` (full replies) is never cached, committed or published; only `data/snapshot.json` is cached.
-  `data/triage.jsonl` is never published. `tests/fixtures/` holds full replies (see the handoff: repo now public).
+  `data/triage.jsonl` is never published. `tests/fixtures/`: real replies cut for a public repo (`make_fixtures.py`).
 - **Never fetch tiktok.com or OpenAI's report pages.**
 - **Origin is never sponsorship.** Three questions kept apart (`doctrine/confidence-mapping.md`). EEAS's
   "Russia-aligned"/"Chinese-aligned" for non-attributed operations (Storm-1516, Operation Overload, Portal Kombat,

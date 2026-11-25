@@ -14,10 +14,9 @@ The operation employed sophisticated operational security and impersonation tact
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `oknyomozoriport[.]hu` |
-| Domain | `ecij[.]org` |
-| Domain | `timesofukraine[.]net` |
-
+| Domain | `fixture-4a931b-1[.]invalid` |
+| Domain | `fixture-4a931b-2[.]invalid` |
+| Domain | `fixture-4a931b-3[.]invalid` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

@@ -14,13 +14,12 @@ We observed that network operators strategically disseminated messaging focused 
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `poufnarozmowa[.]eu` |
-| Social Media Account | `hxxp://x[.]com/jabkowojciech` |
-| Social Media Account | `hxxp://x[.]com/baranowski21205` |
-| Social Media Account | `hxxp://tiktok[.]com/@wojciechjabko` |
-| Social Media Account | `hxxp://tiktok[.]com/@baranowskiad` |
-| Social Media Account | `hxxp://tiktok[.]com/@amelia.wilson237` |
-
+| Domain | `fixture-3815ce-1[.]invalid` |
+| Social Media Account | `hxxp://x[.]com/fixture_3815ce_2` |
+| Social Media Account | `hxxp://x[.]com/fixture_3815ce_3` |
+| Social Media Account | `hxxp://tiktok[.]com/@fixture_3815ce_4` |
+| Social Media Account | `hxxp://tiktok[.]com/@fixture_3815ce_5` |
+| Social Media Account | `hxxp://tiktok[.]com/@fixture_3815ce_6` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2025](TBD)

@@ -14,9 +14,8 @@ This operation, active since 2022, was characterized by high-quality persona bui
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `sizinyol[.]org` |
-| Domain | `qafqaztimes[.]com` |
-
+| Domain | `fixture-c5fa10-1[.]invalid` |
+| Domain | `fixture-c5fa10-2[.]invalid` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H1 2026](TBD)
