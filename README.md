@@ -10,7 +10,7 @@ python tools/undertow.py collect && python tools/undertow.py build && python too
 python -m unittest discover -s tests
 ```
 
-Method: `doctrine/method.md`. Confidence: `doctrine/confidence-mapping.md`. Working notes: `CLAUDE.md`.
+Method: `doctrine/method.md`. Confidence: `doctrine/confidence-mapping.md`.
 Standard library only (Python 3.12+).
 
 ## Licence
