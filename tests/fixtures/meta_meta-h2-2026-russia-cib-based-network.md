@@ -14,9 +14,8 @@ The operators behind this network engaged in complex deception by masquerading a
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Social Media Account | `t[.]me/klichkovv` |
-| Social Media Account | `t[.]me/rstefanchuk` |
-
+| Social Media Account | `t[.]me/fixture_ec76ab_1` |
+| Social Media Account | `t[.]me/fixture_ec76ab_2` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

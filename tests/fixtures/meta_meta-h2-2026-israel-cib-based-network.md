@@ -14,15 +14,14 @@ Although the operation targeted a number of countries with targeted narratives, 
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `lalternative2026[.]com` |
-| Domain | `blogdesophie[.]com` |
-| Domain | `delogupourpalestine[.]com` |
-| Domain | `rcn-france[.]com` |
-| Domain | `forsane-alizza[.]eu` |
-| URL | `https://roayahnews[.]com/فرسان-العزة-في-فرنسا-تجنيد-سري-وتمويل/` |
-| Domain | `sadaqahpalestine[.]com` |
-| Social Media Account | `http://x[.]com/sadaqahpalestin` |
-
+| Domain | `fixture-85aae2-1[.]invalid` |
+| Domain | `fixture-85aae2-2[.]invalid` |
+| Domain | `fixture-85aae2-3[.]invalid` |
+| Domain | `fixture-85aae2-4[.]invalid` |
+| Domain | `fixture-85aae2-5[.]invalid` |
+| URL | `hxxps://fixture-85aae2-6[.]invalid/page-6` |
+| Domain | `fixture-85aae2-7[.]invalid` |
+| Social Media Account | `http://x[.]com/fixture_85aae2_8` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

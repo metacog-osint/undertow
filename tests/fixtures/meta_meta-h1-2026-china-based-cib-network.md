@@ -14,12 +14,11 @@ The network operated several pages, such as Taiwan Gossip Net and New Generation
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `newgenerationrebellion[.]com` |
-| Domain | `ngrebellion[.]com` |
-| Domain | `newgenreb[.]com` |
-| Domain | `twgossiping[.]com` |
-| Social Media Account | `youtube[.]com/@NewGenerationRebellion` |
-
+| Domain | `fixture-cc3e25-1[.]invalid` |
+| Domain | `fixture-cc3e25-2[.]invalid` |
+| Domain | `fixture-cc3e25-3[.]invalid` |
+| Domain | `fixture-cc3e25-4[.]invalid` |
+| Social Media Account | `youtube[.]com/@fixture_cc3e25_5` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H1 2026](TBD)

@@ -13,154 +13,154 @@
       "fetched_at": "2026-11-14T21:22:37Z",
       "sha256_full": "20a5c79b90c391676211ebab913e8afe26e30638109569d42497ef8e05767ced",
       "bytes_full": 4249,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-israel-cib-based-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-israel-cib-based-network.md",
       "fetched_at": "2026-11-14T21:22:37Z",
       "sha256_full": "e294ab1fd85328bbb6dc3045a14ade2593e670c25b8a9baeb3752ff50f32c036",
       "bytes_full": 3696,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-iran-cib-based-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-iran-cib-based-network.md",
       "fetched_at": "2026-11-14T21:22:37Z",
       "sha256_full": "a6c7e87b074d230887f01bc6984d3fe77cea95709290f23137cbcc3a68037035",
       "bytes_full": 2145,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-iran-cib-based-network-3.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-iran-cib-based-network-3.md",
       "fetched_at": "2026-11-14T21:22:37Z",
       "sha256_full": "fce53624cc42198db18cb256be3949b38674795fbaf86a37e52f3d0546dfab80",
       "bytes_full": 3011,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-iran-cib-based-network-2.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-iran-cib-based-network-2.md",
       "fetched_at": "2026-11-14T21:22:38Z",
       "sha256_full": "1c14931801e3041a0fd3437815d95159ccd527ab3903d8892012edc8451dbff4",
       "bytes_full": 3216,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-france-and-spain-cib-based-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-france-and-spain-cib-based-network.md",
       "fetched_at": "2026-11-14T21:22:38Z",
       "sha256_full": "2b76ef652f0c2b579113c7385c9a8cc28f01f5702783a822b0161062e7afa6d9",
       "bytes_full": 2793,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-russia-cib-based-network-3.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network-3.md",
       "fetched_at": "2026-11-14T21:22:38Z",
       "sha256_full": "8ee65f9e6905775ea3bdff0d2289132396bd41373cd5db6fe7dcdf66ec8cadd7",
       "bytes_full": 2580,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-russia-cib-based-network-4.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network-4.md",
       "fetched_at": "2026-11-14T21:22:38Z",
       "sha256_full": "f9a316656bd63098cffc43af039f0d3dc61cec95293b7f78c8076a2d294a2a05",
       "bytes_full": 9585,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2026-russia-cib-based-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2026-russia-cib-based-network.md",
       "fetched_at": "2026-11-14T21:22:39Z",
       "sha256_full": "f3cbdcc2d1ce87d14a4dae255649018d258619d304dbcc2ac8f6f83d2b203b13",
       "bytes_full": 3347,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_h2-2026-ukraine-and-bulgaria-cib-based-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/h2-2026-ukraine-and-bulgaria-cib-based-network.md",
       "fetched_at": "2026-11-14T21:22:39Z",
       "sha256_full": "91c10633f60f09e3719c7159fc486a34ae1572b0a4d5d51788fdc192b61c8c28",
       "bytes_full": 4025,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h1-2026-russia-based-cib-network-2.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-russia-based-cib-network-2.md",
       "fetched_at": "2026-11-14T21:22:39Z",
       "sha256_full": "cc8b4562573dd787da8c29521181efdd425b620c6891d70977213f8b9300c627",
       "bytes_full": 2286,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h1-2026-pakistan-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-pakistan-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:39Z",
       "sha256_full": "753c67e0891db4ed43ff737e220b76f069b4a4a110cc599a7b71254d63a38ba4",
       "bytes_full": 5671,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h1-2026-china-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-china-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:39Z",
       "sha256_full": "23d76ac3320fb3ec01b3b3b5f3b30b4ee256cdd8a1747d895254a53a34a42320",
       "bytes_full": 2332,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h1-2026-iran-based-cib-network-2.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-iran-based-cib-network-2.md",
       "fetched_at": "2026-11-14T21:22:40Z",
       "sha256_full": "64cc1f1c416833e4da3407c7394185bc1f5adb9320bcc00e3aff8f45d712eefa",
       "bytes_full": 2130,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h1-2026-iran-based-cib-network-1.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-iran-based-cib-network-1.md",
       "fetched_at": "2026-11-14T21:22:40Z",
       "sha256_full": "43f63b41721a748688384218c0ecb393675e6eb72ef96de184aadfbf99c97a29",
       "bytes_full": 8145,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h1-2026-russia-based-cib-network-1.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h1-2026-russia-based-cib-network-1.md",
       "fetched_at": "2026-11-14T21:22:40Z",
       "sha256_full": "cb0565551803f48a049ee3273a6356278d16fe71fbdec5f4bfa3b42699c1f3fa",
       "bytes_full": 3610,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2025-moldova-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-moldova-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:40Z",
       "sha256_full": "1de4d9745169715fc5bd186256fb63ba58ed029be07063a2b628c05edb034e0e",
       "bytes_full": 2962,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2025-india-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-india-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:41Z",
       "sha256_full": "acc9f310910b7f734f2dfffb78048d2c0e778a0e3e77a06f599dbb5fc63c7b01",
       "bytes_full": 2268,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2025-poland-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-poland-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:41Z",
       "sha256_full": "2f7660109340cf70923286ac1b6397efda2a5f22147a0e8ffd45bd3a9d02b4d9",
       "bytes_full": 2911,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2025-belarus-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-belarus-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:41Z",
       "sha256_full": "a95c30b4d0a7483f4a4346f9989f0a6e763ab61eb5c380815d9a15893ad926ff",
       "bytes_full": 2718,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2025-russia-based-cib-network-2.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-russia-based-cib-network-2.md",
       "fetched_at": "2026-11-14T21:22:41Z",
       "sha256_full": "7e6b87fb52a82c45819b15d921a7cad4279b7fadaab8d6869cd77d27219d6fe9",
       "bytes_full": 9385,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_meta-h2-2025-iran-based-cib-network.md": {
       "url": "https://raw.githubusercontent.com/meta/threat-research/main/indicators/meta-h2-2025-iran-based-cib-network.md",
       "fetched_at": "2026-11-14T21:22:41Z",
       "sha256_full": "3cc5418370df196bdafa11b133b1d313d260d91325bab98c043c972823b3991c",
       "bytes_full": 6780,
-      "cut": null
+      "cut": "indicator values replaced by made-up ones of the same type (tests/make_fixtures.py synthetic_iocs); the rest whole. MIT, Copyright (c) Meta Platforms, Inc. and its affiliates: tests/fixtures/LICENSE-meta.txt"
     },
     "meta_commits.json": {
       "url": "https://api.github.com/repos/meta/threat-research/commits?per_page=100",
@@ -223,203 +223,203 @@
       "fetched_at": "2026-11-16T02:38:03Z",
       "sha256_full": "fada1fd7a56f94d368ff46965715d22806faf160df58f7f5ca34ca9fd3ab8e70",
       "bytes_full": 19598,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_02.xml": {
       "url": "https://dfrlab.org/feed/?paged=2",
       "fetched_at": "2026-11-16T02:38:05Z",
       "sha256_full": "0f4a2339dbbdbfabb1715c31d14eddc4f23faf105fc35061630101eafe9d81f2",
       "bytes_full": 19910,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_03.xml": {
       "url": "https://dfrlab.org/feed/?paged=3",
       "fetched_at": "2026-11-16T02:38:08Z",
       "sha256_full": "41afed8bd94d0a5c545aaf8251cabfac084f4a97c570237d6226a4bd6e69c0c2",
       "bytes_full": 19138,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_04.xml": {
       "url": "https://dfrlab.org/feed/?paged=4",
       "fetched_at": "2026-11-16T02:38:10Z",
       "sha256_full": "8185f01a281831869d425d10b16f9fc3b728dcd04589051794f5e94c5c3d813e",
       "bytes_full": 18851,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_05.xml": {
       "url": "https://dfrlab.org/feed/?paged=5",
       "fetched_at": "2026-11-16T02:38:12Z",
       "sha256_full": "fb1f064cc195ca1f75a0eb366420e46014658e67f933c874965faf7f6afa2b1f",
       "bytes_full": 19608,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_06.xml": {
       "url": "https://dfrlab.org/feed/?paged=6",
       "fetched_at": "2026-11-16T02:38:14Z",
       "sha256_full": "a021f142a4203543f8db8341bcb76966ce8b17597dddcb49237e9d04d80435c3",
       "bytes_full": 18046,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_07.xml": {
       "url": "https://dfrlab.org/feed/?paged=7",
       "fetched_at": "2026-11-16T02:38:16Z",
       "sha256_full": "65322187126fdef10a3e95d7e521d82575088ad4460ff0821c92eac54be91bae",
       "bytes_full": 20033,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_08.xml": {
       "url": "https://dfrlab.org/feed/?paged=8",
       "fetched_at": "2026-11-16T02:38:18Z",
       "sha256_full": "61e9f1e7390a787d434fcfed0e808c173295102aa2b97113c5e1ccc1ebff0372",
       "bytes_full": 20090,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_09.xml": {
       "url": "https://dfrlab.org/feed/?paged=9",
       "fetched_at": "2026-11-16T02:38:20Z",
       "sha256_full": "48c1104c5943baba3af812a68692242573067f6ba59ac70a9d1037c6ba9f13c2",
       "bytes_full": 16936,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_10.xml": {
       "url": "https://dfrlab.org/feed/?paged=10",
       "fetched_at": "2026-11-16T02:38:23Z",
       "sha256_full": "ce177e7802891b0bd0187ee0af10b71172298ae068ce661587938601638142ce",
       "bytes_full": 15412,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_11.xml": {
       "url": "https://dfrlab.org/feed/?paged=11",
       "fetched_at": "2026-11-16T02:38:25Z",
       "sha256_full": "8fd47a0ab0126b7cb8103b4110d02801348654485c4b4798859760be3e85b6c5",
       "bytes_full": 17169,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_12.xml": {
       "url": "https://dfrlab.org/feed/?paged=12",
       "fetched_at": "2026-11-16T02:38:27Z",
       "sha256_full": "266eab5650cd8484664937d397e05681d81f809ec3bf8d64188f2c8cc79e19d2",
       "bytes_full": 17829,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_13.xml": {
       "url": "https://dfrlab.org/feed/?paged=13",
       "fetched_at": "2026-11-16T02:38:29Z",
       "sha256_full": "b5d7888e21a97340be8e36a170356419bb2f9eef2fc58eda5381141a61fafa45",
       "bytes_full": 18337,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_14.xml": {
       "url": "https://dfrlab.org/feed/?paged=14",
       "fetched_at": "2026-11-16T02:38:31Z",
       "sha256_full": "a94caeadd558b582982c2cccb5b8d5d68ebb5fbb49b2ca0afd108220b0b082f1",
       "bytes_full": 16885,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_15.xml": {
       "url": "https://dfrlab.org/feed/?paged=15",
       "fetched_at": "2026-11-16T02:38:33Z",
       "sha256_full": "9317567af0af915e5baa583a9215392dad7a6260c7e713047070667c6691a73c",
       "bytes_full": 17067,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_16.xml": {
       "url": "https://dfrlab.org/feed/?paged=16",
       "fetched_at": "2026-11-16T02:38:35Z",
       "sha256_full": "d8b2c5c66a2551c83c532a78c1a68b4473d2ff34a119bad90a17e200f1523626",
       "bytes_full": 17750,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_17.xml": {
       "url": "https://dfrlab.org/feed/?paged=17",
       "fetched_at": "2026-11-16T02:38:38Z",
       "sha256_full": "2c71a6b5622a7c0f4bb4db03345e4ab0066f3ea3093e158772b7dd0fdc8606c1",
       "bytes_full": 16029,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_18.xml": {
       "url": "https://dfrlab.org/feed/?paged=18",
       "fetched_at": "2026-11-16T02:38:40Z",
       "sha256_full": "3a0142aa39af4c5462f5b9dd4c0a3b90d5a34ded19886d31645bf3adcd56846f",
       "bytes_full": 16977,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_19.xml": {
       "url": "https://dfrlab.org/feed/?paged=19",
       "fetched_at": "2026-11-16T02:38:42Z",
       "sha256_full": "30fda274c1ee34819f0f5cb64de70fa0699878d70c59621634807cedf8e3b3aa",
       "bytes_full": 18277,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_20.xml": {
       "url": "https://dfrlab.org/feed/?paged=20",
       "fetched_at": "2026-11-16T02:38:44Z",
       "sha256_full": "2598d2c5a391146636e58d1bda4499f6063a0bf6ae83c2e0820646f461c6e65f",
       "bytes_full": 18874,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_21.xml": {
       "url": "https://dfrlab.org/feed/?paged=21",
       "fetched_at": "2026-11-16T02:38:46Z",
       "sha256_full": "b470c9343cc30045ce5b709face1a7ed9cbf6701f427e63bea40a5595fbb9c78",
       "bytes_full": 18275,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_22.xml": {
       "url": "https://dfrlab.org/feed/?paged=22",
       "fetched_at": "2026-11-16T02:38:49Z",
       "sha256_full": "cb3b686b8300822b1e0e46320510abac25c2e675de768be0cb4ce8584855381f",
       "bytes_full": 17634,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_23.xml": {
       "url": "https://dfrlab.org/feed/?paged=23",
       "fetched_at": "2026-11-16T02:38:51Z",
       "sha256_full": "cd3ad098edd03b91d510b1cb6dd17c484c7dc645901dc1698dfb8cab52634954",
       "bytes_full": 18484,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "dfrlab_feed_24.xml": {
       "url": "https://dfrlab.org/feed/?paged=24",
       "fetched_at": "2026-11-16T02:38:53Z",
       "sha256_full": "949038260eed3e6cfae8718098a7b771045f7d3cde8a74af3327e9c74ddd9072",
       "bytes_full": 19499,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "checkfirst_feed_01.xml": {
       "url": "https://checkfirst.network/feed/",
       "fetched_at": "2026-11-16T03:27:07Z",
       "sha256_full": "bd3e7ccf3e0131105e35c1d7aba94f1c9747b88cc164bb5215ea11c8ee326633",
       "bytes_full": 11768,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "checkfirst_feed_02.xml": {
       "url": "https://checkfirst.network/feed/?paged=2",
       "fetched_at": "2026-11-16T03:27:10Z",
       "sha256_full": "a3d393b52807fa63ce9741da8330fae4bc5cc0e259d274341c7fc0b74ff76555",
       "bytes_full": 11046,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "checkfirst_feed_03.xml": {
       "url": "https://checkfirst.network/feed/?paged=3",
       "fetched_at": "2026-11-16T03:27:13Z",
       "sha256_full": "56b3091653c9fde0032e6634bcd3112f197ce647555313672e8bd668e7b0e125",
       "bytes_full": 11594,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "checkfirst_feed_04.xml": {
       "url": "https://checkfirst.network/feed/?paged=4",
       "fetched_at": "2026-11-16T03:27:16Z",
       "sha256_full": "ff54b6758951a83593ed22c6205b276dffd983867499a8ab35966bf6d079b2fe",
       "bytes_full": 11405,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "correctiv_feed_01.xml": {
       "url": "https://correctiv.org/en/feed/",
       "fetched_at": "2026-11-16T03:27:18Z",
       "sha256_full": "f6df7a4687828ff8ebb832e688af057a6cbfe3f17c804061fd4ae1966cb38bae",
       "bytes_full": 114942,
-      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed)"
+      "cut": "items cut to title, link, pubDate, category and description (dc:creator and content:encoded removed); items naming no tracked operation keep only link, pubDate and category (cut_reporter_feed)"
     },
     "tiktok_report_5.json": {
       "url": "https://disinfocode.eu/reports/tiktok/5/json",

@@ -14,14 +14,13 @@ The network employed sophisticated persona development, creating inauthentic acc
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Social Media Account | `http://x[.]com/fateemaahmad01` |
-| Social Media Account | `http://x[.]com/jameelar313` |
-| Social Media Account | `http://x[.]com/yarmama126412` |
-| Social Media Account | `http://x[.]com/lailahgabtee` |
-| Social Media Account | `http://x[.]com/zainabnajad` |
-| Social Media Account | `http://x[.]com/jameelaagabee` |
-| Social Media Account | `http://x[.]com/rayhaner313` |
-
+| Social Media Account | `http://x[.]com/fixture_b36c35_1` |
+| Social Media Account | `http://x[.]com/fixture_b36c35_2` |
+| Social Media Account | `http://x[.]com/fixture_b36c35_3` |
+| Social Media Account | `http://x[.]com/fixture_b36c35_4` |
+| Social Media Account | `http://x[.]com/fixture_b36c35_5` |
+| Social Media Account | `http://x[.]com/fixture_b36c35_6` |
+| Social Media Account | `http://x[.]com/fixture_b36c35_7` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

@@ -14,27 +14,26 @@ The operation's central tactic was the creation and backstopping of a fabricated
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `ibi[.]institute` |
-| Social Media Account | `http://x[.]com/institute_ibi` |
-| Social Media Account | `burkeinstitute[.]substack[.]com` |
-| Social Media Account | `http://t[.]me/institute_ibi` |
-| Social Media Account | `http://tiktok[.]com/@camille_lefevre_fr` |
-| Social Media Account | `http://tiktok[.]com/@etienne_lacroix` |
-| Social Media Account | `http://tiktok[.]com/@laurentbergier` |
-| Social Media Account | `http://tiktok[.]com/@luca_marcel` |
-| Social Media Account | `http://tiktok[.]com/@marc_renier` |
-| Social Media Account | `http://tiktok[.]com/@romain_garnier2` |
-| Social Media Account | `http://tiktok[.]com/@sophierenoir0` |
-| Social Media Account | `http://youtube[.]com/@Etienne_Lacroix` |
-| Social Media Account | `http://youtube[.]com/@LaurentBergier` |
-| Social Media Account | `http://youtube[.]com/@Le_Dernier_Mot` |
-| Social Media Account | `http://youtube[.]com/@Le_Radar_Public` |
-| Social Media Account | `http://youtube[.]com/@Marc-Rénier` |
-| Social Media Account | `http://youtube[.]com/@SophieRenards1` |
-| Social Media Account | `http://youtube[.]com/@camille_lefevre_fr` |
-| Social Media Account | `http://youtube[.]com/@rRomainGarnier` |
-| Social Media Account | `http://youtube[.]com/@ligne_Rougee` |
-
+| Domain | `fixture-11e6fb-1[.]invalid` |
+| Social Media Account | `http://x[.]com/fixture_11e6fb_2` |
+| Social Media Account | `https://x[.]com/fixture_11e6fb_3` |
+| Social Media Account | `http://t[.]me/fixture_11e6fb_4` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_5` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_6` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_7` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_8` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_9` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_10` |
+| Social Media Account | `http://tiktok[.]com/@fixture_11e6fb_11` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_12` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_13` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_14` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_15` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_16` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_17` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_18` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_19` |
+| Social Media Account | `http://youtube[.]com/@fixture_11e6fb_20` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

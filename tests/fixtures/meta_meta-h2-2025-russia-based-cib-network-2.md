@@ -41,12 +41,11 @@ We found this activity as a result of an internal investigation into suspected c
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Social Media Account | `hxxps://x[.]com/Allo_Afrique` |
-| Social Media Account | `hxxps://x[.]com/dernierminute24` |
-| Social Media Account | `hxxps://t[.]me/AlloAfrique` |
-| Social Media Account | `hxxps://t[.]me/derniere_minute` |
-| Social Media Account | `hxxps://www[.]youtube[.]com/@All%C3%B4Afrique` |
-
+| Social Media Account | `hxxps://x[.]com/fixture_affe53_1` |
+| Social Media Account | `hxxps://x[.]com/fixture_affe53_2` |
+| Social Media Account | `hxxps://t[.]me/fixture_affe53_3` |
+| Social Media Account | `hxxps://t[.]me/fixture_affe53_4` |
+| Social Media Account | `hxxps://www[.]youtube[.]com/@fixture_affe53_5` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2025](TBD)
