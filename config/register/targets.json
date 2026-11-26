@@ -1,0 +1,35 @@
+{
+  "note": "Targets read from the report itself, for items whose rule-read targets were checked against the report (undertow/targets.py). A row wins over the rule; `replaces` keeps the value the rule gave, and history/ keeps the earlier item. `basis` says where the report states the targets, in Undertow's words: no reporter text is kept. Kept by hand.",
+  "rows": [
+    {
+      "report_url": "https://dfrlab.org/2026/09/17/storm-1516-operation-targets-the-baltic-states/",
+      "targets": ["EE", "LT", "LV"],
+      "target_regions": [],
+      "basis": "Title and body: the campaigns targeted the Baltic states (Estonia, Latvia, Lithuania), 30 July to 17 August 2026. Ukraine appears as a subject of the false claims and in earlier research on other campaigns, not as a target of these.",
+      "replaces": {"targets": ["UA"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
+      "reviewed_by": "tic-analyst",
+      "reviewed_at": "2026-11-26"
+    },
+    {
+      "report_url": "https://dfrlab.org/2026/07/29/uncovering-the-digital-infrastructure-behind-russian-interference-in-armenian-elections/",
+      "targets": ["AM"],
+      "target_regions": [],
+      "audience": "mostly Western and diaspora audiences, most posts in English (29 July 2026 report)",
+      "basis": "Body: forty-five campaigns that targeted Armenia, June 2025 to June 2026, ahead of its parliamentary elections; the conclusion gives the audience.",
+      "replaces": {"targets": ["AM"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
+      "reviewed_by": "tic-analyst",
+      "reviewed_at": "2026-11-26"
+    },
+    {
+      "key": "tiktok:r9:pk:26:31880",
+      "targets": [],
+      "target_regions": [],
+      "countries_named": ["PK", "IN"],
+      "audience": "the Pakistani and Indian diasporas globally",
+      "basis": "TikTok's report 9 (September 2026): the network targeted the Pakistani and Indian diasporas globally. A diaspora is an audience, not a place targeted.",
+      "replaces": {"targets": ["PK", "IN"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
+      "reviewed_by": "tic-analyst",
+      "reviewed_at": "2026-11-26"
+    }
+  ]
+}

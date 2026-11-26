@@ -148,13 +148,23 @@ def summary(r: dict) -> str:
                             + "; recorded as alignment, not as an origin.")
         else:
             named = r.get("countries_named") or []
-            if named or r.get("target_regions"):
-                bits.append("Countries and regions named in the reports: "
-                            + ", ".join(_names(named) + (r.get("target_regions") or [])) + ".")
-            if r.get("targets"):
+            read = a.get("reports_read") or 0
+            rg = r.get("target_regions") or []
+            if named or (rg and not read):
+                bits.append("Countries and regions named in the reporter's feed descriptions: "
+                            + ", ".join(_names(named) + ([] if read else rg)) + ".")
+            if read and (r.get("targets") or rg):
+                bits.append(("Targets as the reports state them, read from each report: " if read == a["reports"] else
+                             f"Targets as {read} of the {a['reports']} reports state them, read from the report, and for "
+                             "the others countries named that a platform's or the EEAS's disclosure of this operation "
+                             "records as targets: ")
+                            + ", ".join(_names(r.get("targets") or []) + rg) + ".")
+            elif r.get("targets"):
                 bits.append("Marked on the map only where a platform's or the EEAS's disclosure of this operation "
                             f"records a target: {', '.join(_names(r['targets']))}.")
-            elif named:
+            if r.get("audience"):
+                bits.append(f"Audience as the reports describe it: {r['audience']}.")
+            if named and not r.get("targets"):
                 bits.append("None of them is a target that a disclosure of this operation records, so the item is "
                             "not marked on the map.")
         if r.get("origin"):
@@ -185,7 +195,9 @@ def summary(r: dict) -> str:
         bits.append("No origin stated.")
     if r.get("targets") or r.get("target_regions"):
         bits.append("Targets as stated: " + ", ".join(_names(r.get("targets") or []) + (r.get("target_regions") or [])) + ".")
-    elif r.get("countries_named"):
+    if r.get("audience"):
+        bits.append(f"Audience as stated: {r['audience']} (an audience, not a target country, so not marked on the map).")
+    if r.get("countries_named") and not (r.get("targets") or r.get("target_regions")):
         bits.append("Countries named in the publisher's description: " + ", ".join(_names(r["countries_named"]))
                     + " (not stated as targets, so not marked on the map).")
     ct = _counts_text(r.get("counts") or {})
@@ -282,6 +294,8 @@ def feature(r: dict, generated: str) -> dict:
             "targets": r.get("targets") or [],
             "target_regions": r.get("target_regions") or [],
             "countries_named": r.get("countries_named") or [],
+            **({"audience": r["audience"]} if r.get("audience") else {}),
+            **({"target_review": r["target_review"]} if r.get("target_review") else {}),
             "platforms": r.get("platforms") or [],
             "counts": r.get("counts") or {},
             "corroborated_by": r.get("corroborated_by") or [],

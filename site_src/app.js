@@ -205,7 +205,7 @@
       ((a.report_links || []).length > 12 ? " and " + ((a.report_links || []).length - 12) + " earlier" : "");
     var where = it.publisher === "watch" ? ((it.targets || []).length ? "targets as entered from the report: " + places(it.targets) : "none named") :
       (it.countries_named || []).length ? "named in the reports: " + places(it.countries_named) + "; marked on the map: " +
-        ((it.targets || []).length ? places(it.targets) + " (targets that a disclosure of this operation records)" : "none (no target that a disclosure of this operation records)") :
+        ((it.targets || []).length ? places(it.targets) + " (" + (a.reports_read ? a.mapped_at : "targets that a disclosure of this operation records") + ")" : "none (no target that a disclosure of this operation records)") :
       "none named";
     return [
       ["Reporter", '<span class="pub pub-' + it.publisher + '">' + esc(who) + "</span>" + (it.reporter && it.reporter !== who ? ", " + esc(it.reporter) : "") + " (grade " + esc(a.grade) + "; a reporter, not the platform that acted)"],
@@ -214,6 +214,7 @@
         "; quiet after " + a.quiet_after_days + " days without a report (never \u201cended\u201d), as of " + a.state_as_of)],
       ["Reports", links],
       ["Countries", esc(where + ((it.target_regions || []).length ? "; " + it.target_regions.join(", ") : ""))],
+      ["Audience", it.audience ? esc(it.audience) : ""],
       ["Platforms", esc((it.platforms || []).join(", "))],
       ["Origin", it.origin.length ? esc(places(it.origin)) + " (" + esc(it.origin_level) + ")" : "not read: Undertow records that " + esc(who) + " reported the operation, not its attribution"],
       ["Our confidence in origin", it.confidence ? esc(it.confidence) : "none (a reporter corroborates that the operation was reported, not its origin)"],
@@ -230,6 +231,7 @@
       ["Operator named", it.orgs.length ? esc(it.orgs.join(", ")) : "none"],
       ["Listed by", (it.listed_by || []).length ? it.orgs.filter(function (o) { return it.listed_by.some(function (l) { return l.organisation === o; }); }).map(function (o) { return esc(o) + ": " + it.listed_by.filter(function (l) { return l.organisation === o; }).map(function (l) { return link(l.notice, l.list_short) + " (" + esc(l.programme) + ", " + esc(l.listed) + ")"; }).join(", "); }).join("; ") + ' <span class="small muted">A listing corroborates the operator the publisher names; not an origin, and no change to confidence.</span>' : ""],
       ["Targets", target ? esc(target) : (it.countries_named.length ? "none stated; countries named in the description: " + esc(places(it.countries_named)) : "none stated")],
+      ["Audience", it.audience ? esc(it.audience) + " (an audience, not a target country)" : ""],
       ["Counts", esc(counts(it.counts)) || "none stated"],
       ["Languages", esc((it.languages || []).join(", "))],
       ["Our confidence in origin", it.confidence ? esc(it.confidence) + (it.corroborated_by.length ? " (also named by " + esc(it.corroborated_by.map(function (p) { return p === "eu-eeas" ? "EEAS" : PUB[p] || p; }).join(", ")) + ")" : " (one publisher)") : it.publisher === "dfrlab" ? "none (corroborates that the operation was reported, not its origin)" : "none (no origin stated)"],

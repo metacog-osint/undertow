@@ -710,6 +710,62 @@ class Lanes(unittest.TestCase):
         self.assertIn(("RU", 116, 4372), got)
         self.assertEqual(len(got), 8)
 
+    def test_diaspora_is_an_audience_not_a_target(self):
+        """'targeted the Pakistani and Indian diasporas globally' names an audience: PK and IN are countries named,
+        not targets, and the item is not marked on the map."""
+        from undertow import feed
+        rep = tiktok.parse_report(json.loads((FIX / "tiktok_report_9.json").read_text(encoding="utf-8")))
+        pk = next(r for r in tiktok.build_records([rep]) if r["key"] == "tiktok:r9:pk:26:31880")
+        self.assertEqual((pk["targets"], pk["countries_named"]), ([], ["PK", "IN"]))
+        self.assertEqual(pk["audience"], "the Pakistani and Indian diasporas globally")
+        f = feed.feature(pk, "2026-11-26T00:00:00Z")
+        self.assertIsNone(f["geometry"])
+        self.assertIn("Audience as stated: the Pakistani and Indian diasporas globally", f["properties"]["summary"])
+        self.assertEqual(f["properties"]["operation"]["audience"], "the Pakistani and Indian diasporas globally")
+
+    def test_reviewed_targets_win_over_the_rule_and_keep_the_earlier_value(self):
+        """A report read by an analyst gives its stated targets: DFRLab's Baltic report is marked at EE, LV and LT,
+        not at Ukraine, which its feed text only names; the row keeps the value it replaced."""
+        from undertow import feed, targets
+        base = {"named_operations": ["storm-1516"], "target_regions": [], "platforms": [], "disarm": []}
+        baltic = dict(base, key="dfrlab:b", disclosed_at="2026-09-17T17:46:15Z", countries_named=["RU", "UA"],
+                      url="https://dfrlab.org/2026/09/17/storm-1516-operation-targets-the-baltic-states/")
+        armenia = dict(base, key="dfrlab:a", disclosed_at="2026-07-29T18:21:27Z", countries_named=["RU", "AM"],
+                       url="https://dfrlab.org/2026/07/29/uncovering-the-digital-infrastructure-behind-russian-"
+                           "interference-in-armenian-elections/")
+        disclosure = {"key": "eeas:storm", "named_operations": ["storm-1516"], "targets": ["AM", "UA", "US"]}
+        act = activity.aggregate({"dfrlab": [baltic, armenia]}, date(2026, 11, 26))[0]
+        activity.place([disclosure, act], reviewed={})
+        self.assertEqual(act["targets"], ["AM", "UA"])                        # the rule alone
+        self.assertEqual(len(targets.keyword_matched([act], {}, {})), 1)      # listed for review
+        act = activity.aggregate({"dfrlab": [baltic, armenia]}, date(2026, 11, 26))[0]
+        rows = targets.by_report()
+        activity.place([disclosure, act], reviewed=rows)
+        self.assertEqual(act["targets"], ["AM", "EE", "LT", "LV"])
+        self.assertEqual(act["activity"]["reports_read"], 2)
+        self.assertEqual(act["activity"]["mapped_at"], activity.MAPPED_REVIEWED)
+        self.assertEqual(rows[baltic["url"]]["replaces"]["targets"], ["UA"])
+        self.assertEqual(targets.keyword_matched([act], {}, rows), [])
+        p = feed.feature(act, "2026-11-26T00:00:00Z")["properties"]
+        self.assertIn("Targets as the reports state them, read from each report: Armenia, Estonia", p["summary"])
+        self.assertNotIn("_reports", json.dumps(p))
+        one = activity.aggregate({"dfrlab": [baltic, dict(armenia, url="https://dfrlab.org/2026/08/01/other/")]},
+                                 date(2026, 11, 26))[0]
+        activity.place([disclosure, one], reviewed=rows)                      # one read, one by the rule
+        self.assertEqual(one["targets"], ["AM", "EE", "LT", "LV"])
+        self.assertEqual(one["activity"]["mapped_at"], activity.MAPPED_MIXED)
+        self.assertEqual([x["url"] for x in targets.keyword_matched([one], {}, rows)[0]["reports"]],
+                         ["https://dfrlab.org/2026/08/01/other/"])
+
+    def test_targets_register_is_valid(self):
+        from undertow import targets
+        self.assertEqual(targets.check(), [])
+        bad = {"rows": [{"key": "x", "report_url": "https://dfrlab.org/x", "targets": ["Baltic"], "basis": "",
+                         "reviewed_by": "Someone", "reviewed_at": "26 Nov"}]}
+        errs = " ".join(targets.check(bad))
+        for want in ("exactly one", "ISO 3166-1", "no basis", "no replaces", "reviewed_by", "ISO date"):
+            self.assertIn(want, errs)
+
     def test_tiktok_parse(self):
         rep = tiktok.parse_report(json.loads((FIX / "tiktok_report_9.json").read_text(encoding="utf-8")))
         self.assertEqual(rep["window"], ("2026-01-01", "2026-06-30"))
