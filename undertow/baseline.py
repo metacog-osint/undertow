@@ -4,7 +4,9 @@
    trailing 8 periods, publishers kept apart. Each publisher at its own grain: Google per quarterly bulletin, Meta
    and TikTok per report (about half-yearly), OpenAI per calendar quarter of its posts. This is the only layer that
    may later carry tier "anomaly", worded as unusual enforcement against that publisher's own record, never as
-   activity level. No threshold is set yet, so nothing here is rated: `ready` says whether 8 earlier periods exist.
+   activity level. Rule (RULE): a period with 8 earlier periods (`ready`) whose count is outside the range of those
+   8 (`outside`: "above" or "below") is unusual enforcement; feed.enforcement_features makes one item per such
+   period, tier "anomaly". The takedown items themselves stay routine.
 2. Ongoing (named operations): persistence per operation: distinct disclosures and reports, publishers acting,
    last sighting, months since; state "active" or "quiet" at a fixed 6-month window, never "ended".
 3. Emerging: the watch register's closing (UT-IND-3, UT-IND-4) stays in analysis/activity; nothing here.
@@ -103,6 +105,10 @@ def _period(r: dict) -> tuple[str, str] | None:
     return None
 
 
+RULE = ("a publisher's period whose count is outside the range of its own trailing 8 periods is unusual "
+        "enforcement against that publisher's own record (tier anomaly), never a reading of activity level.")
+
+
 def dismantled(records: list[dict], reg: dict) -> dict:
     rows: dict[str, dict[str, dict]] = {p: {} for p in PLATFORMS}
 
@@ -138,7 +144,9 @@ def dismantled(records: list[dict], reg: dict) -> dict:
                            "trailing": {"periods": len(prior), "min": min(prior) if prior else None,
                                         "max": max(prior) if prior else None,
                                         "mean": round(sum(prior) / len(prior), 1) if prior else None},
-                           "ready": len(prior) >= TRAILING})
+                           "ready": len(prior) >= TRAILING,
+                           "outside": (("above" if b["items"] > max(prior) else "below" if b["items"] < min(prior)
+                                        else None) if len(prior) >= TRAILING else None)})
         out[pub] = {"grain": GRAIN[pub], "periods": series}
     return out
 
@@ -208,8 +216,9 @@ def build(records: list[dict], today: date, reg: dict | None = None) -> dict:
     reg = load_register() if reg is None else reg
     return {
         "source": "undertow", "method": "baseline per layer (Tom, 19 Nov 2026)",
-        "note": ("Described, never rated: no anomaly tier and no warning tier is set. Counts are of what each "
-                 "publisher chose to disclose (its enforcement record), not of influence activity."),
+        "note": ("Counts are of what each publisher chose to disclose (its enforcement record), not of influence "
+                 "activity. Dismantled only: " + RULE + " No warning tier."),
+        "rule": RULE,
         "dismantled": dismantled(records, reg),
         "ongoing": {"quiet_after_months": QUIET_MONTHS, "operations": ongoing(records, today)},
         "technique_mix": technique_mix(records),
