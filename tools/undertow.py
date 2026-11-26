@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 
-from undertow import (activity, analysis, archive, baseline, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters,  # noqa: E402
+from undertow import (activity, analysis, archive, baseline, disarm, eeas, feed, fetch, google, listings, meta, openai_rss, reporters, targets,  # noqa: E402
                       stix, tiktok)
 from tic_doctrine import contract, registers  # noqa: E402
 from tic_doctrine.lint import check_header  # noqa: E402
@@ -243,6 +243,7 @@ def all_records(snap: dict) -> list[dict]:
     out += activity.aggregate({lane: recs.get(lane, []) for lane in REPORTER_LANES}, today)
     out += activity.watch_records({"rows": recs.get("watch", [])}, today)
     activity.place(out)
+    targets.apply(out)
     analysis.assess(out)
     return out
 
@@ -261,6 +262,7 @@ def page_data(snap: dict, records: list[dict], feed_doc: dict, events: list[dict
                      "origin_wording": r.get("origin_wording"), "origin_level": r.get("origin_level"),
                      "alignment": r.get("alignment") or [], "targets": r.get("targets") or [],
                      "target_regions": r.get("target_regions") or [], "countries_named": r.get("countries_named") or [],
+                     "audience": r.get("audience"),
                      "operation_name": r.get("operation_name"), "named_operations": r.get("named_operations") or [],
                      "counts": r.get("counts") or {}, "platforms": r.get("platforms") or [],
                      "summary": p["summary"], "publisher_text": r.get("summary"), "publisher_text_note": r.get("summary_note"),
@@ -366,7 +368,8 @@ def leak_scan(paths: list[Path]) -> list[str]:
 
 
 def check_all(root: Path = ROOT) -> list[str]:
-    errs = registers.check(root / "doctrine") + baseline.check_register(baseline.load_register())
+    errs = (registers.check(root / "doctrine") + baseline.check_register(baseline.load_register())
+            + targets.check())
     regs = registers.ids(root / "doctrine")
     data = root / "site" / "data"
     feed_path = data / "feed.geojson"
@@ -507,6 +510,8 @@ def main(argv=None) -> int:
     t.add_argument("--days", type=int, default=180)    # Tom, 16 Nov 2026: 180 days, to raise the register's volume
     k = sub.add_parser("closing", help="laptop only: watch rows against later disclosures into data/closing.json")
     k.add_argument("--months", type=int, default=activity.CLOSE_MONTHS)
+    sub.add_parser("targetreview", help="items whose targets a rule read from prose, not yet read from the report "
+                                        "(config/register/targets.json), into data/target-review.json")
     sub.add_parser("tagbackfill", help="laptop only: Google's TAG bulletins Q1 2024-Q4 2025 into a counts-only register")
     args = ap.parse_args(argv)
     if args.cmd == "collect":
@@ -530,6 +535,17 @@ def main(argv=None) -> int:
             print("  -", e)
         print(f"Undertow check: {'PASS' if not errs else f'FAIL ({len(errs)} problems)'}")
         return 1 if errs else 0
+    if args.cmd == "targetreview":
+        snap = json.loads((ROOT / "data" / "snapshot.json").read_text(encoding="utf-8"))
+        rows = targets.keyword_matched(all_records(snap))
+        out = ROOT / "data" / "target-review.json"
+        out.write_text(json.dumps({"generated_at": snap["generated_at"], "items": rows}, indent=1, ensure_ascii=False),
+                       encoding="utf-8")
+        for r in rows:
+            print(f"  {r['id']} {r['publisher']:10s} {','.join(r['targets'] + r['target_regions'])}: "
+                  f"{(r['sentence'] or '')[:120] or str(len(r.get('reports') or [])) + ' report(s) to read'}")
+        print(f"{len(rows)} items to review -> {out.relative_to(ROOT)}")
+        return 0
     if args.cmd == "tagbackfill":
         if os.environ.get("GITHUB_ACTIONS"):
             print("tagbackfill runs on the laptop only: its register is reviewed before it is committed.")

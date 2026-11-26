@@ -110,6 +110,9 @@ def aggregate(reports_by_lane: dict[str, list[dict]], today: date) -> list[dict]
             "url": rs[-1]["url"],
             "withheld": 0,
             "disarm": sorted(tech.values(), key=lambda d: d["id"]),
+            # Per report, for placement (place) and the review list (targets.keyword_matched); never published.
+            "_reports": [{"url": r["url"], "countries_named": r.get("countries_named") or [],
+                          "target_regions": r.get("target_regions") or []} for r in reversed(rs)],
             "activity": {
                 "unit": "reported activity", "operation": op, "operation_name": names[op],
                 "reporter": lane, "reporter_name": rep.credit, "grade": rep.grade,
@@ -123,16 +126,22 @@ def aggregate(reports_by_lane: dict[str, list[dict]], today: date) -> list[dict]
 
 
 MAPPED_AT = "countries named in the reports that a platform's or the EEAS's disclosure of this operation records as targets"
+MAPPED_REVIEWED = "the targets each report states, read from the report (config/register/targets.json)"
+MAPPED_MIXED = (MAPPED_REVIEWED + "; for reports not yet read, " + MAPPED_AT)
 
 
-def place(records: list[dict]) -> None:
+def place(records: list[dict], reviewed: dict | None = None) -> None:
     """Map a reporter lane's item only at targets (Tom, 16 Nov 2026: "Mark only target countries on the map").
 
     A reporter lane reads no targets, only the countries its reports name, and those often include where the
     operators are said to be (Storm-1516's CORRECTIV story names Russia and the US). So the item's targets are the
     countries named in its reports that a disclosure of the same operation (grade A2) records as targets; an item
     with none is not marked on the map. The countries named stay in `countries_named`. Watch rows keep the countries
-    Tom entered as targets. Sets `targets` in place, on reporter-lane records only."""
+    entered from the report as targets. A report read by an analyst (`reviewed`, config/register/targets.json by report URL)
+    gives its stated targets instead of the rule, so a report on "the Baltic states" is marked there and a country
+    its feed text only names is not. Sets `targets` and `target_regions` in place, on reporter-lane records only."""
+    from undertow import targets as reviewed_targets
+    reviewed = reviewed_targets.by_report() if reviewed is None else reviewed
     disclosed: dict[str, set] = {}
     for r in records:
         if r.get("activity"):
@@ -143,8 +152,29 @@ def place(records: list[dict]) -> None:
         a = r.get("activity")
         if not a or r.get("publisher") == "watch":
             continue
-        r["targets"] = sorted(set(r.get("countries_named") or []) & disclosed.get(a["operation"], set()))
-        a["mapped_at"] = MAPPED_AT
+        allowed = disclosed.get(a["operation"], set())
+        reps = r.get("_reports")
+        if reps is None:
+            r["targets"] = sorted(set(r.get("countries_named") or []) & allowed)
+            a["mapped_at"] = MAPPED_AT
+            continue
+        tg, rg, aud, n = set(), set(), [], 0
+        for rep in reps:
+            row = reviewed.get(rep["url"])
+            if row:
+                n += 1
+                tg |= set(row["targets"])
+                rg |= set(row.get("target_regions") or [])
+                if row.get("audience") and row["audience"] not in aud:
+                    aud.append(row["audience"])
+            else:
+                tg |= set(rep["countries_named"]) & allowed
+                rg |= set(rep["target_regions"])
+        r["targets"], r["target_regions"] = sorted(tg), sorted(rg)
+        if aud:
+            r["audience"] = "; ".join(aud)
+        a["mapped_at"] = MAPPED_AT if not n else MAPPED_REVIEWED if n == len(reps) else MAPPED_MIXED
+        a["reports_read"] = n
 
 
 # --- closing: watch rows against later disclosures (UT-IND-3..4, Tom, 16 Nov 2026) --------------------------------

@@ -70,6 +70,11 @@ def _origin(label_or_desc: str) -> list[str]:
     return [cc] if cc else []
 
 
+# A diaspora is an audience defined by where its members come from, not a place targeted ("targeted the Pakistani and
+# Indian diasporas globally"): its countries are named, not targets, and the wording is kept as the audience.
+DIASPORA_RE = re.compile(r"\bdiasporas?\b", re.I)
+
+
 def _target(desc: str) -> tuple[list[str], list[str], str | None]:
     m = re.search(r"target(?:ed|ing) (?P<t>(?:an? |the )?[^.(]+?)(?: audiences?)?(?:\s*\(|\.|,|$)", desc)
     if not m:
@@ -166,6 +171,9 @@ def build_records(reports: list[dict]) -> list[dict]:
             title = (f"TikTok removed a network of {e['accounts']:,} accounts"
                      + (f" operated from {origin_name}" if origin_name else "")
                      + (f" that {where}" if where else ""))
+            tg, named, audience = list(e["targets"]), [], None
+            if where and DIASPORA_RE.search(where):
+                tg, named, audience = [], tg, where.split(" ", 1)[1] if " " in where else where
             wording = None
             for d in descs:
                 m = re.search(r"(?:We )?assess(?:ed)? that this network operated from [^.]+?(?= and target|\.)", d)
@@ -190,8 +198,9 @@ def build_records(reports: list[dict]) -> list[dict]:
                 "origin_wording": wording or (f"Network Origin: {origin_name}" if origin_name else None),
                 "origin_level": "moderate" if origin else "none",
                 "alignment": [],
-                "targets": [c for c in e["targets"]], "target_regions": e["target_regions"], "target_text": where,
-                "countries_named": [],
+                "targets": tg, "target_regions": e["target_regions"], "target_text": where,
+                "countries_named": named,
+                **({"audience": audience} if audience else {}),
                 "platforms": ["TikTok"],
                 "counts": {"accounts": e["accounts"], "followers": e["followers"]},
                 "contexts": e["contexts"],
