@@ -291,12 +291,14 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
         snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
     snap = snapshot
     records = all_records(snap)
-    feed_doc = feed.build_feed(records, snap["generated_at"], feed.health(snap.get("lanes") or {}, records, snap["generated_at"]))
+    today = _today(snap)
+    base = baseline.build(records, today)
+    feed_doc = feed.build_feed(records, snap["generated_at"], feed.health(snap.get("lanes") or {}, records, snap["generated_at"]),
+                               extra=feed.enforcement_features(base, records, snap["generated_at"]))
     bundle = stix.build_bundle(records, snap["generated_at"])
     gq = [(p["year"], p["quarter"]) for p in (snap.get("extra", {}).get("google") or {}).get("pages", [])]
     tr = (snap.get("extra", {}).get("tiktok") or {}).get("reports", [])
     ep = ((snap.get("extra", {}).get("eeas") or {}).get("report") or {}).get("published")
-    today = _today(snap)
     events = analysis.expected_disclosures(records, gq, tr, ep, today)
 
     def dump(obj) -> str:
@@ -308,7 +310,7 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
         "data/events.json": dump({"source": "undertow", "note": "Expected dates on each publisher's past pattern. "
                                   "Dates only, no probabilities; none is a published schedule.", "events": events}),
         "data/snapshot.json": dump(page_data(snap, records, feed_doc, events)),
-        "data/baseline.json": dump(baseline.build(records, today)),
+        "data/baseline.json": dump(base),
     }
     src_dir = root / "site_src"
     if src_dir.exists():
