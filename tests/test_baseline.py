@@ -1,4 +1,4 @@
-"""Baseline per layer (ideas#16, Tom 19 Nov 2026): offline, from the committed TAG register and made-up records
+"""Baseline per layer (ideas#16, 19 Nov 2026): offline, from the committed TAG register and made-up records
 shaped like the lanes' own (no page is fetched)."""
 from __future__ import annotations
 

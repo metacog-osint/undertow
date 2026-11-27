@@ -144,7 +144,7 @@ jobs:
       # Private archive (19 Nov 2026, retention rule: no data lost). OpenAI's RSS and the reporter pages roll off and
       # publishers edit pages, so the raw replies go to the PRIVATE repo metacog-osint/tic-archive as release assets
       # (tools/tic_archive.py, release undertow-raw-YYYY-MM: a snapshot per run, only changed replies uploaded).
-      # Operation level only still holds (Tom, 19 Nov 2026): Meta's per-network files (indicator values) and the
+      # Operation level only still holds (19 Nov 2026): Meta's per-network files (indicator values) and the
       # reporter lanes' pages (reporter text) are left out, one --exclude per lane in undertow/reporters.py
       # (tests/test_private_archive.py holds it). Never to this public repo's releases, artifacts or logs.
       # After the deploy, so a failure turns the run red but never holds the live site. Token: TIC_ARCHIVE_TOKEN,

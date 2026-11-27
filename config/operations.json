@@ -40,7 +40,7 @@
     {"id": "cyber-special-operations", "name": "Cyber Special Operations", "aliases": [], "origin": "CN"}
   ],
   "organisations": {
-    "note": "Standing listings of the organisations above, one row per list, each read from the publisher's own notice on 16 Nov 2026 (Tom's yes, 16 Nov 2026). Lists: OFAC SDN, EU, UK, France and Canada. France's register restates the EU's act for all three Russian organisations (its legal basis is (UE) 2023/1563), so it has no row of its own. Haimai and China Global Television Network are on none of the five lists (Headwind's copies of 12 to 16 Nov 2026). A listing says a government acted against the organisation; it corroborates the operator a publisher names, never an origin, and changes no confidence. Organisations only: never a person named in the same notice.",
+    "note": "Standing listings of the organisations above, one row per list, each read from the publisher's own notice on 16 Nov 2026 (16 Nov 2026). Lists: OFAC SDN, EU, UK, France and Canada. France's register restates the EU's act for all three Russian organisations (its legal basis is (UE) 2023/1563), so it has no row of its own. Haimai and China Global Television Network are on none of the five lists (Headwind's copies of 12 to 16 Nov 2026). A listing says a government acted against the organisation; it corroborates the operator a publisher names, never an origin, and changes no confidence. Organisations only: never a person named in the same notice.",
     "read_on": "2026-11-16",
     "entries": [
       {"name": "Social Design Agency",

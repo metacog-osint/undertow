@@ -5,7 +5,7 @@
     python tools/undertow.py build                   # build site/ from data/snapshot.json
     python tools/undertow.py check                   # registers, feed linter, STIX check, leak scan
     python tools/undertow.py archive                 # append reporter report records to history/reports.jsonl
-    python tools/undertow.py triage [--days 180]     # LAPTOP ONLY: list new, unnamed reported activity for Tom
+    python tools/undertow.py triage [--days 180]     # LAPTOP ONLY: list new, unnamed reported activity for review
     python tools/undertow.py closing [--months 12]   # LAPTOP ONLY: watch rows against later disclosures (UT-IND-3..4)
 
 collect never falls back to made-up data. A lane that fails keeps its last good copy (from_previous) or stays
@@ -416,7 +416,7 @@ def check_all(root: Path = ROOT) -> list[str]:
 def triage(days: int = 60, root: Path = ROOT, getter=None, pause: float | None = None) -> list[dict]:
     """Read each reporter's feed back `days` days and list influence-worded articles that name no tracked operation
     and are not yet on the triage list or in the watch register. Appends them to data/triage.jsonl (git-ignored,
-    never published, never run in Actions) and returns them. Tom reads the list and promotes what matters into
+    never published, never run in Actions) and returns them. The analyst reads the list and promotes what matters into
     config/register/watch.json by hand."""
     from datetime import timedelta
     path = root / "data" / "triage.jsonl"
@@ -465,7 +465,7 @@ def triage(days: int = 60, root: Path = ROOT, getter=None, pause: float | None =
 
 def closing_list(root: Path = ROOT, months: int = activity.CLOSE_MONTHS) -> dict:
     """Watch rows against the disclosures in data/snapshot.json (UT-IND-3..4). Writes data/closing.json (git-ignored,
-    never published) and returns it. Run after each collect that brings a new disclosure; Tom closes rows by hand."""
+    never published) and returns it. Run after each collect that brings a new disclosure; rows are closed by hand."""
     snap = json.loads((root / "data" / "snapshot.json").read_text(encoding="utf-8"))
     recs = snap.get("records") or {}
     disclosures = [r for lane in LANES if lane not in REPORTER_LANES and lane != "watch" for r in recs.get(lane, [])]
@@ -478,7 +478,7 @@ def closing_list(root: Path = ROOT, months: int = activity.CLOSE_MONTHS) -> dict
 
 
 def tag_backfill(getter=None, raw_dir: Path | None = None, pause: float = 2.0) -> dict:
-    """Read Google's TAG Bulletin pages for the quarters before the lane's first, keep counts only (Tom's default
+    """Read Google's TAG Bulletin pages for the quarters before the lane's first, keep counts only (the default
     for ideas#16, 19 Nov 2026). The full replies go to data/raw/ only, never committed."""
     import time
     raw_dir = raw_dir if raw_dir is not None else ROOT / "data" / "raw"
@@ -497,7 +497,7 @@ def tag_backfill(getter=None, raw_dir: Path | None = None, pause: float = 2.0) -
                     "read by tools/undertow.py tagbackfill. Per entry: month, the linked-to country code as the lane's "
                     "parser reads it, asset counts, ongoing. No bulletin text kept. Used only by the baseline "
                     "(site/data/baseline.json), not as feed items."),
-           "licence": "Google; facts and counts only (Tom's decision, 14 Nov 2026)",
+           "licence": "Google; facts and counts only (14 Nov 2026)",
            "read_at": fetch.now_utc(), "pages": pages}
     errs = baseline.check_register(reg)
     if errs:
@@ -515,7 +515,7 @@ def main(argv=None) -> int:
     sub.add_parser("check")
     sub.add_parser("archive", help="append the reporter lanes' report records to history/reports.jsonl")
     t = sub.add_parser("triage", help="laptop only: list new, unnamed reported activity into data/triage.jsonl")
-    t.add_argument("--days", type=int, default=180)    # Tom, 16 Nov 2026: 180 days, to raise the register's volume
+    t.add_argument("--days", type=int, default=180)    # 16 Nov 2026: 180 days, to raise the register's volume
     k = sub.add_parser("closing", help="laptop only: watch rows against later disclosures into data/closing.json")
     k.add_argument("--months", type=int, default=activity.CLOSE_MONTHS)
     sub.add_parser("targetreview", help="items whose targets a rule read from prose, not yet read from the report "
@@ -578,7 +578,7 @@ def main(argv=None) -> int:
         return 0
     if args.cmd == "closing":
         if os.environ.get("GITHUB_ACTIONS"):
-            print("closing runs on the laptop only: Tom closes watch rows by hand.")
+            print("closing runs on the laptop only: watch rows are closed by hand.")
             return 1
         out = closing_list(months=args.months)
         for o in out["open"]:

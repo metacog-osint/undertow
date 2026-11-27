@@ -1,4 +1,4 @@
-"""Reported activity: one item per operation and reporter, kept apart from disclosures (decision 1, Tom, 16 Nov 2026).
+"""Reported activity: one item per operation and reporter, kept apart from disclosures (decision 1, 16 Nov 2026).
 
 A disclosure is a platform's or a government's report of an operation it acted on or named (grade A2), and it
 arrives 1 to 8 months after the activity. A reported-activity item says that an independent reporter has reported an
@@ -7,17 +7,17 @@ operation while it runs: who reported it, the first and last report, how many re
 - "active": the reporter's last report is no more than QUIET_DAYS old;
 - "quiet": no report from this reporter for longer than that.
 
-Never "ended": a reporter falling silent is not evidence that an operation stopped. QUIET_DAYS is 180 (Tom,
-16 Nov 2026): DFRLab's 15 reports on tracked operations span 30 months, so a shorter window would mark most
+Never "ended": a reporter falling silent is not evidence that an operation stopped. QUIET_DAYS is 180 (16 Nov
+2026): DFRLab's 15 reports on tracked operations span 30 months, so a shorter window would mark most
 operations quiet most of the time. Graded by the reporter (B2 or B3, reporters.REPORTERS).
 
 Two ways in (decision 2):
 1. Tracked operations, automatically: the reporter lanes' report records, grouped here by (reporter, operation).
-2. New activity, by hand: rows Tom promotes from the private triage list into config/register/watch.json. Each row
+2. New activity, by hand: rows the analyst promotes from the private triage list into config/register/watch.json. Each row
    is a cited, hand-kept entry; it publishes as a reported-activity item with publisher "watch".
 
 Origin (decision 4): a reporter lane never adds an origin. A watch row's origin counts toward Undertow's origin
-confidence only when Tom has checked the row (`checked_by`) and the reporter shows its own evidence for the origin
+confidence only when the analyst has checked the row (`checked_by`) and the reporter shows its own evidence for the origin
 (`origin_evidence` "own"), not when it repeats a platform's or a government's attribution ("cites-other"). Even then
 the cap stays Moderate (analysis.py): origin is easy to fake.
 """
@@ -140,7 +140,7 @@ def by_machine(read: int, checked: int) -> str:
 
 
 def place(records: list[dict], reviewed: dict | None = None) -> None:
-    """Map a reporter lane's item only at targets (Tom, 16 Nov 2026: "Mark only target countries on the map").
+    """Map a reporter lane's item only at targets (16 Nov 2026).
 
     A reporter lane reads no targets, only the countries its reports name, and those often include where the
     operators are said to be (Storm-1516's CORRECTIV story names Russia and the US). So the item's targets are the
@@ -192,7 +192,7 @@ def place(records: list[dict], reviewed: dict | None = None) -> None:
         a["reports_checked"] = checked
 
 
-# --- closing: watch rows against later disclosures (UT-IND-3..4, Tom, 16 Nov 2026) --------------------------------
+# --- closing: watch rows against later disclosures (UT-IND-3..4, 16 Nov 2026) --------------------------------
 
 CLOSE_MONTHS = 12
 TAKEDOWN_LANES = ("meta", "google", "openai", "tiktok")   # a platform acted; the EEAS's annual naming is "naming"
@@ -205,9 +205,9 @@ def _date(s: str) -> date:
 def closing(rows: list[dict], disclosures: list[dict], months: int = CLOSE_MONTHS) -> dict:
     """The baseline's working list. For each open watch row, the disclosures dated from its first report up to
     `months` later that share a target country with it (a disclosure's stated targets, else the countries its
-    description names) or name its tracked operation. Tom reads the list and closes a row by hand (`closed_into`).
+    description names) or name its tracked operation. The analyst reads the list and closes a row by hand (`closed_into`).
     For each closed row, the lead from first report to that disclosure, which is what UT-IND-3 and UT-IND-4 count.
-    Matching is by country and period only, so a candidate is a lead for Tom to read, never a finding."""
+    Matching is by country and period only, so a candidate is a lead for the analyst to read, never a finding."""
     by_key = {d["key"]: d for d in disclosures}
     window = round(months * 30.44)
     open_rows, closed, problems = [], [], []
@@ -324,7 +324,7 @@ def check_watch(reg: dict) -> list[str]:
 
 
 def row_operations(row: dict) -> list[str]:
-    """The tracked operations a watch row's report names (Tom, 16 Nov 2026: a list, `tracked_operations`; the older
+    """The tracked operations a watch row's report names (16 Nov 2026: a list, `tracked_operations`; the older
     single `tracked_operation` still reads)."""
     ops = list(row.get("tracked_operations") or [])
     if row.get("tracked_operation") and row["tracked_operation"] not in ops:
@@ -333,7 +333,7 @@ def row_operations(row: dict) -> list[str]:
 
 
 def origin_counts(row: dict) -> bool:
-    """Decision 4: only a row Tom has checked, whose reporter shows its own evidence for the origin."""
+    """Decision 4: only a row the analyst has checked, whose reporter shows its own evidence for the origin."""
     return bool(row.get("origin") and row.get("checked_by") and row.get("origin_evidence") == "own")
 
 

@@ -304,7 +304,7 @@ class Pipeline(unittest.TestCase):
     def test_doppelganger_corroborated_moderate(self):
         dop = [f["properties"] for f in self.feed["features"] if "doppelganger" in f["properties"]["operation"]["named_operations"]]
         pubs = {p["operation"]["publisher"] for p in dop}
-        # "watch": the G7 RRM's Moldova row names Doppelganger (Tom, 18 Nov 2026).
+        # "watch": the G7 RRM's Moldova row names Doppelganger (18 Nov 2026).
         self.assertEqual(pubs, {"meta", "openai", "eeas", "dfrlab", "correctiv", "watch"})
         self.assertTrue(all(p["confidence"] == "moderate" for p in dop if "activity" not in p))
         self.assertTrue(all("confidence" not in p for p in dop if "activity" in p))
@@ -477,7 +477,7 @@ class Lanes(unittest.TestCase):
         self.assertNotIn("ended", json.dumps(a2))
 
     def test_only_stated_targets_are_marked_on_the_map(self):
-        """Tom, 16 Nov 2026: a reporter item is marked only at countries its reports name that a disclosure of the
+        """16 Nov 2026: a reporter item is marked only at countries its reports name that a disclosure of the
         same operation records as targets, never at the operators' country; a description's countries are never
         geometry."""
         from undertow import feed
@@ -505,16 +505,16 @@ class Lanes(unittest.TestCase):
         self.assertIn("not stated as targets", h["properties"]["summary"])
 
     def test_watch_register_checks_and_origin_rule(self):
-        """Decision 4: a watch row's origin counts only when Tom checked it and the reporter shows its own evidence."""
+        """Decision 4: a watch row's origin counts only when the analyst checked it and the reporter shows its own evidence."""
         self.assertEqual(activity.check_watch(activity.load_watch()), [])
-        live = activity.load_watch()                           # first row: Armenia, promoted by Tom on 16 Nov 2026
+        live = activity.load_watch()                           # first row: Armenia, promoted on 16 Nov 2026
         self.assertTrue(all(not r.get("origin") and not r.get("checked_by") for r in live["rows"]))
         self.assertTrue(all(any(r["first_report"]["url"].startswith(h) for h in live["reporter_hosts"])
                             for r in live["rows"]))
         row = {"id": "example-net", "operation": "an unnamed network targeting Moldova",
                "reporter": {"name": "Example Lab", "grade": "B2", "terms": "read 16 Nov 2026"},
                "first_report": {"date": "2026-11-01", "url": "https://lab.example/a/"},
-               "countries": ["MD"], "origin": ["RU"], "origin_evidence": "own", "checked_by": "Tom",
+               "countries": ["MD"], "origin": ["RU"], "origin_evidence": "own", "checked_by": "tic-analyst",
                "checked_on": "2026-11-16", "tracked_operation": "storm-1516"}
         reg = {"reporter_hosts": ["https://lab.example/"], "rows": [row]}
         self.assertEqual(activity.check_watch(reg), [])
@@ -543,7 +543,7 @@ class Lanes(unittest.TestCase):
 
     def test_watch_label_mid_sentence(self):
         """A watch row's label starts its title capitalised and reads lower-case mid-sentence; acronyms keep theirs.
-        Its targets are said to be entered from the report (Tom enters them at triage)."""
+        Its targets are said to be entered from the report (entered at triage)."""
         self.assertEqual(activity.in_sentence("Inauthentic networks before X"), "inauthentic networks before X")
         for keep in ("RRN networks", "A", "G7 summit networks", "an unnamed network"):
             self.assertEqual(activity.in_sentence(keep), keep)
@@ -559,7 +559,7 @@ class Lanes(unittest.TestCase):
         self.assertNotIn("as the reporter states them", s)
 
     def test_watch_row_with_several_tracked_operations(self):
-        """Tom, 16 Nov 2026: a watch row may name several tracked operations; a reporter's 'state-aligned' is
+        """16 Nov 2026: a watch row may name several tracked operations; a reporter's 'state-aligned' is
         alignment, never origin; activity_period says when the activity ran; closing matches any listed operation."""
         row = {"id": "example-vote", "operation": "Pro-Russian disinformation before an example vote",
                "tracked_operations": ["storm-1516", "portal-kombat"],
@@ -619,7 +619,7 @@ class Lanes(unittest.TestCase):
             del os.environ["GITHUB_ACTIONS"]
 
     def test_closing_lists_candidates_and_measures_closed_rows(self):
-        """Tom, 16 Nov 2026 (UT-IND-3..4): open watch rows get the disclosures up to 12 months after their first report
+        """16 Nov 2026 (UT-IND-3..4): open watch rows get the disclosures up to 12 months after their first report
         that share a country or name the tracked operation; closed rows give their lead; a bad closed_into is a
         problem; the command is laptop only."""
         rows = [

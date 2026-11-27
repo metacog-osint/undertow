@@ -2,7 +2,7 @@
 
 Pages are found from blog.google's security RSS and from the URL pattern
 blog.google/security/influence-operations-bulletin-qN-YYYY/ for every quarter from FIRST_QUARTER to the current
-one (a quarter not yet published answers 404 and is skipped). Tom's decision, 14 Nov 2026: automate; facts and
+one (a quarter not yet published answers 404 and is skipped). Decided 14 Nov 2026: automate; facts and
 counts only, no bulletin text republished. robots.txt disallows only search paths.
 
 Each bulletin entry is one sentence pair of a fixed form: "We terminated N YouTube channels [and ...] as part of

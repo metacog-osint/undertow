@@ -1,7 +1,7 @@
 {
   "program": "undertow",
   "version": "1.0",
-  "note": "No warning problem yet: there is no baseline of disclosures to measure against, so every item is tier routine (plan section 6). The indicators below are registered for when Tom writes one; no item carries an indicator_id. UT-IND-3..4 (Tom, 16 Nov 2026) measure the watch register against later takedowns (python tools/undertow.py closing); name-matched lead time is described, never rated, because platforms coin most operation names in the disclosure itself (measured 16 Nov 2026). No anomaly rule and no warning tier before 10 closed rows.",
+  "note": "No warning problem yet: there is no baseline of disclosures to measure against, so every item is tier routine (plan section 6). The indicators below are registered for when one is written; no item carries an indicator_id. UT-IND-3..4 (16 Nov 2026) measure the watch register against later takedowns (python tools/undertow.py closing); name-matched lead time is described, never rated, because platforms coin most operation names in the disclosure itself (measured 16 Nov 2026). No anomaly rule and no warning tier before 10 closed rows.",
   "warning_problems": [],
   "indicators": [
     {"id": "UT-IND-1",
@@ -15,7 +15,7 @@
      "rule": "count > median + 3 x MAD of the country's previous quarters, with at least four quarters on file",
      "gentry": {"predictive": true, "diagnostic": false, "unambiguous": false, "collectable": true}},
     {"id": "UT-IND-3",
-     "text": "Lead time from a watch-register row's first report to the platform takedown Tom closes it into (closed_into); the baseline the 16 Nov 2026 numbers chose over name-matched lead time.",
+     "text": "Lead time from a watch-register row's first report to the platform takedown it is closed into (closed_into); the baseline the 16 Nov 2026 numbers chose over name-matched lead time.",
      "series": "watch_row_lead_days",
      "rule": "none until 10 rows are closed into a takedown; then describe the median and range only, no rule fires",
      "gentry": {"predictive": true, "diagnostic": false, "unambiguous": false, "collectable": true}},
