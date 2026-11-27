@@ -62,17 +62,21 @@ jobs:
           restore-keys: undertow-state-
       # Then the private archive: its lane `state` holds the run snapshot of every run whose last check passed. The
       # restore goes to a temporary folder first and is copied into data/ only when it finished, so a broken
-      # download never leaves half a snapshot behind. With neither, the run goes on as a first run.
+      # download never leaves half a snapshot behind. With neither, the run goes on as a first run, so a failed
+      # restore is a warning: tic_archive.py's own ::error:: lines (stderr) are shown as warnings, and a green run
+      # carries no error annotation.
       - name: No cache entry, so the snapshot from the private archive
         if: steps.state.outputs.cache-matched-key == ''
         env:
           GH_TOKEN: ${{ secrets.TIC_ARCHIVE_TOKEN }}
         run: |
+          err="$RUNNER_TEMP/archive-state.err"
           if [ -n "$GH_TOKEN" ] && python tools/tic_archive.py restore --program undertow --lane state \
-               --dest "$RUNNER_TEMP/archive-state" && [ -f "$RUNNER_TEMP/archive-state/snapshot.json" ]; then
+               --dest "$RUNNER_TEMP/archive-state" 2> "$err" && [ -f "$RUNNER_TEMP/archive-state/snapshot.json" ]; then
             mkdir -p data && cp -R "$RUNNER_TEMP/archive-state/." data/
             echo "::warning::No snapshot in the Actions cache; restored the newest copy kept in the private archive."
           else
+            if [ -s "$err" ]; then sed 's/^::error::/::warning::/' "$err"; fi
             echo "::warning::No snapshot in the Actions cache or the private archive, so a lane that fails this run has no last good copy."
           fi
       - name: Live collection (a failed lane keeps its last good copy and says so on the page)
@@ -132,6 +136,7 @@ jobs:
             if [ "$wait" != 0 ]; then echo "::warning::Cloudflare deploy failed; trying again in ${wait} s"; sleep "$wait"; fi
             if npx --yes wrangler@4.151.3 pages deploy site --project-name undertow --branch main \
                  --commit-hash "$GITHUB_SHA" --commit-message "update $GITHUB_SHA" --commit-dirty=true; then
+              echo "deployed=true" >> "$GITHUB_OUTPUT"    # only here: the skip above also ends the step green
               exit 0
             fi
           done
@@ -159,13 +164,18 @@ jobs:
       # (release undertow-<lane>-YYYY-MM; a snapshot per run, only changed files uploaded, nothing replaced):
       #   history  history/ as the History step left it: the kit's history log and state.json, and reports.jsonl.
       #            Committed to main too. Only when that step ran, so a run that stopped earlier never archives an
-      #            older checkout's history/ as the newest snapshot.
+      #            older checkout's history/ as the newest snapshot. When the kit's history step or all three pushes
+      #            failed (the step warns and still succeeds), the snapshot holds this run's history/, which main
+      #            never got; the next run logs the same changes again from main's tip, with its own times. So the
+      #            newest snapshot can hold lines that were never public, and is the only copy of this run's times.
       #   state    data/ without data/raw (its own lane above): the run snapshot, which the Actions cache keeps for
       #            7 days. Only once the last check passed, so it is a snapshot the next run may use (the restore
       #            near the top reads it when the cache has none). data/triage.jsonl is never in it: that list
       #            holds reporters' headlines and is made on the laptop only, never in Actions.
       #   site     site/ as deployed: every published file, feed.geojson, stix.json, events.json and ended.geojson
-      #            (COP) among them, each replaced by the next deploy. Only when the deploy step succeeded.
+      #            (COP) among them, each replaced by the next deploy. Only when wrangler deployed it (the deploy
+      #            step's output `deployed`): without the Cloudflare secrets the step skips the deploy and still
+      #            succeeds.
       # Operation level only, as on the site: the snapshot and history/ hold no Meta indicator values and no
       # reporter text (tests/test_archive_lanes.py holds it), so nothing is redacted and the archived bytes match
       # the public copy. Each lane is tried even if another failed; any failure turns the run red after the live
@@ -176,7 +186,7 @@ jobs:
           GH_TOKEN: ${{ secrets.TIC_ARCHIVE_TOKEN }}
           HISTORY: ${{ steps.history.outcome }}
           CHECKED: ${{ steps.recheck.outcome }}
-          DEPLOYED: ${{ steps.deploy.outcome }}
+          DEPLOYED: ${{ steps.deploy.outputs.deployed }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
             echo "::error::secret TIC_ARCHIVE_TOKEN is not set, so history/, the run snapshot and site/ did not reach the private archive"; exit 1
@@ -193,10 +203,10 @@ jobs:
           else
             echo "state: the last check did not pass this run, so the snapshot was not archived"
           fi
-          if [ "$DEPLOYED" = "success" ]; then
+          if [ "$DEPLOYED" = "true" ]; then
             python tools/tic_archive.py put --program undertow --lane site --src site || failed=1
           else
-            echo "site: not deployed this run, so not archived"
+            echo "site: not deployed this run (the deploy failed or was skipped), so not archived"
           fi
           if [ "$failed" != 0 ]; then
             echo "::error::a lane did not reach the private archive this run (see above)"; exit 1

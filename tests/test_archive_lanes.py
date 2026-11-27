@@ -67,7 +67,8 @@ def archive_calls(text: str, cmd: str) -> list[list[str]]:
     flat = re.sub(r"\\\n\s*", " ", text)
     calls = []
     for m in re.finditer(r"python tools/tic_archive\.py (" + cmd + r")\b([^;|&\n]*)", flat):
-        calls.append([m.group(1), *shlex.split(m.group(2))])
+        args = re.sub(r"\s\d?>>?\s*(\"[^\"]*\"|\S+)", " ", m.group(2))     # a shell redirection is not an argument
+        calls.append([m.group(1), *shlex.split(args)])
     return calls
 
 
@@ -180,13 +181,17 @@ class TestWorkflowLanes(unittest.TestCase):
         text = STEPS[NEW_STEP]
         self.assertIn("HISTORY: ${{ steps.history.outcome }}", text)
         self.assertIn("CHECKED: ${{ steps.recheck.outcome }}", text)
-        self.assertIn("DEPLOYED: ${{ steps.deploy.outcome }}", text)
+        # The deploy step's outcome is success also when it skipped the deploy (no Cloudflare secrets), so the
+        # site lane reads the step's own output, which only a real deploy writes (TestDeployOutput).
+        self.assertIn("DEPLOYED: ${{ steps.deploy.outputs.deployed }}", text)
+        self.assertNotIn("steps.deploy.outcome", text)
         self.assertIn("id: history", step("History"))
         self.assertIn("id: recheck", step("Check again"))
         self.assertIn("id: deploy", STEPS["Deploy site/ to Cloudflare Pages"])
         flat = re.sub(r"\\\n\s*", " ", text)
-        for var, lane in (("HISTORY", "history"), ("CHECKED", "state"), ("DEPLOYED", "site")):
-            self.assertRegex(flat, rf'if \[ "\${var}" = "success" \]; then\s+python tools/tic_archive\.py put '
+        for var, value, lane in (("HISTORY", "success", "history"), ("CHECKED", "success", "state"),
+                                 ("DEPLOYED", "true", "site")):
+            self.assertRegex(flat, rf'if \[ "\${var}" = "{value}" \]; then\s+python tools/tic_archive\.py put '
                                    rf'--program undertow --lane {lane} ')
 
     def test_what_the_workflow_keeps_for_a_while_is_inside_the_archived_folders(self):
@@ -199,6 +204,102 @@ class TestWorkflowLanes(unittest.TestCase):
         self.assertTrue(cached.startswith("data/") and not cached.startswith("data/raw"))
         self.assertIn("git add history\n", step("History"))
         self.assertIn("pages deploy site --project-name", step("Deploy site/"))
+
+
+def run_script(text: str) -> str:
+    """A step's `run: |` block as the shell gets it."""
+    block = text.split("run: |\n", 1)[1]
+    return "".join(line[10:] if line.startswith(" " * 10) else line.lstrip(" ")
+                   for line in block.splitlines(keepends=True))
+
+
+def run_step(text: str, td: Path, env: dict[str, str], stubs: str) -> subprocess.CompletedProcess:
+    """Run a step's shell in `td` with bash -e, as Actions does, after the shell functions in `stubs`."""
+    script = td / "step.sh"
+    script.write_text(run_script(text), encoding="utf-8", newline="\n")
+    cmd = f'set -e; {stubs} . "{script.as_posix()}"'
+    return subprocess.run(["bash", "-c", cmd], env={**os.environ, **env}, capture_output=True, text=True, cwd=td)
+
+
+@unittest.skipUnless(shutil.which("bash"), "needs bash")
+class TestDeployOutput(unittest.TestCase):
+    """The deploy step's own shell, with npx and sleep replaced: `deployed=true` reaches $GITHUB_OUTPUT only when
+    wrangler deployed, so a run without the Cloudflare secrets never archives a site that was not published."""
+
+    def run_deploy(self, token: str, account: str, npx_exit: int) -> tuple[int, str, int]:
+        """(exit code, what the step wrote to $GITHUB_OUTPUT, how many times npx ran)."""
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            calls, out = td / "npx-calls", td / "github-output"
+            out.write_text("", encoding="utf-8")
+            env = {"CLOUDFLARE_API_TOKEN": token, "CLOUDFLARE_ACCOUNT_ID": account, "GITHUB_SHA": "0" * 40,
+                   "GITHUB_OUTPUT": out.as_posix()}
+            # Shell functions stand in for npx (counted, its exit code chosen here) and sleep (no wait).
+            stubs = f'npx() {{ echo x >> "{calls.as_posix()}"; return {npx_exit}; }}; sleep() {{ :; }};'
+            r = run_step(STEPS["Deploy site/ to Cloudflare Pages"], td, env, stubs)
+            n = len(calls.read_text().splitlines()) if calls.exists() else 0
+            return r.returncode, out.read_text(encoding="utf-8"), n
+
+    def test_no_secrets_skips_and_writes_no_output(self):
+        for token, account in (("", ""), ("t", ""), ("", "a")):
+            code, out, npx = self.run_deploy(token, account, 0)
+            self.assertEqual((code, npx), (0, 0))
+            self.assertNotIn("deployed=true", out)
+
+    def test_a_real_deploy_writes_the_output(self):
+        code, out, npx = self.run_deploy("t", "a", 0)
+        self.assertEqual((code, npx), (0, 1))
+        self.assertEqual(out.strip(), "deployed=true")
+
+    def test_three_failed_deploys_write_no_output(self):
+        code, out, npx = self.run_deploy("t", "a", 1)
+        self.assertEqual((code, npx), (1, 3))
+        self.assertNotIn("deployed=true", out)
+
+
+@unittest.skipUnless(shutil.which("bash"), "needs bash")
+class TestRestoreStepAnnotations(unittest.TestCase):
+    """The restore on a cache miss, its own shell with python replaced: a failed restore falls through to a first
+    run, so the step stays green and prints no ::error:: line (a red annotation on a green run)."""
+
+    STEP = "No cache entry, so the snapshot from the private archive"
+
+    def run_restore(self, token: str, restore: str) -> tuple[subprocess.CompletedProcess, Path]:
+        td = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, td, True)
+        (td / "runner-temp").mkdir()
+        env = {"GH_TOKEN": token, "RUNNER_TEMP": (td / "runner-temp").as_posix()}
+        return run_step(step(self.STEP), td, env, f"python() {{ {restore} }};"), td
+
+    @staticmethod
+    def lines(r: subprocess.CompletedProcess) -> list[str]:
+        return (r.stdout + r.stderr).splitlines()
+
+    def test_a_failed_restore_is_a_warning_not_an_error(self):
+        r, td = self.run_restore("t", 'echo "::error::tic-archive: restore undertow/state: no release" >&2; return 1;')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse([ln for ln in self.lines(r) if ln.startswith("::error::")], self.lines(r))
+        self.assertIn("::warning::tic-archive: restore undertow/state: no release", self.lines(r))
+        self.assertTrue(any("No snapshot in the Actions cache or the private archive" in ln for ln in self.lines(r)))
+        self.assertFalse((td / "data").exists())
+
+    def test_no_token_is_a_warning_and_no_restore(self):
+        r, _ = self.run_restore("", 'echo called >&2; return 1;')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertNotIn("called", r.stdout + r.stderr)
+        self.assertFalse([ln for ln in self.lines(r) if ln.startswith("::error::")])
+
+    def test_a_restore_without_the_snapshot_file_is_not_copied(self):
+        r, td = self.run_restore("t", 'mkdir -p "$RUNNER_TEMP/archive-state"; return 0;')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse((td / "data").exists())
+
+    def test_a_good_restore_is_copied_into_data(self):
+        r, td = self.run_restore("t", 'mkdir -p "$RUNNER_TEMP/archive-state"; '
+                                      'echo "{}" > "$RUNNER_TEMP/archive-state/snapshot.json"; return 0;')
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual((td / "data" / "snapshot.json").read_text(encoding="utf-8").strip(), "{}")
+        self.assertTrue(any("restored the newest copy" in ln for ln in self.lines(r)))
 
 
 class TestEveryRunFileIsArchived(unittest.TestCase):
