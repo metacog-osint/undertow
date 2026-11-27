@@ -90,11 +90,12 @@ def review_note(row: dict) -> dict:
 
 
 def human_review(r: dict) -> str:
-    """The item's human_review (vocab enums): "full" for the EEAS register's items (unchanged); "sampled" where an
-    analyst checked the item's targets against the report (a person looked at that part of the item, not the
-    whole item); otherwise "none", including targets read from the report by machine."""
+    """The item's human_review (vocab enums): for the EEAS register's items, "full" only when the register says an
+    analyst read its rows against the report (`reviewed_by` "tic-analyst"), else "none" (read from the PDF by
+    machine); "sampled" where an analyst checked the item's targets against the report (a person looked at that
+    part of the item, not the whole item); otherwise "none", including targets read from the report by machine."""
     if r.get("publisher") == "eeas":
-        return "full"
+        return "full" if (r.get("register") or {}).get("reviewed_by") == REVIEWED_BY else "none"
     if (r.get("target_review") or {}).get("reviewed_by") == REVIEWED_BY or (r.get("activity") or {}).get("reports_checked"):
         return "sampled"
     return "none"
