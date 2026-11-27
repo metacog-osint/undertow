@@ -3,6 +3,7 @@ metacog-osint/tic-archive after the deploy (tools/tic_archive.py). Live views ar
 from __future__ import annotations
 
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -18,7 +19,9 @@ import tic_archive as ta  # noqa: E402
 NOW = datetime(2026, 11, 19, 6, 0, tzinfo=timezone.utc)
 PROGRAM = "undertow"
 WF = (ROOT / ".github" / "workflows" / "update.yml").read_text(encoding="utf-8")
-STEP = WF[WF.index("- name: Private archive (raw replies, to tic-archive)"):]
+_START = WF.index("- name: Private archive (raw replies, to tic-archive)")
+_NEXT = re.search(r"\n      [-#]", WF[_START + 1:])     # the raw step only, not the lanes after it
+STEP = WF[_START:_START + 1 + _NEXT.start()] if _NEXT else WF[_START:]
 
 
 def put(files: dict, **kw):
