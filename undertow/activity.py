@@ -128,6 +128,15 @@ def aggregate(reports_by_lane: dict[str, list[dict]], today: date) -> list[dict]
 MAPPED_AT = "countries named in the reports that a platform's or the EEAS's disclosure of this operation records as targets"
 MAPPED_REVIEWED = "the targets each report states, read from the report (config/register/targets.json)"
 MAPPED_MIXED = (MAPPED_REVIEWED + "; for reports not yet read, " + MAPPED_AT)
+# Said after "read from the report" while any of the rows used is a machine reading no analyst has checked.
+BY_MACHINE = " by machine and not yet checked by an analyst"
+
+
+def by_machine(read: int, checked: int) -> str:
+    """The words that say who read a reporter item's reports: nothing when an analyst checked every row used."""
+    if checked >= read:
+        return ""
+    return BY_MACHINE if not checked else f" ({checked} of them checked by an analyst, the rest read by machine)"
 
 
 def place(records: list[dict], reviewed: dict | None = None) -> None:
@@ -137,7 +146,8 @@ def place(records: list[dict], reviewed: dict | None = None) -> None:
     operators are said to be (Storm-1516's CORRECTIV story names Russia and the US). So the item's targets are the
     countries named in its reports that a disclosure of the same operation (grade A2) records as targets; an item
     with none is not marked on the map. The countries named stay in `countries_named`. Watch rows keep the countries
-    entered from the report as targets. A report read by an analyst (`reviewed`, config/register/targets.json by report URL)
+    entered from the report as targets. A report read from the report itself (`reviewed`, config/register/targets.json
+    by report URL; its `reviewed_by` says whether an analyst checked it or a machine read it)
     gives its stated targets instead of the rule, so a report on "the Baltic states" is marked there and a country
     its feed text only names is not. Sets `targets` and `target_regions` in place, on reporter-lane records only."""
     from undertow import targets as reviewed_targets
@@ -158,11 +168,12 @@ def place(records: list[dict], reviewed: dict | None = None) -> None:
             r["targets"] = sorted(set(r.get("countries_named") or []) & allowed)
             a["mapped_at"] = MAPPED_AT
             continue
-        tg, rg, aud, n = set(), set(), [], 0
+        tg, rg, aud, n, checked = set(), set(), [], 0, 0
         for rep in reps:
             row = reviewed.get(rep["url"])
             if row:
                 n += 1
+                checked += int(reviewed_targets.analyst_checked(row))
                 tg |= set(row["targets"])
                 rg |= set(row.get("target_regions") or [])
                 if row.get("audience") and row["audience"] not in aud:
@@ -174,7 +185,11 @@ def place(records: list[dict], reviewed: dict | None = None) -> None:
         if aud:
             r["audience"] = "; ".join(aud)
         a["mapped_at"] = MAPPED_AT if not n else MAPPED_REVIEWED if n == len(reps) else MAPPED_MIXED
+        if n:
+            a["mapped_at"] = a["mapped_at"].replace("read from the report", "read from the report"
+                                                    + by_machine(n, checked), 1)
         a["reports_read"] = n
+        a["reports_checked"] = checked
 
 
 # --- closing: watch rows against later disclosures (UT-IND-3..4, Tom, 16 Nov 2026) --------------------------------

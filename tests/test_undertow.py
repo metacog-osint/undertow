@@ -723,6 +723,22 @@ class Lanes(unittest.TestCase):
         self.assertIn("Audience as stated: the Pakistani and Indian diasporas globally", f["properties"]["summary"])
         self.assertEqual(f["properties"]["operation"]["audience"], "the Pakistani and Indian diasporas globally")
 
+    def test_diaspora_keeps_the_other_stated_targets(self):
+        """Only the countries the diaspora phrase names are the diaspora's: in "targeted audiences in Germany and the
+        Turkish diaspora" Germany stays a stated target and Turkey is a country named."""
+        entry = {"origin": ["RU"], "accounts": 10, "followers": 5, "descriptions": [], "contexts": [], "month": None,
+                 "target_regions": [], "target_wording": "targeted audiences in Germany and the Turkish diaspora"}
+        tg = tiktok._target("This network targeted audiences in Germany and the Turkish diaspora.")[0]
+        self.assertEqual(sorted(tg), ["DE", "TR"])
+        rep = {"id": 99, "name": "test", "published": None, "window": None, "entries": [dict(entry, targets=tg)]}
+        r = tiktok.build_records([rep])[0]
+        self.assertEqual((r["targets"], r["countries_named"], r["audience"]), (["DE"], ["TR"], "the Turkish diaspora"))
+        # A wording that names only diasporas still moves every country off the map.
+        both = dict(entry, target_wording="targeted the Pakistani and Indian diasporas globally", targets=["PK", "IN"])
+        r = tiktok.build_records([dict(rep, entries=[both])])[0]
+        self.assertEqual((r["targets"], r["countries_named"]), ([], ["PK", "IN"]))
+        self.assertEqual(r["audience"], "the Pakistani and Indian diasporas globally")
+
     def test_reviewed_targets_win_over_the_rule_and_keep_the_earlier_value(self):
         """A report read by an analyst gives its stated targets: DFRLab's Baltic report is marked at EE, LV and LT,
         not at Ukraine, which its feed text only names; the row keeps the value it replaced."""
@@ -743,19 +759,51 @@ class Lanes(unittest.TestCase):
         activity.place([disclosure, act], reviewed=rows)
         self.assertEqual(act["targets"], ["AM", "EE", "LT", "LV"])
         self.assertEqual(act["activity"]["reports_read"], 2)
-        self.assertEqual(act["activity"]["mapped_at"], activity.MAPPED_REVIEWED)
+        machine = "read from the report" + activity.BY_MACHINE      # the committed rows are machine readings
+        self.assertEqual(act["activity"]["mapped_at"], activity.MAPPED_REVIEWED.replace("read from the report", machine))
         self.assertEqual(rows[baltic["url"]]["replaces"]["targets"], ["UA"])
         self.assertEqual(targets.keyword_matched([act], {}, rows), [])
         p = feed.feature(act, "2026-11-26T00:00:00Z")["properties"]
-        self.assertIn("Targets as the reports state them, read from each report: Armenia, Estonia", p["summary"])
+        self.assertIn("Targets as the reports state them, read from each report by machine and not yet checked by an "
+                      "analyst: Armenia, Estonia", p["summary"])
+        self.assertEqual(p["human_review"], "none")
         self.assertNotIn("_reports", json.dumps(p))
         one = activity.aggregate({"dfrlab": [baltic, dict(armenia, url="https://dfrlab.org/2026/08/01/other/")]},
                                  date(2026, 11, 26))[0]
         activity.place([disclosure, one], reviewed=rows)                      # one read, one by the rule
         self.assertEqual(one["targets"], ["AM", "EE", "LT", "LV"])
-        self.assertEqual(one["activity"]["mapped_at"], activity.MAPPED_MIXED)
+        self.assertEqual(one["activity"]["mapped_at"], activity.MAPPED_MIXED.replace("read from the report", machine))
         self.assertEqual([x["url"] for x in targets.keyword_matched([one], {}, rows)[0]["reports"]],
                          ["https://dfrlab.org/2026/08/01/other/"])
+        # Rows an analyst has checked say so, and the item is marked as partly reviewed by a person.
+        checked = {u: dict(row, reviewed_by=targets.REVIEWED_BY) for u, row in rows.items()}
+        act = activity.aggregate({"dfrlab": [baltic, armenia]}, date(2026, 11, 26))[0]
+        activity.place([disclosure, act], reviewed=checked)
+        self.assertEqual(act["activity"]["mapped_at"], activity.MAPPED_REVIEWED)
+        p = feed.feature(act, "2026-11-26T00:00:00Z")["properties"]
+        self.assertIn("Targets as the reports state them, read from each report: Armenia", p["summary"])
+        self.assertEqual(p["human_review"], "sampled")
+
+    def test_human_review_never_contradicts_the_target_reviewer(self):
+        """An item never says human_review "none" while its targets say an analyst reviewed them, and a machine
+        reading is never presented as an analyst's: run over every TikTok record of the recorded reports with the
+        committed register applied, then with each row marked as an analyst's."""
+        from undertow import feed, targets
+        recs = []
+        for n in (6, 8, 9):
+            recs += tiktok.build_records([tiktok.parse_report(json.loads(
+                (FIX / f"tiktok_report_{n}.json").read_text(encoding="utf-8")))])
+        rows = targets.by_key()
+        for mark in (None, targets.REVIEWED_BY):
+            use = rows if mark is None else {k: dict(v, reviewed_by=mark) for k, v in rows.items()}
+            rs = [dict(r) for r in recs]
+            targets.apply(rs, use)
+            reviewed = [feed.feature(r, "2026-11-27T00:00:00Z")["properties"] for r in rs if r.get("target_review")]
+            self.assertTrue(reviewed)
+            for p in reviewed:
+                who = p["operation"]["target_review"]["reviewed_by"]
+                self.assertEqual(p["human_review"], "sampled" if who == targets.REVIEWED_BY else "none", p["id"])
+                self.assertEqual(p["operation"]["target_review"]["note"], targets.READERS[who])
 
     def test_targets_register_is_valid(self):
         from undertow import targets
