@@ -10,7 +10,7 @@ places, all read here and merged on (origin, accounts, followers):
 - The elections chapter ("In February 2026, we disrupted ... operating from Hungary and targeting a Hungarian
   audience, included 107 accounts with 37,070 followers"), which gives the month.
 The Centre states no terms of use (none found, 14 Nov 2026). The partial list runs 3 to 8 months behind TikTok's
-own monthly list; that full list needs TikTok's written approval (permission email drafted for Tom).
+own monthly list; that full list needs TikTok's written approval (permission email drafted).
 """
 from __future__ import annotations
 

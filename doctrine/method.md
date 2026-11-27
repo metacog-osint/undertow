@@ -19,7 +19,7 @@ individuals. It states no probability.
 | `dfrlab` | Atlantic Council's Digital Forensic Research Lab (from 16 Nov 2026) | `dfrlab.org/feed/` RSS pages, one at a time with a pause; never the article pages | Several a month | Reporter lane (below). Grade B2 |
 | `checkfirst` | CheckFirst, a Finnish research firm (from 16 Nov 2026) | `checkfirst.network/feed/` RSS pages, as DFRLab's | A few a month | Reporter lane. Grade B2 |
 | `correctiv` | CORRECTIV, a German investigative newsroom, English feed (from 16 Nov 2026) | `correctiv.org/en/feed/` RSS pages, as DFRLab's | Several a week, few on influence operations | Reporter lane. Grade B3: a newsroom often reports other researchers' findings |
-| `watch` | Undertow's watch register, `config/register/watch.json` (from 16 Nov 2026) | Entered by hand from the private triage list (below) | When Tom promotes a row | Reported activity entered by hand after review: activity a reporter lane does not match by title (unnamed, or naming tracked operations only in the report's text) |
+| `watch` | Undertow's watch register, `config/register/watch.json` (from 16 Nov 2026) | Entered by hand from the private triage list (below) | When a row is promoted by hand | Reported activity entered by hand after review: activity a reporter lane does not match by title (unnamed, or naming tracked operations only in the report's text) |
 
 **Reporter lanes** keep an article only when its title or one-line description names an operation already listed in
 `config/operations.json` (by name or a publisher-given alias, case-sensitive). They keep the operations named, the
@@ -28,7 +28,7 @@ or attribution, because headlines name individuals. A match on a name says that 
 operation, not that it found the operation running.
 
 ## What an item is
-Two units, kept apart (Tom, 16 Nov 2026). Both are kind `observation`, tier `routine`, `status_class: reported`.
+Two units, kept apart (16 Nov 2026). Both are kind `observation`, tier `routine`, `status_class: reported`.
 
 - **A disclosure:** one item per network or operation a platform or government disclosed. Source grade **A2**: the
   publisher is reliable on its own enforcement actions; the takedown is probably true and cannot be confirmed from
@@ -41,20 +41,20 @@ Two units, kept apart (Tom, 16 Nov 2026). Both are kind `observation`, tier `rou
 
 **Two ways in.**
 1. Tracked operations are matched automatically by the reporter lanes.
-2. New, unnamed activity goes to a **private triage list**. `python tools/undertow.py triage` runs on Tom's laptop
+2. New, unnamed activity goes to a **private triage list**. `python tools/undertow.py triage` runs on the analyst's laptop
    only (it refuses to run in GitHub Actions). It reads each reporter's feed back 60 days and writes
    influence-worded articles that name no tracked operation to `data/triage.jsonl`, which is git-ignored and never
-   published. `check` fails if any of its headlines reaches a published file. Tom promotes what matters by hand into
+   published. `check` fails if any of its headlines reaches a published file. What matters is promoted by hand into
    the **watch register**: a cited row with the operation as the reporter frames it (never a person's name), the
    countries, the first report and the reporter's attribution wording. A row can later be closed into a disclosure
    when a platform names the network.
 
 **Origin from a reporter.** A reporter lane never adds an origin. A watch row's origin counts toward our origin
-confidence only when Tom has checked the row and the reporter shows its own evidence for the origin
+confidence only when the analyst has checked the row and the reporter shows its own evidence for the origin
 (`origin_evidence: own`). A reporter repeating a platform's or government's attribution (`cites-other`) is the same
 line counted twice, so it does not count. The cap stays Moderate.
 
-**Baseline (Tom, 16 Nov 2026).** No anomaly rule and no warning tier before 10 watch rows are closed into a
+**Baseline (16 Nov 2026).** No anomaly rule and no warning tier before 10 watch rows are closed into a
 takedown. The baseline is the watch register, not name matches:
 - `UT-IND-3`: days from a watch row's first report to the takedown it is closed into (`closed_into`).
 - `UT-IND-4`: the share of watch rows a takedown closes within 12 months.
@@ -80,7 +80,7 @@ report until a later report exists. A count only grows, so "above" is marked on 
 `python tools/undertow.py closing` (laptop only) lists, for each open watch row, the disclosures from its first
 report up to 12 months later that share a country with it or name its tracked operation. It shows each one's
 period, because a quarterly bulletin published after the report may cover action taken before it. A candidate is a
-lead for Tom to read, never a finding, and Tom closes a row by hand. Part of any lead time is the referral pipeline:
+lead for the analyst to read, never a finding, and a row is closed by hand. Part of any lead time is the referral pipeline:
 platforms often act because researchers send them what they found, so lead time is not an independent warning
 signal.
 
@@ -106,12 +106,12 @@ every published file for defanged values, handles and URLs outside the publisher
 DISARM Framework v1.6.1 (CC BY-SA 4.0). A technique is attached only when a rule in the published table matches the
 publisher's own words; the matched phrase is kept (for Google, not kept: facts only). `basis: mapped` means it is
 Undertow's reading, not the publisher's claim; `basis: reported` is for a publisher that cites an id for one
-operation (none in this slice). A behaviour no rule matches stays as text. **The rule table was reviewed by Tom on 14
+operation (none in this slice). A behaviour no rule matches stays as text. **The rule table was reviewed on 14
 Nov 2026** (15 rules as drafted, two narrowed so that an unnamed medium is not read as images and a standalone
 website is not read as a news site); every item says so (`disarm_rules_status`).
 
 ## Outputs
-- `data/feed.geojson`: tic-feed/2. Geometry only on stated target countries (Tom, 16 Nov 2026), never on a country a
+- `data/feed.geojson`: tic-feed/2. Geometry only on stated target countries (16 Nov 2026), never on a country a
   description merely names, because those often include where the operators are said to be. Google and OpenAI name
   no target, so their items have no geometry; the countries their stance or summary names stay in `countries` and
   `countries_named` and in the summary. A reporter's item is marked only at countries its reports name that a
@@ -128,7 +128,7 @@ website is not read as a news site); every item says so (`disarm_rules_status`).
 ## What the method does not do
 - It does not judge whether an operation worked, how far it reached, or who sponsored it.
 - It does not read OpenAI's report pages or tiktok.com, so OpenAI's Breakout Scale and TikTok's monthly list are
-  missing. Permission emails to both are drafted for Tom.
+  missing. Permission emails to both are drafted.
 - TikTok's Code of Conduct reports cover only networks that touched Europe or a crisis, 3 to 8 months behind TikTok's
   own monthly list.
 - Google names no target; the countries its stance names are not targets.

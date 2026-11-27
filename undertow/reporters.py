@@ -11,10 +11,10 @@ text (they name individuals, and the scrubber's single-surname gap, UT-ASM-4, wo
 (`dc:creator` and author categories), attribution wording, and anything from the article page.
 
 Report records are not feed items. activity.py folds them into one "reported activity" item per operation and
-reporter (decision 1, Tom, 16 Nov 2026). A reporter adds no origin line, so it never changes a confidence level.
+reporter (decision 1, 16 Nov 2026). A reporter adds no origin line, so it never changes a confidence level.
 
 New, unnamed activity is not matched here. `triage()` lists influence-worded articles that name no tracked operation
-for Tom to read, on the laptop only (decision 2): see tools/undertow.py triage. Its output holds the reporters'
+for the analyst to read, on the laptop only (decision 2): see tools/undertow.py triage. Its output holds the reporters'
 headlines and is never published.
 
 Terms, read before each lane was built:
@@ -26,7 +26,7 @@ Terms, read before each lane was built:
   CheckFirst with a link to the original publication. robots.txt allows everything but admin and search paths.
 - Correctiv (16 Nov 2026): no terms of use or licence found (legal disclosure and imprint only; /en/terms-of-use/,
   /nutzungsbedingungen/ and /en/republishing/ answer 404). robots.txt does not disallow the feed. Its text is
-  therefore all rights reserved: the lane keeps facts (operation named, date, link) only, as Tom set for Google.
+  therefore all rights reserved: the lane keeps facts (operation named, date, link) only, as set for Google.
 """
 from __future__ import annotations
 

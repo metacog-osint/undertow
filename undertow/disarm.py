@@ -31,8 +31,8 @@ def name(tid: str) -> str | None:
 
 
 def reviewed() -> bool:
-    """True only when the table is marked reviewed and every rule carries review "accepted" (Tom, 19 Nov 2026):
-    a rule added later without Tom's review turns the whole table back to "proposed"."""
+    """True only when the table is marked reviewed and every rule carries review "accepted" (19 Nov 2026):
+    a rule added later without review turns the whole table back to "proposed"."""
     r = rules()
     return ((r.get("review") or {}).get("status") == "reviewed"
             and all(x.get("review") == "accepted" for x in r["rules"]))

@@ -61,7 +61,7 @@ class Workflow(unittest.TestCase):
 
 
 class OperationLevelOnly(unittest.TestCase):
-    """Tom, 19 Nov 2026: Meta indicator values and reporter text stay unstored, in the private archive too."""
+    """19 Nov 2026: Meta indicator values and reporter text stay unstored, in the private archive too."""
 
     def test_every_reporter_lane_and_meta_networks_excluded(self):
         from undertow import reporters

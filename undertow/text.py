@@ -1,6 +1,6 @@
 """Text guards and place matching. Everything a lane keeps from a publisher's words passes scrub() first.
 
-Hard rule (Tom, 14 Nov 2026): operation level only. Undertow never stores indicator values, account handles,
+Hard rule (14 Nov 2026): operation level only. Undertow never stores indicator values, account handles,
 URLs or domains, or the names of individuals. Publishers' summaries sometimes name a politician who was the
 subject of a narrative, or a domain the operation ran, so every kept sentence is scrubbed:
 

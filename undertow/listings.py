@@ -3,7 +3,7 @@
 Each row is one list's listing of one organisation, read from the publisher's own notice: the list, the programme,
 the listing date and the notice's address. A listing says a government acted against the organisation. It
 corroborates the operator a publisher names; it is never an origin and changes no confidence. Organisations only:
-a person named in the same notice is never entered (Tom, 16 Nov 2026).
+a person named in the same notice is never entered (16 Nov 2026).
 """
 from __future__ import annotations
 

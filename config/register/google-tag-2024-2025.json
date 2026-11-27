@@ -1,7 +1,7 @@
 {
  "register": "google-tag-2024-2025",
  "note": "Counts only, from Google's TAG Bulletin pages (the Influence Operations Bulletin's earlier name), read by tools/undertow.py tagbackfill. Per entry: month, the linked-to country code as the lane's parser reads it, asset counts, ongoing. No bulletin text kept. Used only by the baseline (site/data/baseline.json), not as feed items.",
- "licence": "Google; facts and counts only (Tom's decision, 14 Nov 2026)",
+ "licence": "Google; facts and counts only (14 Nov 2026)",
  "read_at": "2026-11-19T16:30:00Z",
  "pages": [
   {

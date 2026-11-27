@@ -1,11 +1,11 @@
 {
   "register": "watch",
-  "note": "Hand-kept register of reported activity that a reporter lane does not match by title: unnamed activity, or a report that names tracked operations only in its text (decision 2, Tom, 16 Nov 2026; several tracked operations, alignment and activity_period from 16 Nov 2026). Rows are promoted by Tom from the private triage list (python tools/undertow.py triage, data/triage.jsonl, never published). Each row is the operation as the reporter frames it, never a person's name, handle, URL or domain of the operation. See undertow/activity.py for the fields and doctrine/method.md for the rules.",
+  "note": "Hand-kept register of reported activity that a reporter lane does not match by title: unnamed activity, or a report that names tracked operations only in its text (decision 2, 16 Nov 2026; several tracked operations, alignment and activity_period from 16 Nov 2026). Rows are promoted by hand from the private triage list (python tools/undertow.py triage, data/triage.jsonl, never published). Each row is the operation as the reporter frames it, never a person's name, handle, URL or domain of the operation. See undertow/activity.py for the fields and doctrine/method.md for the rules.",
   "fields": {
     "id": "lower-case slug, stable",
     "operation": "the operation's label as the reporter frames it (no names of individuals)",
     "label_starts_with_name": "optional true when the label begins with a name or demonym, so it keeps its capital mid-sentence",
-    "tracked_operations": "optional list: ids in config/operations.json of the tracked operations the report names (Tom, 16 Nov 2026); the older single tracked_operation still reads",
+    "tracked_operations": "optional list: ids in config/operations.json of the tracked operations the report names (16 Nov 2026); the older single tracked_operation still reads",
     "reporter": {
       "name": "the reporter",
       "grade": "B2 or B3",
@@ -51,7 +51,7 @@
       "countries": [
         "AM"
       ],
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-16",
       "note": "Promoted from the 16 Nov 2026 triage run. Azerbaijan is named in the report but not entered as a target. No origin entered: Undertow does not read DFRLab's attribution and the row is not checked. Activity period added 16 Nov 2026 from the report: claims tracked 1 Jan to 7 Jun 2026 (the parliamentary election of 7 June), some pages silent from 9 June.",
       "activity_period": {
@@ -90,9 +90,9 @@
         "TikTok"
       ],
       "attribution_wording": "foreign, especially pro-Russian, actors",
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-16",
-      "note": "From the 16 Nov 2026 triage run (180 days); Tom's yes to the watch-candidates draft, candidate 1. Not the activity of armenia-election-war-fears-2026 (other platforms, no war-fear networks). No origin entered; the row is not checked."
+      "note": "From the 16 Nov 2026 triage run (180 days); watch-candidates draft, candidate 1. Not the activity of armenia-election-war-fears-2026 (other platforms, no war-fear networks). No origin entered; the row is not checked."
     },
     {
       "id": "bulgaria-election-eu-interference-claims-2026",
@@ -123,7 +123,7 @@
         "X"
       ],
       "attribution_wording": "Kremlin-aligned",
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-16",
       "note": "From the 16 Nov 2026 triage run (180 days); candidate 2. DFRLab monitored 1 to 19 Apr 2026 (the vote of 19 April); overt state media republished and coordinated laundering through mirror sites; the report names the Pravda Network. No platform action reported. No origin entered; not checked.",
       "label_starts_with_name": true
@@ -159,7 +159,7 @@
         "Mastodon"
       ],
       "attribution_wording": "pro-Russian",
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-16",
       "note": "From the 16 Nov 2026 triage run; candidate 3. CheckFirst's own name for the set, active since at least Sep 2025; it states a structural link to Portal Kombat without formal proof. Accounts still active at the time of research. No origin entered; not checked.",
       "label_starts_with_name": true
@@ -201,7 +201,7 @@
         "RU"
       ],
       "attribution_wording": "Russian state-aligned",
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-16",
       "note": "Hand-entered (candidate 4); the page shows no publication date, only Date modified 2026-10-26, which is used. Monitoring 1 Jan to 10 Jun 2026 (election 7 June). The report says platform moderators removed several Operation Overload videos, undated. 'State-aligned' is recorded as alignment, never origin. Not the activity of armenia-election-war-fears-2026.",
       "label_starts_with_name": true
@@ -242,7 +242,7 @@
         "RU"
       ],
       "attribution_wording": "Russian state-aligned",
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-18",
       "note": "Hand-entered (candidate 6); the page shows no publication date (Date modified 2026-05-11), so the date is Global Affairs Canada's news release of 17 Apr 2026. Monitoring Nov 2024 to Oct 2025, months only (election 28 Sep 2025). Also names Operation Undercut, which Undertow does not track, and calls Doppelg\u00e4nger 'Russian state-directed'; neither is recorded as origin. The report says Undercut's X network was removed on 22 Sep 2025, by an unnamed party. 'State-aligned' is recorded as alignment, never origin.",
       "label_starts_with_name": true
@@ -271,7 +271,7 @@
         "to": "2026-08-20"
       },
       "attribution_wording": "known to spread manipulated content favourable to Russia's political aims",
-      "promoted_by": "Tom",
+      "promoted_by": "tic-analyst",
       "promoted_on": "2026-11-18",
       "note": "Hand-entered (read 18 Nov 2026). A G7 RRM Secretariat statement relaying the Government of Poland's investigations; it names the Pravda Network (Portal Kombat) only, and no platforms or takedowns. The period starts on 30 Jul 2026, the night of the incident; its end is the statement's date, not a reported end. 'Favourable to Russia's political aims' is not recorded as alignment or origin."
     }

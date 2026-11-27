@@ -1,11 +1,11 @@
 """Build Undertow's contract-v2 feed (tic-feed/2, GeoJSON) from the collected records.
 
-Two units, kept apart (decision 1, Tom, 16 Nov 2026), both kind "observation", tier "routine", status_class "reported":
+Two units, kept apart (decision 1, 16 Nov 2026), both kind "observation", tier "routine", status_class "reported":
 - a disclosure: one item per network or operation a publisher disclosed, its report of its own enforcement action or
   its own naming (source grade A2);
 - reported activity: one item per operation and reporter (activity.py), saying that an independent reporter has
   reported the operation while it runs, with the first and last report and a state of active or quiet (grade B2 or
-  B3, by reporter). It adds no origin unless it is a watch row Tom checked whose reporter shows its own evidence.
+  B3, by reporter). It adds no origin unless it is a checked watch row whose reporter shows its own evidence.
 Undertow states no probability. Geometry
 is on the target countries the publisher names (Google names none, and OpenAI's feed summary seldom states one:
 countries only named in a stance or summary are listed as such, not mapped), or null with a link to the page.
@@ -239,7 +239,7 @@ def feature(r: dict, generated: str) -> dict:
     if r.get("disclosed_at"):
         src["published_at"] = r["disclosed_at"]
     sid = src["id"]
-    # Only stated targets are marked on the map (Tom, 16 Nov 2026). Countries a description merely names (Google's
+    # Only stated targets are marked on the map (16 Nov 2026). Countries a description merely names (Google's
     # stance, OpenAI's one line, a reporter's story) stay in `countries` and in the summary, never in the geometry,
     # because they often include where the operators are said to be.
     places = r.get("targets") or []
