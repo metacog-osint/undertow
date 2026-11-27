@@ -73,6 +73,30 @@ def _origin(label_or_desc: str) -> list[str]:
 # A diaspora is an audience defined by where its members come from, not a place targeted ("targeted the Pakistani and
 # Indian diasporas globally"): its countries are named, not targets, and the wording is kept as the audience.
 DIASPORA_RE = re.compile(r"\bdiasporas?\b", re.I)
+# The diaspora phrase itself: the run of capitalised words, commas, "and" and "or" just before "diaspora(s)", with
+# a "the" in front. Only the countries that run names by a demonym are the diaspora's; any other country in the
+# wording ("audiences in Germany and the Turkish diaspora") stays a stated target.
+DIASPORA_PHRASE_RE = re.compile(r"(?:\bthe\s+)?(?P<run>(?:[A-Z][\w-]*(?:\s*,\s*(?:and\s+|or\s+)?|\s+(?:and|or)\s+|\s+))*"
+                                r"[A-Z][\w-]*)\s+diasporas?\b")
+
+
+def _diaspora_split(where: str, targets: list[str]) -> tuple[list[str], list[str], str] | None:
+    """(targets kept, countries named as the diaspora's, audience) for wording that names a diaspora, else None.
+    When every target is the diaspora's, the audience is the whole wording after the verb, as before."""
+    if not DIASPORA_RE.search(where):
+        return None
+    diaspora: list[str] = []
+    phrases = []
+    for m in DIASPORA_PHRASE_RE.finditer(where):
+        run = m.group("run")
+        names = set(text.countries_in(run, demonyms=False))
+        diaspora += [c for c in text.countries_in(run) if c not in names and c not in diaspora]
+        phrases.append(m.group(0))
+    kept = [c for c in targets if c not in diaspora]
+    named = [c for c in targets if c in diaspora]
+    if not kept or not phrases:
+        return [], list(targets), where.split(" ", 1)[1] if " " in where else where
+    return kept, named, "; ".join(phrases)
 
 
 TARGET_RE = re.compile(r"target(?:ed|ing) (?P<t>(?:an? |the )?[^.(]+?)(?: audiences?)?(?:\s*\(|\.|,|$)")
@@ -196,8 +220,9 @@ def build_records(reports: list[dict]) -> list[dict]:
                      + (f" operated from {origin_name}" if origin_name else "")
                      + (f" that {where}" if where else ""))
             tg, named, audience = list(e["targets"]), [], None
-            if where and DIASPORA_RE.search(where):
-                tg, named, audience = [], tg, where.split(" ", 1)[1] if " " in where else where
+            split = _diaspora_split(where, tg) if where else None
+            if split:
+                tg, named, audience = split
             wording = None
             for d in descs:
                 m = re.search(r"(?:We )?assess(?:ed)? that this network operated from [^.]+?(?= and target|\.)", d)

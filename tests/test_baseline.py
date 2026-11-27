@@ -116,39 +116,85 @@ class OngoingAndMixTest(unittest.TestCase):
         self.assertEqual(len(out["google_tag_register"]), 8)
 
 
+def google_recs(year, q, n, updated):
+    recs = [dict(rec("google", f"google:{year}-q{q}", f"{updated}T00:00:00Z", ["IR"], key=f"google:{year}-{q}:{i}"),
+                 url="https://blog.google/x/", title="t") for i in range(n)]
+    for r in recs:
+        r["disclosure"]["title"] = f"Google bulletin Q{q} {year}"
+    return recs
+
+
 class DismantledAnomalyTest(unittest.TestCase):
-    """A period outside its publisher's trailing 8-period range is unusual enforcement: one item, tier anomaly; the
-    takedown items stay routine, and a period inside the range (or without 8 earlier periods) is not flagged."""
+    """A period outside its publisher's trailing 8-period range gets one item; it is tier anomaly (unusual
+    enforcement) only while the publisher's flag rate is within the contract's 5%, otherwise routine. The takedown
+    items stay routine, and a period inside the range (or without 8 earlier periods) gets no item."""
+
+    TODAY = date(2026, 11, 27)
 
     def setUp(self):
         self.reg = {"pages": [{"year": 2024, "quarter": q, "entries": [{"origin": ["RU"]}] * (q + 1)}
                               for q in (1, 2, 3, 4)]
                     + [{"year": 2025, "quarter": q, "entries": [{"origin": []}] * 3} for q in (1, 2, 3, 4)]}
 
-    def flagged(self, n):
-        records = [dict(rec("google", "google:2026-q1", "2026-03-31T00:00:00Z", ["IR"], key=f"google:g{i}"),
-                        url="https://blog.google/x/", title="t") for i in range(n)]
-        for r in records:
-            r["disclosure"]["title"] = "Google bulletin Q1 2026"
-        base = {"dismantled": baseline.dismantled(records, self.reg)}
+    def build(self, records, reg=None, today=None):
         from undertow import feed
-        return base["dismantled"]["google"]["periods"][-1], feed.enforcement_features(base, records,
-                                                                                     "2026-11-26T00:00:00Z")
+        base = {"dismantled": baseline.dismantled(records, self.reg if reg is None else reg, today or self.TODAY)}
+        return base["dismantled"]["google"], feed.enforcement_features(base, records, "2026-11-27T00:00:00Z")
 
-    def test_above_range_makes_one_anomaly_item(self):
-        last, feats = self.flagged(9)                    # trailing range 2 to 5
+    def flagged(self, n):
+        layer, feats = self.build(google_recs(2026, 1, n, "2026-03-31"))
+        return layer["periods"][-1], feats
+
+    def test_cap_is_the_contracts(self):
+        from tic_doctrine import contract
+        self.assertEqual(baseline.FLAG_RATE_CAP, contract.FLAG_RATE_CAP)
+
+    def test_above_range_over_the_cap_is_routine(self):
+        last, feats = self.flagged(9)                    # trailing range 2 to 5; 1 of 1 rated periods outside
         self.assertEqual((last["outside"], last["trailing"]["min"], last["trailing"]["max"]), ("above", 2, 5))
         self.assertEqual(len(feats), 1)
         p = feats[0]["properties"]
-        self.assertEqual((p["tier"], p["kind"], feats[0]["geometry"]), ("anomaly", "observation", None))
+        self.assertEqual((p["tier"], p["kind"], feats[0]["geometry"]), ("routine", "observation", None))
         self.assertTrue(p["id"].startswith("UT-ENFORCEMENT-"))
-        self.assertIn("Unusual enforcement against Google's own record", p["summary"])
+        self.assertIn("Outside Google's own record, not rated unusual", p["summary"])
+        self.assertIn("1 of Google's 1 rated periods outside their range (100%)", p["summary"])
+        self.assertNotIn("Unusual enforcement", p["summary"])
         self.assertIn("not how much influence activity there was", p["summary"])
-        self.assertEqual(p["baseline_ref"]["type"], "rolling")
+        self.assertEqual(p["baseline_ref"]["flag_rate"], 1.0)
         self.assertEqual(p["data_as_of"], "2026-03-31T00:00:00Z")
+
+    def test_the_live_google_series_is_routine(self):
+        """Google's counts as published on 27 Nov 2026: 2024-25 from the TAG register, 2026 from the lane. Q1 (91
+        against 27 to 58) and Q2 (158 against 28 to 91) are outside their range, 2 of 3 rated periods (67%), so
+        neither is an anomaly, and the kit's linter has no flag-rate note on them."""
+        counts = [27, 28, 43, 36, 41, 28, 58, 52]
+        reg = {"pages": [{"year": 2024 + i // 4, "quarter": i % 4 + 1, "updated": None,
+                          "entries": [{"origin": ["RU"]}] * c} for i, c in enumerate(counts)]}
+        recs = (google_recs(2026, 1, 91, "2026-03-31") + google_recs(2026, 2, 158, "2026-06-30")
+                + google_recs(2026, 3, 93, "2026-10-30"))
+        layer, feats = self.build(recs, reg)
+        self.assertEqual((layer["rated"], layer["outside"], layer["flag_rate"], layer["rated_unusual"]),
+                         (3, 2, 0.667, False))
+        self.assertEqual([f["properties"]["baseline"]["period"] for f in feats], ["2026-Q1", "2026-Q2"])
+        self.assertEqual({f["properties"]["tier"] for f in feats}, {"routine"})
+        from tic_doctrine import contract
+        for f in feats:
+            notes = [m for _, _, m in contract.check(f, set()) if "flag_rate" in m or "anomaly" in m]
+            self.assertEqual(notes, [])
+
+    def test_anomaly_within_the_cap(self):
+        """With 40 quarters of 3 and one of 9, the rule marks 1 of 33 rated periods (3%): tier anomaly."""
+        reg = {"pages": [{"year": 2016 + i // 4, "quarter": i % 4 + 1, "updated": None,
+                          "entries": [{"origin": []}] * 3} for i in range(40)]}
+        layer, feats = self.build(google_recs(2026, 1, 9, "2026-03-31"), reg)
+        self.assertEqual((layer["rated"], layer["outside"], layer["rated_unusual"]), (33, 1, True))
+        p = feats[0]["properties"]
+        self.assertEqual(p["tier"], "anomaly")
+        self.assertIn("Unusual enforcement against Google's own record", p["summary"])
         from tic_doctrine import contract
         errs = [m for _, sev, m in contract.check(feats[0], set()) if sev == "error"]
         self.assertFalse([m for m in errs if "anomaly" in m or "baseline_ref" in m], errs)
+        self.assertEqual([m for _, _, m in contract.check(feats[0], set()) if "flag_rate" in m], [])
 
     def test_inside_range_and_below(self):
         last, feats = self.flagged(4)
@@ -156,7 +202,42 @@ class DismantledAnomalyTest(unittest.TestCase):
         self.assertEqual(feats, [])
         last, feats = self.flagged(1)
         self.assertEqual(last["outside"], "below")
+        self.assertTrue(last["closed"])
         self.assertIn("fewer than in any of its previous 8 periods", feats[0]["properties"]["title"])
+
+    def test_a_period_still_being_filled_is_never_below(self):
+        """Google's Q4 2026 bulletin read on 27 Nov with 1 entry so far: the quarter has not ended, so it is not
+        rated below its range; read again in January from a page updated on 31 Dec, it is."""
+        reg = {"pages": self.reg["pages"] + [{"year": 2026, "quarter": q, "entries": [{"origin": []}] * 3}
+                                            for q in (1, 2, 3)]}
+        layer, feats = self.build(google_recs(2026, 4, 1, "2026-11-20"), reg)
+        last = layer["periods"][-1]
+        self.assertEqual((last["key"], last["ready"], last["closed"], last["outside"]), ("2026-Q4", True, False, None))
+        self.assertEqual(feats, [])
+        # The quarter is over but the page was last updated inside it: still open.
+        layer, _ = self.build(google_recs(2026, 4, 1, "2026-12-15"), reg, date(2027, 1, 10))
+        self.assertEqual((layer["periods"][-1]["closed"], layer["periods"][-1]["outside"]), (False, None))
+        layer, feats = self.build(google_recs(2026, 4, 1, "2026-12-31"), reg, date(2027, 1, 10))
+        self.assertEqual((layer["periods"][-1]["closed"], layer["periods"][-1]["outside"]), (True, "below"))
+        self.assertEqual(len(feats), 1)
+        # Above is rated on an open period: a count only grows.
+        layer, feats = self.build(google_recs(2026, 4, 40, "2026-11-20"), reg)
+        self.assertEqual((layer["periods"][-1]["closed"], layer["periods"][-1]["outside"]), (False, "above"))
+
+    def test_openai_current_quarter_and_report_grains(self):
+        posts = [rec("openai", "o", f"{y}-{m:02d}-15T00:00:00Z", key=f"o{y}{m}{i}")
+                 for y in (2024, 2025) for m in (2, 5, 8, 11) for i in range(3)]
+        now = [rec("openai", "o", "2026-10-15T00:00:00Z", key="o-now")]
+        d = baseline.dismantled(posts + now, {"pages": []}, date(2026, 11, 27))["openai"]["periods"]
+        self.assertEqual((d[-1]["key"], d[-1]["ready"], d[-1]["closed"], d[-1]["outside"]),
+                         ("2026-Q4", True, False, None))
+        d = baseline.dismantled(posts + now, {"pages": []}, date(2027, 1, 2))["openai"]["periods"]
+        self.assertEqual((d[-1]["closed"], d[-1]["outside"]), (True, "below"))
+        reports = [rec("tiktok", f"tiktok:report-{n}", "2026-01-01T00:00:00Z", key=f"t{n}{i}")
+                   for n in range(1, 10) for i in range(5 if n < 9 else 1)]
+        t = baseline.dismantled(reports, {"pages": []}, date(2030, 1, 1))["tiktok"]["periods"]
+        self.assertEqual((t[-1]["closed"], t[-1]["outside"]), (False, None))   # the latest report: no later one yet
+        self.assertTrue(all(x["closed"] for x in t[:-1]))
 
     def test_not_ready_is_never_flagged(self):
         d = baseline.dismantled([rec("meta", "meta:h2-2025", "2026-05-19T00:00:00Z", ["RU"])] * 3, {"pages": []})

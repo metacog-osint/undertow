@@ -1,5 +1,5 @@
 {
-  "note": "Targets read from the report itself, for items whose rule-read targets were checked against the report (undertow/targets.py). A row wins over the rule; `replaces` keeps the value the rule gave, and history/ keeps the earlier item. `basis` says where the report states the targets, in Undertow's words: no reporter text is kept. Kept by hand.",
+  "note": "Targets read from the report itself, for items whose rule-read targets were checked against the report (undertow/targets.py). A row wins over the rule; `replaces` keeps the value the rule gave, and history/ keeps the earlier item. `basis` says where the report states the targets, in Undertow's words: no reporter text is kept. `reviewed_by` says who read the report: `tic-analyst` when an analyst checked the row against it, `machine-read` when it was read by machine and no analyst has checked it yet. Kept by hand.",
   "rows": [
     {
       "report_url": "https://dfrlab.org/2026/09/17/storm-1516-operation-targets-the-baltic-states/",
@@ -7,7 +7,7 @@
       "target_regions": [],
       "basis": "Title and body: the campaigns targeted the Baltic states (Estonia, Latvia, Lithuania), 30 July to 17 August 2026. Ukraine appears as a subject of the false claims and in earlier research on other campaigns, not as a target of these.",
       "replaces": {"targets": ["UA"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -17,7 +17,7 @@
       "audience": "mostly Western and diaspora audiences, most posts in English (29 July 2026 report)",
       "basis": "Body: forty-five campaigns that targeted Armenia, June 2025 to June 2026, ahead of its parliamentary elections; the conclusion gives the audience.",
       "replaces": {"targets": ["AM"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -28,7 +28,7 @@
       "audience": "the Pakistani and Indian diasporas globally",
       "basis": "TikTok's report 9 (September 2026): the network targeted the Pakistani and Indian diasporas globally. A diaspora is an audience, not a place targeted.",
       "replaces": {"targets": ["PK", "IN"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -37,7 +37,7 @@
       "target_regions": ["European"],
       "basis": "Title and body: the ads were aimed at users in Ukraine and France, and the operation is described as still targeting audiences in Europe. Ads in other languages are counted without further countries being named as targets.",
       "replaces": {"targets": ["FR", "UA"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -46,7 +46,7 @@
       "target_regions": [],
       "basis": "Title and body: this round was aimed at audiences in the United States. Georgia is the subject of the content, not a target.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -55,7 +55,7 @@
       "target_regions": [],
       "basis": "Title and body: operations aimed at voters in the United States before its 2024 presidential election.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -64,7 +64,7 @@
       "target_regions": [],
       "basis": "Title and body: copied and invented news sites aimed at audiences in the United States. Europe appears as earlier activity, and Israel only in a quoted planning document.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -73,7 +73,7 @@
       "target_regions": [],
       "basis": "Body: the replacement sites mainly aim at audiences in the United States before its 2024 election. Wider multilingual reach and earlier European activity are not given as these sites' targets.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -83,7 +83,7 @@
       "audience": "speakers of French, German, Polish and Russian on TikTok, and German speakers on X (26 February 2025 report)",
       "basis": "Body: one coordinated set of posts is described as targeting France. Other material is described by its audience's language, and Ukraine, Europe and the United States as what the content attacks.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -92,7 +92,7 @@
       "target_regions": ["global"],
       "basis": "Body: the countries named where new domains or subdomains are described as aimed at them (2024 to early 2025), out of more than eighty countries and regions that are not all listed. Russian cities appear only for earlier sites described as suspected first versions, so Russia is not listed.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -102,7 +102,7 @@
       "audience": "Russian domestic audiences, inferred in the report from links in Russia's minority languages (12 March 2025 report)",
       "basis": "Body: expansions of the network are described as targeting Ukraine, and the network as having targeted more than eighty regions and countries. Language counts on Wikipedia and X are not stated as targets.",
       "replaces": {"targets": [], "target_regions": ["global"], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -111,7 +111,7 @@
       "target_regions": ["global"],
       "basis": "Body: article volume centres on France, Germany, Ukraine, Moldova and Serbia, case studies describe how four of these are targeted, and the country domains began with Poland, Germany and France. The reach listed for a second network is not counted.",
       "replaces": {"targets": [], "target_regions": ["global"], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -120,7 +120,7 @@
       "target_regions": ["the European Union"],
       "basis": "Body: the languages used point to European Union member states as targets, and no country is stated as one for the story examined. Ukraine is what the content is about.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -129,7 +129,7 @@
       "target_regions": ["European"],
       "basis": "Body: four main target countries are given, and the stated aim is to reach European audiences.",
       "replaces": {"targets": ["DE", "FR", "UA"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -138,7 +138,7 @@
       "target_regions": [],
       "basis": "Title and body: the operation turned to targeting the United States before its 2024 presidential election.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -147,7 +147,7 @@
       "target_regions": [],
       "basis": "Body: the campaign seeks to interfere in elections and politics in Ukraine, France, Germany and, more recently, Poland and Moldova.",
       "replaces": {"targets": [], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -156,7 +156,7 @@
       "target_regions": [],
       "basis": "Body: the traced link shows the copied news page only to visitors from Germany. Other countries' media and labels are mentioned without being stated as targets, and Europe appears as where infrastructure companies are.",
       "replaces": {"targets": [], "target_regions": ["European"], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -165,7 +165,7 @@
       "target_regions": ["the West"],
       "basis": "Body: pages shown only to visitors from Germany, earlier attention to France and Israel, then to the United States around its election, with the aim of swaying Western opinion. Ukraine is what the content argues against.",
       "replaces": {"targets": ["UA"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -174,7 +174,7 @@
       "target_regions": [],
       "basis": "Body: interference around Germany's federal and state elections, and activity in the United States and France.",
       "replaces": {"targets": ["US"], "target_regions": [], "rule": "countries the feed text names that a disclosure of the operation records as targets"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -183,7 +183,7 @@
       "target_regions": [],
       "basis": "OpenAI's feed summary names the West as what the content criticizes and states no target.",
       "replaces": {"targets": [], "target_regions": ["the West"], "rule": "regions named in the publisher's description"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -192,7 +192,7 @@
       "target_regions": ["Africa"],
       "basis": "OpenAI's feed summary gives Africa and the United Kingdom as what the content targeted.",
       "replaces": {"targets": [], "target_regions": ["Africa"], "rule": "regions named in the publisher's description"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -201,7 +201,7 @@
       "target_regions": ["the West"],
       "basis": "OpenAI's feed summary gives Ukraine and the West as what the content targeted.",
       "replaces": {"targets": [], "target_regions": ["the West"], "rule": "regions named in the publisher's description"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -210,7 +210,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the stored target (Moldova, Ukraine) is the one the entry states for this network.",
       "replaces": {"targets": ["MD", "UA"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -219,7 +219,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the stored target (Poland) is the one the entry states for this network.",
       "replaces": {"targets": ["PL"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -228,7 +228,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the network targeted audiences in four countries: Russia, Georgia, Croatia and Belarus. The rule stopped at the first comma.",
       "replaces": {"targets": ["RU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -237,7 +237,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the stored target (Russia) is the one the entry states for this network.",
       "replaces": {"targets": ["RU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -246,7 +246,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the stored target (Germany, Ukraine) is the one the entry states for this network.",
       "replaces": {"targets": ["DE", "UA"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -255,7 +255,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the stored target (Moldova) is the one the entry states for this network.",
       "replaces": {"targets": ["MD"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -264,7 +264,7 @@
       "target_regions": ["European"],
       "basis": "TikTok's report 6: the stored target (European) is the one the entry states for this network.",
       "replaces": {"targets": [], "target_regions": ["European"], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -273,7 +273,7 @@
       "target_regions": [],
       "basis": "TikTok's report 6: the stored target (United States of America) is the one the entry states for this network.",
       "replaces": {"targets": ["US"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -282,7 +282,7 @@
       "target_regions": [],
       "basis": "TikTok's report 8: the stored target (Russia) is the one the entry states for this network.",
       "replaces": {"targets": ["RU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -291,7 +291,7 @@
       "target_regions": [],
       "basis": "TikTok's report 8: the stored target (Russia) is the one the entry states for this network.",
       "replaces": {"targets": ["RU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -300,7 +300,7 @@
       "target_regions": [],
       "basis": "TikTok's report 8: the stored target (Ukraine) is the one the entry states for this network.",
       "replaces": {"targets": ["UA"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -310,7 +310,7 @@
       "audience": "a global audience, including Latino-American, African-American and African audiences, and English and Spanish speakers worldwide",
       "basis": "TikTok's report 8: a global audience is stated, and a later sentence adds African audiences, Latino-American and African-American communities and two language readerships. Communities and readerships are audiences, so no country is marked.",
       "replaces": {"targets": [], "target_regions": ["global"], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -319,7 +319,7 @@
       "target_regions": [],
       "basis": "TikTok's report 8: the stored target (Israel, Palestine) is the one the entry states for this network.",
       "replaces": {"targets": ["IL", "PS"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -328,7 +328,7 @@
       "target_regions": [],
       "basis": "TikTok's report 8: the stored target (Israel) is the one the entry states for this network.",
       "replaces": {"targets": ["IL"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -337,7 +337,7 @@
       "target_regions": ["Africa"],
       "basis": "TikTok's report 8: the stored target (Africa) is the one the entry states for this network.",
       "replaces": {"targets": [], "target_regions": ["Africa"], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -346,7 +346,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Hungary) is the one the entry states for this network.",
       "replaces": {"targets": ["HU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -355,7 +355,7 @@
       "target_regions": ["European"],
       "basis": "TikTok's report 9: the stored target (European) is the one the entry states for this network.",
       "replaces": {"targets": [], "target_regions": ["European"], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -364,7 +364,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Hungary) is the one the entry states for this network.",
       "replaces": {"targets": ["HU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -373,7 +373,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Hungary) is the one the entry states for this network.",
       "replaces": {"targets": ["HU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -382,7 +382,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Bulgaria) is the one the entry states for this network.",
       "replaces": {"targets": ["BG"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -391,7 +391,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Malta) is the one the entry states for this network.",
       "replaces": {"targets": ["MT"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -400,7 +400,7 @@
       "target_regions": ["global"],
       "basis": "TikTok's report 9: the stored target (global) is the one the entry states for this network.",
       "replaces": {"targets": [], "target_regions": ["global"], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -409,7 +409,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Germany) is the one the entry states for this network.",
       "replaces": {"targets": ["DE"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -418,7 +418,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Armenia, Azerbaijan) is the one the entry states for this network.",
       "replaces": {"targets": ["AM", "AZ"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -428,7 +428,7 @@
       "audience": "a global English-speaking audience",
       "basis": "TikTok's report 9: the stated target is an English-language readership worldwide, which is an audience, so no country is marked.",
       "replaces": {"targets": [], "target_regions": ["global"], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -437,7 +437,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Russia) is the one the entry states for this network.",
       "replaces": {"targets": ["RU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -446,7 +446,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the entry gives the target as a nationality, Ukrainian, with no noun after it in the report as published. Stored as Ukraine.",
       "replaces": {"targets": ["UA"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -455,7 +455,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Colombia) is the one the entry states for this network.",
       "replaces": {"targets": ["CO"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -464,7 +464,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (Russia) is the one the entry states for this network.",
       "replaces": {"targets": ["RU"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -473,7 +473,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (United States of America) is the one the entry states for this network.",
       "replaces": {"targets": ["US"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     },
     {
@@ -482,7 +482,7 @@
       "target_regions": [],
       "basis": "TikTok's report 9: the stored target (United States of America, Israel) is the one the entry states for this network.",
       "replaces": {"targets": ["US", "IL"], "target_regions": [], "rule": "TikTok's 'targeted ...' sentence"},
-      "reviewed_by": "tic-analyst",
+      "reviewed_by": "machine-read",
       "reviewed_at": "2026-11-26"
     }
   ]

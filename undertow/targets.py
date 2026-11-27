@@ -21,7 +21,10 @@ ROOT = Path(__file__).resolve().parent.parent
 REGISTER = ROOT / "config" / "register" / "targets.json"
 FIELDS = {"key", "report_url", "targets", "target_regions", "countries_named", "audience", "basis", "replaces",
           "reviewed_by", "reviewed_at"}
-REVIEWED_BY = "tic-analyst"
+REVIEWED_BY = "tic-analyst"       # an analyst checked the row against the report
+MACHINE_READ = "machine-read"     # read from the report by machine; no analyst has checked it yet
+READERS = {REVIEWED_BY: "checked against the report by an analyst",
+           MACHINE_READ: "read from the report by machine, not yet checked by an analyst"}
 REPORT_HOSTS = ("https://dfrlab.org/", "https://checkfirst.network/", "https://correctiv.org/")
 
 
@@ -68,8 +71,8 @@ def check(reg: dict | None = None) -> list[str]:
             errs.append(f"{at}: no basis (where the report states the targets)")
         if not isinstance(r.get("replaces"), dict):
             errs.append(f"{at}: no replaces (the value the rule gave before this reading)")
-        if r.get("reviewed_by") != REVIEWED_BY:
-            errs.append(f"{at}: reviewed_by must be {REVIEWED_BY!r}")
+        if r.get("reviewed_by") not in READERS:
+            errs.append(f"{at}: reviewed_by must be one of {sorted(READERS)}")
         try:
             date.fromisoformat(r.get("reviewed_at") or "")
         except ValueError:
@@ -77,9 +80,24 @@ def check(reg: dict | None = None) -> list[str]:
     return errs
 
 
+def analyst_checked(row: dict | None) -> bool:
+    return bool(row) and row.get("reviewed_by") == REVIEWED_BY
+
+
 def review_note(row: dict) -> dict:
     return {"basis": row["basis"], "reviewed_by": row["reviewed_by"], "reviewed_at": row["reviewed_at"],
-            "replaces": row["replaces"]}
+            "note": READERS[row["reviewed_by"]], "replaces": row["replaces"]}
+
+
+def human_review(r: dict) -> str:
+    """The item's human_review (vocab enums): "full" for the EEAS register's items (unchanged); "sampled" where an
+    analyst checked the item's targets against the report (a person looked at that part of the item, not the
+    whole item); otherwise "none", including targets read from the report by machine."""
+    if r.get("publisher") == "eeas":
+        return "full"
+    if (r.get("target_review") or {}).get("reviewed_by") == REVIEWED_BY or (r.get("activity") or {}).get("reports_checked"):
+        return "sampled"
+    return "none"
 
 
 def apply(records: list[dict], rows: dict[str, dict] | None = None) -> None:
