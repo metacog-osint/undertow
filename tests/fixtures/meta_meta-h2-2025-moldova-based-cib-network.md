@@ -14,15 +14,14 @@ We observed that network operators systematically amplified messaging supportive
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `hxxps://gagauzia24[.]info/` |
-| Social Media Account | `hxxp://x[.]com/gagauzianews24` |
-| Social Media Account | `hxxp://x[.]com/gagauzinfomd` |
-| Social Media Account | `hxxps://www[.]youtube[.]com/@gagauzia_24` |
-| Social Media Account | `hxxp://tiktok[.]com/@gagauzia24` |
-| Social Media Account | `hxxp://tiktok[.]com/@gagauzportal` |
-| Social Media Account | `hxxp://tiktok[.]com/@golosgagauzii` |
-| Social Media Account | `hxxp://vk[.]com/id464508604` |
-
+| Domain | `fixture-dff72c-1[.]invalid` |
+| Social Media Account | `hxxp://x[.]com/fixture_dff72c_2` |
+| Social Media Account | `hxxp://x[.]com/fixture_dff72c_3` |
+| Social Media Account | `hxxps://www[.]youtube[.]com/@fixture_dff72c_4` |
+| Social Media Account | `hxxp://tiktok[.]com/@fixture_dff72c_5` |
+| Social Media Account | `hxxp://tiktok[.]com/@fixture_dff72c_6` |
+| Social Media Account | `hxxp://tiktok[.]com/@fixture_dff72c_7` |
+| Social Media Account | `hxxp://vk[.]com/fixture_dff72c_8` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2025](TBD)

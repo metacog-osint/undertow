@@ -9,6 +9,14 @@ Third-party and shared files in this repository keep their own licences:
   Canonical copies: site/shared/ in github.com/metacog-osint/theintelligence-company.
 - config/disarm/       A cut of the DISARM Framework v1.6.1 STIX bundle, CC BY-SA 4.0 (DISARM Foundation;
   marking kept in the file)
+- tests/fixtures/      Replies recorded from Undertow's sources, cut to what the tests read and used only to test
+  the parsers (tests/fixtures/MANIFEST.json states each cut). They keep their publishers' terms:
+  Meta's threat-research files, MIT, Copyright (c) Meta Platforms, Inc. and its affiliates
+  (tests/fixtures/LICENSE-meta.txt), with indicator values replaced by made-up ones; Google's influence operations
+  bulletins and OpenAI's news feed; TikTok's reports from the Code of Conduct transparency centre (disinfocode.eu);
+  the European External Action Service's FIMI page, with acknowledgement of the EEAS; feed pages of the Atlantic
+  Council's Digital Forensic Research Lab (DFRLab), CheckFirst and CORRECTIV, where items that name no operation
+  Undertow tracks keep only their link, date and categories.
 
 Data keeps its sources' terms. Each source's licence is recorded in doctrine/sources.json and credited on the
 site.

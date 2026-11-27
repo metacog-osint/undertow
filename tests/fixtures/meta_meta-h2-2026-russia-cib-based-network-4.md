@@ -38,21 +38,20 @@ We have remained vigilant through Doppelganger’s evolution from a single, cent
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Domain | `armeniaopinion[.]com` |
-| Domain | `news-md[.]com` |
-| Domain | `newscong[.]life` |
-| Domain | `opinion-world[.]com` |
-| Domain | `vocea-mea[.]online` |
-| Domain | `vocepentru[.]com` |
-| Social Media Account | `http://tiktok[.]com/@garrygarr950` |
-| Social Media Account | `http://youtube[.]com/@Newscong_life` |
-| Social Media Account | `http://youtube[.]com/@Strong_Armenia_Team` |
-| Social Media Account | `http://tiktok[.]com/@merdzevovteam` |
-| Social Media Account | `http://tiktok[.]com/@strong_armenia_team` |
-| Domain | `eu-hot-news[.]com` |
-| Domain | `ua-hot-news[.]com` |
-| Domain | `newspace[.]today` |
-
+| Domain | `fixture-368a46-1[.]invalid` |
+| Domain | `fixture-368a46-2[.]invalid` |
+| Domain | `fixture-368a46-3[.]invalid` |
+| Domain | `fixture-368a46-4[.]invalid` |
+| Domain | `fixture-368a46-5[.]invalid` |
+| Domain | `fixture-368a46-6[.]invalid` |
+| Social Media Account | `http://tiktok[.]com/@fixture_368a46_7` |
+| Social Media Account | `http://youtube[.]com/@fixture_368a46_8` |
+| Social Media Account | `http://youtube[.]com/@fixture_368a46_9` |
+| Social Media Account | `http://tiktok[.]com/@fixture_368a46_10` |
+| Social Media Account | `http://tiktok[.]com/@fixture_368a46_11` |
+| Domain | `fixture-368a46-12[.]invalid` |
+| Domain | `fixture-368a46-13[.]invalid` |
+| Domain | `fixture-368a46-14[.]invalid` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)

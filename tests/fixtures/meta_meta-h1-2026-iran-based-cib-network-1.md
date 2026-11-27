@@ -41,11 +41,10 @@ Content quality was notably compromised in this phase. The new accounts engaged 
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Social Media Account | `https://x[.]com/SophiaGnzlz` |
-| Social Media Account | `https://x[.]com/Therapist_Ben` |
-| Social Media Account | `https://x[.]com/ImAliceJohnson` |
-| Social Media Account | `https://x[.]com/LevyMillar` |
-
+| Social Media Account | `https://x[.]com/fixture_1a1448_1` |
+| Social Media Account | `https://x[.]com/fixture_1a1448_2` |
+| Social Media Account | `https://x[.]com/fixture_1a1448_3` |
+| Social Media Account | `https://x[.]com/fixture_1a1448_4` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H1 2026](TBD)

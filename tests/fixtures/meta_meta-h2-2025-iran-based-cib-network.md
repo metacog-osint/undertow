@@ -32,14 +32,13 @@ We are publishing this update and data in hopes that new information will contri
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Proxy IP | `45[.]141[.]152[.]19` |
-| Proxy IP | `146[.]70[.]118[.]226` |
-| Proxy IP | `45[.]141[.]152[.]18` |
-| Proxy IP | `45[.]141[.]152[.]194` |
-| Proxy IP | `5[.]9[.]29[.]230` |
-| Proxy IP | `104[.]237[.]255[.]202` |
-| Proxy IP | `116[.]202[.]235[.]13` |
-
+| Proxy IP | `192[.]0[.]2[.]1` |
+| Proxy IP | `192[.]0[.]2[.]2` |
+| Proxy IP | `192[.]0[.]2[.]3` |
+| Proxy IP | `192[.]0[.]2[.]4` |
+| Proxy IP | `192[.]0[.]2[.]5` |
+| Proxy IP | `192[.]0[.]2[.]6` |
+| Proxy IP | `192[.]0[.]2[.]7` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2025](TBD)

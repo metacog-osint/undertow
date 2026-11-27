@@ -7,8 +7,8 @@ Two units, kept apart (decision 1, Tom, 16 Nov 2026), both kind "observation", t
   reported the operation while it runs, with the first and last report and a state of active or quiet (grade B2 or
   B3, by reporter). It adds no origin unless it is a watch row Tom checked whose reporter shows its own evidence.
 Undertow states no probability. Geometry
-is on the target countries the publisher names (Google and OpenAI name none: there it is the countries named in
-the stance or summary, marked as such), or null with a link to the page.
+is on the target countries the publisher names (Google names none, and OpenAI's feed summary seldom states one:
+countries only named in a stance or summary are listed as such, not mapped), or null with a link to the page.
 """
 from __future__ import annotations
 
@@ -148,13 +148,23 @@ def summary(r: dict) -> str:
                             + "; recorded as alignment, not as an origin.")
         else:
             named = r.get("countries_named") or []
-            if named or r.get("target_regions"):
-                bits.append("Countries and regions named in the reports: "
-                            + ", ".join(_names(named) + (r.get("target_regions") or [])) + ".")
-            if r.get("targets"):
+            read = a.get("reports_read") or 0
+            rg = r.get("target_regions") or []
+            if named or (rg and not read):
+                bits.append("Countries and regions named in the reporter's feed descriptions: "
+                            + ", ".join(_names(named) + ([] if read else rg)) + ".")
+            if read and (r.get("targets") or rg):
+                bits.append(("Targets as the reports state them, read from each report: " if read == a["reports"] else
+                             f"Targets as {read} of the {a['reports']} reports state them, read from the report, and for "
+                             "the others countries named that a platform's or the EEAS's disclosure of this operation "
+                             "records as targets: ")
+                            + ", ".join(_names(r.get("targets") or []) + rg) + ".")
+            elif r.get("targets"):
                 bits.append("Marked on the map only where a platform's or the EEAS's disclosure of this operation "
                             f"records a target: {', '.join(_names(r['targets']))}.")
-            elif named:
+            if r.get("audience"):
+                bits.append(f"Audience as the reports describe it: {r['audience']}.")
+            if named and not r.get("targets"):
                 bits.append("None of them is a target that a disclosure of this operation records, so the item is "
                             "not marked on the map.")
         if r.get("origin"):
@@ -185,7 +195,9 @@ def summary(r: dict) -> str:
         bits.append("No origin stated.")
     if r.get("targets") or r.get("target_regions"):
         bits.append("Targets as stated: " + ", ".join(_names(r.get("targets") or []) + (r.get("target_regions") or [])) + ".")
-    elif r.get("countries_named"):
+    if r.get("audience"):
+        bits.append(f"Audience as stated: {r['audience']} (an audience, not a target country, so not marked on the map).")
+    if r.get("countries_named") and not (r.get("targets") or r.get("target_regions")):
         bits.append("Countries named in the publisher's description: " + ", ".join(_names(r["countries_named"]))
                     + " (not stated as targets, so not marked on the map).")
     ct = _counts_text(r.get("counts") or {})
@@ -282,6 +294,8 @@ def feature(r: dict, generated: str) -> dict:
             "targets": r.get("targets") or [],
             "target_regions": r.get("target_regions") or [],
             "countries_named": r.get("countries_named") or [],
+            **({"audience": r["audience"]} if r.get("audience") else {}),
+            **({"target_review": r["target_review"]} if r.get("target_review") else {}),
             "platforms": r.get("platforms") or [],
             "counts": r.get("counts") or {},
             "corroborated_by": r.get("corroborated_by") or [],
@@ -339,8 +353,78 @@ def health(lanes: dict, records: list[dict], generated: str | None = None) -> di
     return out
 
 
-def build_feed(records: list[dict], generated: str, health_record: dict | None = None) -> dict:
-    feats = [feature(r, generated) for r in records]
+def enforcement_features(base: dict, records: list[dict], generated: str) -> list[dict]:
+    """One item per Dismantled period outside its publisher's trailing 8-period range (baseline.RULE): tier
+    "anomaly", worded as unusual enforcement against the publisher's own record, never as activity. Its time and
+    source are the period's own disclosure; it has no place, since an enforcement record is not a target."""
+    from undertow import baseline
+    out = []
+    for pub, layer in (base.get("dismantled") or {}).items():
+        ready = [x for x in layer["periods"] if x.get("ready")]
+        rate = round(sum(1 for x in ready if x.get("outside")) / len(ready), 3) if ready else None
+        for p in layer["periods"]:
+            if not p.get("outside"):
+                continue
+            recs = [r for r in records if r.get("publisher") == pub and r.get("lane") == pub
+                    and (baseline._period(r) or (None,))[0] == p["key"]]
+            if not recs:
+                continue    # a period read only from the counts register has no disclosure to cite
+            last = max(recs, key=lambda r: r.get("disclosed_at") or "")
+            t = p["trailing"]
+            word = "more" if p["outside"] == "above" else "fewer"
+            name = SOURCES[pub]["publisher"]
+            key = f"enforcement:{pub}:{p['key']}"
+            src = dict(SOURCES[pub])
+            src.setdefault("grade", "A2")
+            src.update({"title": last["disclosure"]["title"], "url": last["url"], "accessed_at": generated})
+            if last.get("disclosed_at"):
+                src["published_at"] = last["disclosed_at"]
+            origins = [c for c in p["origin"] if c != "none"]
+            props = {
+                "contract": CONTRACT, "id": item_id(key), "subject_id": item_id(key), "program": "undertow",
+                "title": (f"{name}, {p['period']}: {p['items']} takedowns, {word} than in any of its previous 8 "
+                          f"periods ({t['min']} to {t['max']})"),
+                "summary": (f"Unusual enforcement against {name}'s own record: {name} disclosed {p['items']} takedowns "
+                            f"in its {p['period']}, against {t['min']} to {t['max']} (mean {t['mean']}) in its "
+                            f"previous {t['periods']} periods ({layer['grain']}). This counts what {name} chose to "
+                            "disclose, not how much influence activity there was. Rule: " + baseline.RULE
+                            + f" The origins counted are where the operators were, as {name} states them; an origin "
+                            "is never a finding of who directed it."),
+                "kind": "observation", "tier": "anomaly", "status": "actual", "msg_type": "new",
+                "human_review": "none", "us_person_data": "none", "status_class": "reported",
+                "product_category": "current",
+                "data_as_of": last.get("disclosed_at") or generated, "published_at": generated,
+                **({"data_as_of_precision": last["disclosed_precision"]}
+                   if last.get("disclosed_at") and last.get("disclosed_precision") else {}),
+                "countries": origins,
+                "pmesii_pt": ["information", "political"], "ie_aspect": ["informational", "human"],
+                "ascope": ["people", "organizations"], "continuum": "competition",
+                "requirement_ids": REQUIREMENT[pub], "method_version": METHOD, "precision_class": "none",
+                "visual": {"type": "page", "url": f"{SITE}/#method"},
+                "sources": [src], "actors": [],
+                # The operation fields every Undertow item carries, empty where a period has none, so readers of the
+                # feed (COP's joins, the page) need no special case.
+                "disarm_version": disarm.VERSION, "disarm_technique": [], "disarm_mapping": [],
+                "disarm_rules_status": "reviewed" if disarm.reviewed() else "proposed, not yet reviewed",
+                "operation": {"key": key, "publisher": pub, "disclosure": last["disclosure"], "operation_name": None,
+                              "named_operations": [], "period": p["period"], "origin": [], "origin_wording": None,
+                              "origin_level_stated": None, "alignment": [], "sponsor": [], "listed_by": [],
+                              "targets": [], "target_regions": [], "countries_named": [], "platforms": [],
+                              "counts": {"takedowns": p["items"]}, "corroborated_by": [], "withheld": 0},
+                "baseline_ref": {"id": f"undertow-dismantled-{pub}", "type": "rolling",
+                                 "window": f"trailing {t['periods']} periods ({layer['grain']})",
+                                 **({"flag_rate": rate} if rate is not None else {})},
+                "baseline": {"layer": "dismantled", "publisher": pub, "period": p["key"], "period_label": p["period"],
+                             "items": p["items"], "trailing": t, "outside": p["outside"], "origin": p["origin"],
+                             "rule": baseline.RULE},
+            }
+            out.append({"type": "Feature", "geometry": None, "properties": props})
+    return out
+
+
+def build_feed(records: list[dict], generated: str, health_record: dict | None = None,
+               extra: list[dict] | None = None) -> dict:
+    feats = [feature(r, generated) for r in records] + list(extra or [])
     feats.sort(key=lambda f: (f["properties"]["data_as_of"], f["properties"]["id"]), reverse=True)
     doc = {
         "type": "FeatureCollection",

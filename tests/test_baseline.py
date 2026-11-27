@@ -106,13 +106,61 @@ class OngoingAndMixTest(unittest.TestCase):
         self.assertEqual(o["techniques"], {"T0085.001": {"items": 1, "share": 0.5}})
         self.assertEqual(next(m for m in mix if m["publisher"] == "google")["techniques"], {})
 
-    def test_build_has_no_rating(self):
+    def test_build_states_the_rule_and_no_warning(self):
         out = baseline.build([rec("openai", "o", "2025-02-01T00:00:00Z")], date(2026, 11, 19))
         txt = json.dumps(out)
-        for word in ('"tier"', "anomaly\"", "warning\""):
+        for word in ('"tier"', "warning\""):
             self.assertNotIn(word, txt)
+        self.assertEqual(out["rule"], baseline.RULE)
+        self.assertIn("never a reading of activity level", out["rule"])
         self.assertEqual(len(out["google_tag_register"]), 8)
 
+
+class DismantledAnomalyTest(unittest.TestCase):
+    """A period outside its publisher's trailing 8-period range is unusual enforcement: one item, tier anomaly; the
+    takedown items stay routine, and a period inside the range (or without 8 earlier periods) is not flagged."""
+
+    def setUp(self):
+        self.reg = {"pages": [{"year": 2024, "quarter": q, "entries": [{"origin": ["RU"]}] * (q + 1)}
+                              for q in (1, 2, 3, 4)]
+                    + [{"year": 2025, "quarter": q, "entries": [{"origin": []}] * 3} for q in (1, 2, 3, 4)]}
+
+    def flagged(self, n):
+        records = [dict(rec("google", "google:2026-q1", "2026-03-31T00:00:00Z", ["IR"], key=f"google:g{i}"),
+                        url="https://blog.google/x/", title="t") for i in range(n)]
+        for r in records:
+            r["disclosure"]["title"] = "Google bulletin Q1 2026"
+        base = {"dismantled": baseline.dismantled(records, self.reg)}
+        from undertow import feed
+        return base["dismantled"]["google"]["periods"][-1], feed.enforcement_features(base, records,
+                                                                                     "2026-11-26T00:00:00Z")
+
+    def test_above_range_makes_one_anomaly_item(self):
+        last, feats = self.flagged(9)                    # trailing range 2 to 5
+        self.assertEqual((last["outside"], last["trailing"]["min"], last["trailing"]["max"]), ("above", 2, 5))
+        self.assertEqual(len(feats), 1)
+        p = feats[0]["properties"]
+        self.assertEqual((p["tier"], p["kind"], feats[0]["geometry"]), ("anomaly", "observation", None))
+        self.assertTrue(p["id"].startswith("UT-ENFORCEMENT-"))
+        self.assertIn("Unusual enforcement against Google's own record", p["summary"])
+        self.assertIn("not how much influence activity there was", p["summary"])
+        self.assertEqual(p["baseline_ref"]["type"], "rolling")
+        self.assertEqual(p["data_as_of"], "2026-03-31T00:00:00Z")
+        from tic_doctrine import contract
+        errs = [m for _, sev, m in contract.check(feats[0], set()) if sev == "error"]
+        self.assertFalse([m for m in errs if "anomaly" in m or "baseline_ref" in m], errs)
+
+    def test_inside_range_and_below(self):
+        last, feats = self.flagged(4)
+        self.assertIsNone(last["outside"])
+        self.assertEqual(feats, [])
+        last, feats = self.flagged(1)
+        self.assertEqual(last["outside"], "below")
+        self.assertIn("fewer than in any of its previous 8 periods", feats[0]["properties"]["title"])
+
+    def test_not_ready_is_never_flagged(self):
+        d = baseline.dismantled([rec("meta", "meta:h2-2025", "2026-05-19T00:00:00Z", ["RU"])] * 3, {"pages": []})
+        self.assertEqual([x["outside"] for x in d["meta"]["periods"]], [None])
 
 if __name__ == "__main__":
     unittest.main()

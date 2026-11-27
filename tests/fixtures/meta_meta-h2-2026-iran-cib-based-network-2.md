@@ -14,12 +14,11 @@ The network engaged in sophisticated brand development, using inauthentic accoun
 
 | Indicator Type | Indicator Value |
 | :--- | :--- |
-| Social Media Account | `http://t[.]me/xeybar_az` |
-| Social Media Account | `http://tiktok[.]com/@sozundibi6` |
-| Social Media Account | `http://tiktok[.]com/@kolgetv` |
-| Social Media Account | `http://tiktok[.]com/aydin_baxish` |
-| Social Media Account | `http://tiktok[.]com/@azadhaqq` |
-
+| Social Media Account | `http://t[.]me/fixture_016e03_1` |
+| Social Media Account | `http://tiktok[.]com/@fixture_016e03_2` |
+| Social Media Account | `http://tiktok[.]com/@fixture_016e03_3` |
+| Social Media Account | `http://tiktok[.]com/fixture_016e03_4` |
+| Social Media Account | `http://tiktok[.]com/@fixture_016e03_5` |
 ## Cross-Links
 
 - **Full ATR Report:** [Meta Adversarial Threat Report H2 2026](TBD)
