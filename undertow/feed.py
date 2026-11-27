@@ -50,7 +50,7 @@ SOURCES = {
              "licence": "EEAS: reuse authorised provided the source is acknowledged", "independence_group": "eu-eeas",
              "source_type": "official report",
              "descriptor": "The EEAS annual report on foreign information manipulation and interference threats; the "
-                           "Information Manipulation Sets it names, entered once by hand with page numbers."},
+                           "Information Manipulation Sets it names, read once from the report's text with page numbers."},
     "dfrlab": {"id": "dfrlab-rss", "publisher": "DFRLab (Atlantic Council)", "grade": "B2",
                "licence": ("Atlantic Council (DFRLab): noncommercial use with credit; operation names, dates and links "
                            "only, no DFRLab text republished"),
@@ -77,7 +77,7 @@ SOURCES = {
               "independence_group": "watch", "source_type": "independent research",
               "descriptor": "Reported activity a reporter lane does not match by title (unnamed, or naming tracked operations only "
                             "in the report's text), entered by hand from the reporter's "
-                            "own publication after Tom's review."},
+                            "own publication after an analyst's review."},
 }
 REQUIREMENT = {"meta": ["UT-PIR-1", "UT-PIR-2"], "google": ["UT-PIR-1"], "openai": ["UT-PIR-1", "UT-PIR-3"],
                "tiktok": ["UT-PIR-1", "UT-PIR-2"], "eeas": ["UT-PIR-1", "UT-PIR-2", "UT-PIR-3"],

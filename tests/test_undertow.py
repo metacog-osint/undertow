@@ -860,6 +860,21 @@ class Lanes(unittest.TestCase):
         self.assertEqual(pg, {"listed": True, "newer_report": None})
         self.assertEqual(eeas.check_page(b"<a>Read the 5th EEAS Report on FIMI threats</a>", reg)["newer_report"], 5)
 
+    def test_eeas_human_review_follows_the_register_reader(self):
+        """The register's rows were read from the PDF by machine and checked by a second machine reading, so its
+        items say human_review "none"; only a register an analyst has read against the report gives "full"."""
+        from undertow import targets
+        reg = eeas.load_registers()[0]
+        self.assertIn(reg.get("reviewed_by"), targets.READERS)
+        self.assertEqual(reg["reviewed_by"], targets.MACHINE_READ)
+        for mark, want in ((None, "none"), (targets.REVIEWED_BY, "full")):
+            use = reg if mark is None else dict(reg, reviewed_by=mark)
+            recs = eeas.build_records(use)
+            self.assertEqual(len(recs), 9)
+            for r in recs:
+                p = feed.feature(r, "2026-11-27T00:00:00Z")["properties"]
+                self.assertEqual(p["human_review"], want, r["key"])
+
 
 class Guards(unittest.TestCase):
     def test_listings_table_passes_its_check(self):

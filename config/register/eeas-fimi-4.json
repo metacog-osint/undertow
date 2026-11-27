@@ -15,6 +15,7 @@
   "entered_by": "Claude (Undertow build session), read from the PDF text (pdftotext 14 Nov 2026)",
   "entered_at": "2026-11-14",
   "checked_by": "A second machine reading, not a person's check: Claude (Undertow session) on 15 Nov 2026 read every row against printed pp. 28-34 and p. 14 of the PDF (sha256 matched). Four quotes were put back to the report's exact words, the RRN region corrected, five targets from pp. 32 and 34 added and two origin bases reworded, each after analyst review.",
+  "reviewed_by": "machine-read",
   "rule": "One row per Information Manipulation Set (IMS) the report names and describes in 'Infrastructures and Information Manipulation Sets (IMS) in 2025' (pp. 28-31) and 'Cheap and fast: the use of AI in Chinese FIMI operations' (p. 34). Targets the report names for those IMS on p. 32 ('Ukraine: a persistent target of Russian FIMI') are added with the page. Quotes are the report's words, short, with the page. 'Aligned' is recorded as alignment, never as origin: the report itself calls Storm-1516 and Operation Overload non-attributed. Origin is set only where the report names who operates the IMS. Domains, outlet names and the names of individuals in the report are left out.",
   "operations": [
     {"id": "doppelganger", "name": "Doppelgänger", "page": 28,

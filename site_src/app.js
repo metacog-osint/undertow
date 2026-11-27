@@ -287,7 +287,7 @@
     document.getElementById("disarm-v").textContent = S.disarm_version;
     document.getElementById("rules-status").textContent = S.disarm_rules_status === "reviewed" ?
       "The rule table is reviewed. A technique is still Undertow's reading of the publisher's words, not the publisher's claim." :
-      "The rule table is proposed and not yet reviewed by Tom: read every technique here as provisional.";
+      "The rule table is proposed and not yet reviewed by an analyst: read every technique here as provisional.";
     var used = {};
     S.items.forEach(function (it) { (it.disarm || []).forEach(function (d) { used[d.rule] = (used[d.rule] || 0) + 1; }); });
     document.getElementById("rules").innerHTML = "<thead><tr><th scope=\"col\">Rule</th><th scope=\"col\">Technique</th><th scope=\"col\">Reads</th><th scope=\"col\">Items</th></tr></thead><tbody>" +
@@ -306,7 +306,7 @@
       }
       if (k === "tiktok" && ex.reports) { note += ". Reports read: " + ex.reports.map(function (r) { return r.name + " (" + r.networks + " networks)"; }).join(", "); }
       if (k === "eeas" && ex.page) { note += ". 4th report still listed: " + (ex.page.listed ? "yes" : "no") + (ex.page.newer_report ? "; a newer report (" + ex.page.newer_report + "th) is listed: its register needs extracting" : "; no newer report listed"); }
-      if (k === "watch") { note = ok ? (ex.rows || 0) + " rows, entered by hand after Tom's review" : note; }
+      if (k === "watch") { note = ok ? (ex.rows || 0) + " rows, entered by hand after an analyst's review" : note; }
       if ((k === "dfrlab" || k === "checkfirst" || k === "correctiv") && ex.items_read) { note += ". " + ex.items_read + " feed items read this run (" + ex.pages_read + (ex.pages_read === 1 ? " page" : " pages") + "); only articles naming a tracked operation are kept"; }
       if (k === "openai" && ex.roundups) { note += ". " + ex.roundups.length + " report round-ups kept as disclosures, not operations"; }
       return '<p class="small"><strong>' + esc(labels[k]) + '</strong> <span class="badge' + (ok ? "" : " badge-warn") + '">' + (ok ? "current" : "not current") + "</span><br>" + esc(note) + "</p>";

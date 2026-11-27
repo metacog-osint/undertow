@@ -1,7 +1,10 @@
 """EEAS lane: named Information Manipulation Sets from the 4th EEAS report on FIMI threats (March 2026).
 
-The report is a 25 MB PDF published once a year, so its named operations were extracted once, by hand, into
-config/register/eeas-fimi-4.json, each row cited to its printed page. The live part of the lane reads the
+The report is a 25 MB PDF published once a year, so its named operations were extracted once from the PDF's text
+into config/register/eeas-fimi-4.json, each row cited to its printed page. The register's `reviewed_by` says who
+read the rows against the report: "machine-read" (a machine reading, checked by a second machine reading) until an
+analyst has, then "tic-analyst"; it sets the items' human_review (targets.human_review), and the page's
+Sources table (site_src/index.html) says the same. The live part of the lane reads the
 EEAS FIMI page each run to confirm the 4th report's page is still listed and to notice a newer report
 (a 5th, expected about March 2027): when one appears the lane says so (`newer_report`), and a session extracts
 its register the same way. The PDF itself is not fetched on a schedule.
@@ -79,7 +82,8 @@ def build_records(reg: dict) -> list[dict]:
             "url": rep["landing_url"],
             "page": o["page"],
             "register": {"file": f"config/register/{reg['register']}.json", "entered_by": reg["entered_by"],
-                         "entered_at": reg["entered_at"], "checked_by": reg.get("checked_by")},
+                         "entered_at": reg["entered_at"], "checked_by": reg.get("checked_by"),
+                         "reviewed_by": reg.get("reviewed_by")},
             "withheld": withheld,
             "disarm": maps,
         })
