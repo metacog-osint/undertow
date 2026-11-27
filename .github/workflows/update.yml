@@ -105,8 +105,16 @@ jobs:
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "Cloudflare secrets not set; skipping deploy"; exit 0
           fi
-          npx --yes wrangler@4.151.3 pages deploy site --project-name undertow --branch main \
-            --commit-hash "$GITHUB_SHA" --commit-message "update $GITHUB_SHA" --commit-dirty=true
+          # Cloudflare's API fails now and then with nothing wrong here ("An unknown error occurred ... [code: 8000000]"),
+          # which failed the run and mailed an alert. Try three times, 20 s and 60 s apart.
+          for wait in 0 20 60; do
+            if [ "$wait" != 0 ]; then echo "::warning::Cloudflare deploy failed; trying again in ${wait} s"; sleep "$wait"; fi
+            if npx --yes wrangler@4.151.3 pages deploy site --project-name undertow --branch main \
+                 --commit-hash "$GITHUB_SHA" --commit-message "update $GITHUB_SHA" --commit-dirty=true; then
+              exit 0
+            fi
+          done
+          echo "::error::Cloudflare Pages deploy failed three times"; exit 1
       # Private archive (19 Nov 2026, retention rule: no data lost). OpenAI's RSS and the reporter pages roll off and
       # publishers edit pages, so the raw replies go to the PRIVATE repo metacog-osint/tic-archive as release assets
       # (tools/tic_archive.py, release undertow-raw-YYYY-MM: a snapshot per run, only changed replies uploaded).
