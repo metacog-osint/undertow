@@ -1,8 +1,12 @@
-"""Baseline per layer (Tom, 19 Nov 2026, ideas#16; default accepted the same day). Described, never rated.
+"""Baseline per layer (19 Nov 2026). Described, never rated.
 
 1. Dismantled (platform takedowns): items per period by publisher and stated origin, each publisher against its own
    trailing 8 periods, publishers kept apart. Each publisher at its own grain: Google per quarterly bulletin, Meta
-   and TikTok per report (about half-yearly), OpenAI per calendar quarter of its posts. This is the only layer that
+   and TikTok per report (about half-yearly), OpenAI per calendar quarter of its posts. OpenAI's lane reads its whole
+   news feed (back to 2015), so a calendar quarter with no influence-operation post is a count of 0, not a gap: its
+   series has every quarter from its first post to the last quarter that ended before the feed was last read, zeros
+   marked `source` "no posts" (NO_POSTS). Google, Meta and TikTok get no zeros: a period exists only where a
+   bulletin or report was published (a Google bulletin not yet out is not a count of 0). This is the only layer that
    may later carry tier "anomaly", worded as unusual enforcement against that publisher's own record, never as
    activity level. Rule (RULE): a period with 8 earlier periods (`ready`) whose count is outside the range of those
    8 (`outside`: "above" or "below") is outside the publisher's own record; feed.enforcement_features makes one item
@@ -37,6 +41,8 @@ TRAILING = 8
 QUIET_MONTHS = 6
 PLATFORMS = ("meta", "google", "openai", "tiktok")
 GRAIN = {"google": "bulletin (quarter)", "meta": "report", "tiktok": "report", "openai": "calendar quarter"}
+ZERO_FILL = ("openai",)   # a calendar quarter of a feed read whole: a quarter with no posts counts 0
+NO_POSTS = "no posts"
 ENTRY_FIELDS = {"key", "month", "origin", "assets", "ongoing"}
 PAGE_FIELDS = {"year", "quarter", "url", "updated", "updated_note", "sha256", "entries", "unparsed"}
 MODIFIED_RE = re.compile(r'"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})')
@@ -136,7 +142,16 @@ def _closed(pub: str, key: str, updated: str | None, later: bool, today: date) -
     return pub == "openai" or bool(updated and updated[:10] >= end.isoformat())
 
 
-def dismantled(records: list[dict], reg: dict, today: date | None = None) -> dict:
+def _next_quarter(key: str) -> str:
+    y, q = int(key[:4]), int(key[-1])
+    return f"{y + 1}-Q1" if q == 4 else f"{y}-Q{q + 1}"
+
+
+def dismantled(records: list[dict], reg: dict, today: date | None = None,
+               read_on: dict[str, date] | None = None) -> dict:
+    """`read_on`: the day each lane's source was last read (snapshot lanes' fetched_at; default today). A ZERO_FILL
+    publisher's quarters with no posts count 0 only up to the last quarter that ended before that day, so a lane
+    showing its last good copy never turns quarters it has not read into zeros."""
     today = today or date.today()
     rows: dict[str, dict[str, dict]] = {p: {} for p in PLATFORMS}
 
@@ -162,6 +177,14 @@ def dismantled(records: list[dict], reg: dict, today: date | None = None) -> dic
         p = _period(r)
         if p:
             add(r["publisher"], p[0], p[1], r.get("origin"), "lane", r.get("disclosed_at"))
+    for pub in ZERO_FILL:
+        if not rows[pub]:
+            continue
+        through = min(today, (read_on or {}).get(pub) or today)
+        k = min(rows[pub])
+        while _quarter_end(k) < through:
+            rows[pub].setdefault(k, {"period": k, "items": 0, "origin": Counter(), "source": NO_POSTS, "updated": None})
+            k = _next_quarter(k)
     out = {}
     for pub in PLATFORMS:
         keys = sorted(rows[pub])
@@ -254,14 +277,14 @@ def technique_mix(records: list[dict]) -> list[dict]:
             for k, v in sorted(by.items())]
 
 
-def build(records: list[dict], today: date, reg: dict | None = None) -> dict:
+def build(records: list[dict], today: date, reg: dict | None = None, read_on: dict[str, date] | None = None) -> dict:
     reg = load_register() if reg is None else reg
     return {
-        "source": "undertow", "method": "baseline per layer (Tom, 19 Nov 2026)",
+        "source": "undertow", "method": "baseline per layer (19 Nov 2026)",
         "note": ("Counts are of what each publisher chose to disclose (its enforcement record), not of influence "
                  "activity. Dismantled only: " + RULE + " No warning tier."),
         "rule": RULE,
-        "dismantled": dismantled(records, reg, today),
+        "dismantled": dismantled(records, reg, today, read_on),
         "ongoing": {"quiet_after_months": QUIET_MONTHS, "operations": ongoing(records, today)},
         "technique_mix": technique_mix(records),
         "google_tag_register": [{"year": p["year"], "quarter": p["quarter"], "url": p["url"], "updated": p["updated"],

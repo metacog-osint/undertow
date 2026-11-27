@@ -226,7 +226,7 @@ class DismantledAnomalyTest(unittest.TestCase):
 
     def test_openai_current_quarter_and_report_grains(self):
         posts = [rec("openai", "o", f"{y}-{m:02d}-15T00:00:00Z", key=f"o{y}{m}{i}")
-                 for y in (2024, 2025) for m in (2, 5, 8, 11) for i in range(3)]
+                 for y in (2024, 2025, 2026) for m in (2, 5, 8, 11) for i in range(3) if (y, m) < (2026, 11)]
         now = [rec("openai", "o", "2026-10-15T00:00:00Z", key="o-now")]
         d = baseline.dismantled(posts + now, {"pages": []}, date(2026, 11, 27))["openai"]["periods"]
         self.assertEqual((d[-1]["key"], d[-1]["ready"], d[-1]["closed"], d[-1]["outside"]),
@@ -238,6 +238,64 @@ class DismantledAnomalyTest(unittest.TestCase):
         t = baseline.dismantled(reports, {"pages": []}, date(2030, 1, 1))["tiktok"]["periods"]
         self.assertEqual((t[-1]["closed"], t[-1]["outside"]), (False, None))   # the latest report: no later one yet
         self.assertTrue(all(x["closed"] for x in t[:-1]))
+
+    def test_openai_quarter_with_no_posts_counts_zero(self):
+        """OpenAI's feed is read whole, so a quarter with no influence post is a count of 0 (the live series had
+        none in 2025-Q3): every quarter from the first post to the last one ended before the feed was read. Google,
+        Meta and TikTok periods exist only where a bulletin or report was published."""
+        counts = {"2024-Q2": 5, "2024-Q3": 1, "2024-Q4": 3, "2025-Q1": 3, "2025-Q2": 5, "2025-Q4": 3,
+                  "2026-Q1": 3, "2026-Q2": 2, "2026-Q3": 1, "2026-Q4": 1}
+        mon = {"1": 2, "2": 5, "3": 8, "4": 11}
+        posts = [rec("openai", "o", f"{k[:4]}-{mon[k[-1]]:02d}-15T00:00:00Z", key=f"o{k}{i}")
+                 for k, n in counts.items() for i in range(n)]
+        others = (google_recs(2026, 1, 3, "2026-03-31") + google_recs(2026, 3, 3, "2026-09-30")
+                  + [rec("meta", "meta:h1-2025", "2025-08-01T00:00:00Z", key="m1"),
+                     rec("meta", "meta:q1-2026", "2026-05-01T00:00:00Z", key="m2"),
+                     rec("tiktok", "tiktok:report-6", "2025-03-01T00:00:00Z", key="t6"),
+                     rec("tiktok", "tiktok:report-8", "2026-03-01T00:00:00Z", key="t8")])
+        d = baseline.dismantled(posts + others, {"pages": []}, date(2026, 11, 27))
+        o = {x["key"]: x for x in d["openai"]["periods"]}
+        self.assertEqual(list(o), ["2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4",
+                                   "2026-Q1", "2026-Q2", "2026-Q3", "2026-Q4"])
+        z = o["2025-Q3"]
+        self.assertEqual((z["items"], z["origin"], z["source"], z["closed"]), (0, {}, baseline.NO_POSTS, True))
+        self.assertEqual({x["source"] for k, x in o.items() if k != "2025-Q3"}, {"lane"})
+        self.assertEqual(o["2026-Q3"]["trailing"], {"periods": 8, "min": 0, "max": 5, "mean": 2.5})
+        self.assertEqual((d["openai"]["rated"], d["openai"]["outside"]), (2, 0))
+        self.assertEqual([x["key"] for x in d["google"]["periods"]], ["2026-Q1", "2026-Q3"])
+        self.assertEqual([x["key"] for x in d["meta"]["periods"]], ["2025-H1", "2026-Q1"])
+        self.assertEqual([x["key"] for x in d["tiktok"]["periods"]], ["006", "008"])
+        for pub in ("google", "meta", "tiktok"):
+            self.assertNotIn(baseline.NO_POSTS, {x["source"] for x in d[pub]["periods"]})
+        # Quarters after the last post fill only up to the last one ended before the feed was read: a lane
+        # showing its last good copy (read 15 Jul 2026) never turns quarters it has not read into zeros.
+        early = [p for p in posts if p["disclosed_at"] < "2026-04-01"]
+        keys = [x["key"] for x in baseline.dismantled(early, {"pages": []}, date(2026, 11, 27),
+                                                      {"openai": date(2026, 7, 15)})["openai"]["periods"]]
+        self.assertEqual(keys[-2:], ["2026-Q1", "2026-Q2"])
+        self.assertEqual(baseline.dismantled([], {"pages": []}, date(2026, 11, 27))["openai"]["periods"], [])
+
+    def test_a_quarter_with_no_posts_can_be_below(self):
+        """Eight quarters of 3 posts, then one with none: rated below, and its item cites the feed that was read."""
+        posts = [rec("openai", "o", f"{y}-{m:02d}-15T00:00:00Z", key=f"o{y}{m}{i}")
+                 for y in (2024, 2025) for m in (2, 5, 8, 11) for i in range(3)]
+        posts.append(dict(rec("openai", "o", "2026-05-15T00:00:00Z", key="o-q2"), url="https://openai.com/index/x/"))
+        for r in posts:
+            r["disclosure"]["title"] = "t"
+            r.setdefault("url", "https://openai.com/index/x/")
+        from undertow import feed
+        base = {"dismantled": baseline.dismantled(posts, {"pages": []}, self.TODAY)}
+        q1 = next(x for x in base["dismantled"]["openai"]["periods"] if x["key"] == "2026-Q1")
+        self.assertEqual((q1["items"], q1["source"], q1["outside"]), (0, baseline.NO_POSTS, "below"))
+        feats = feed.enforcement_features(base, posts, "2026-11-27T00:00:00Z")
+        self.assertEqual(len(feats), 1)
+        p = feats[0]["properties"]
+        self.assertEqual(p["baseline"]["period"], "2026-Q1")
+        self.assertEqual(p["tier"], "routine")
+        self.assertIn("0 takedowns, fewer than in any of its previous 8 periods", p["title"])
+        self.assertEqual(p["sources"][0]["url"], "https://openai.com/news/rss.xml")
+        from tic_doctrine import contract
+        self.assertEqual([m for _, sev, m in contract.check(feats[0], set()) if sev == "error"], [])
 
     def test_not_ready_is_never_flagged(self):
         d = baseline.dismantled([rec("meta", "meta:h2-2025", "2026-05-19T00:00:00Z", ["RU"])] * 3, {"pages": []})
