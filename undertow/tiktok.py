@@ -75,12 +75,36 @@ def _origin(label_or_desc: str) -> list[str]:
 DIASPORA_RE = re.compile(r"\bdiasporas?\b", re.I)
 
 
+TARGET_RE = re.compile(r"target(?:ed|ing) (?P<t>(?:an? |the )?[^.(]+?)(?: audiences?)?(?:\s*\(|\.|,|$)")
+# A comma ends the wording unless what follows goes on with a list of countries ("targeted audiences in Russia,
+# Georgia, Croatia, and Belarus"): each further part, with "and" or "or" allowed in front, must be country names only.
+LIST_PART_RE = re.compile(r",\s*(?P<part>[^,.(]+)")
+
+
+def _only_countries(part: str) -> bool:
+    names = re.split(r"\s+(?:and|or)\s+", re.sub(r"^(?:and|or)\s+", "", part.strip()))
+    return all(text.country_code(n) for n in names)
+
+
+def _list_end(desc: str, comma: int) -> int:
+    """Where a list of countries that goes on past the comma at `comma` ends (`comma` itself if it does not)."""
+    end = comma
+    while (m := LIST_PART_RE.match(desc, end)) and _only_countries(m.group("part")):
+        end = m.end("part")
+    return end
+
+
 def _target(desc: str) -> tuple[list[str], list[str], str | None]:
-    m = re.search(r"target(?:ed|ing) (?P<t>(?:an? |the )?[^.(]+?)(?: audiences?)?(?:\s*\(|\.|,|$)", desc)
+    m = TARGET_RE.search(desc)
     if not m:
         return [], [], None
-    t = re.sub(r"\b[\w-]+-speaking\b", "", m.group("t"))
-    return text.countries_in(t), text.regions_in(t), m.group(0).rstrip(".,( ")
+    t, wording = m.group("t"), m.group(0)
+    if wording.endswith(","):
+        end = _list_end(desc, m.end() - 1)
+        if end > m.end() - 1:
+            t, wording = desc[m.start("t"):end], desc[m.start():end]
+    t = re.sub(r"\b[\w-]+-speaking\b", "", t)
+    return text.countries_in(t), text.regions_in(t), wording.rstrip(".,( ")
 
 
 def parse_report(doc: dict) -> dict:

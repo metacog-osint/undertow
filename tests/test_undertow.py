@@ -780,6 +780,25 @@ class Lanes(unittest.TestCase):
         by = next(r for r in tiktok.build_records([rep8]) if r["origin"] == ["BY"])
         self.assertEqual(by["targets"], ["UA"])        # "Russian-speaking audience within Ukraine"
 
+    def test_tiktok_target_list_goes_past_a_comma(self):
+        """A comma ends the target wording unless a list of countries goes on after it."""
+        rep6 = tiktok.parse_report(json.loads((FIX / "tiktok_report_6.json").read_text(encoding="utf-8")))
+        ua = next(r for r in tiktok.build_records([rep6]) if r["key"] == "tiktok:r6:ua:28713:300456")
+        self.assertTrue(ua["title"].endswith("that targeted audiences in Russia, Georgia, Croatia, and Belarus"))
+        self.assertEqual(ua["targets"], ["RU", "GE", "HR", "BY"])
+        for desc, want in (
+                ("operated from X and targeted audiences in Russia, Georgia, Croatia and Belarus.",
+                 (["RU", "GE", "HR", "BY"], "targeted audiences in Russia, Georgia, Croatia and Belarus")),
+                ("targeted audiences in Russia, Georgia or Belarus, using fake accounts.",
+                 (["RU", "GE", "BY"], "targeted audiences in Russia, Georgia or Belarus")),
+                ("targeted audiences in Moldova, and created pages posing as news outlets.",
+                 (["MD"], "targeted audiences in Moldova")),
+                ("targeted a Hungarian audience, posting in Hungarian.", (["HU"], "targeted a Hungarian audience")),
+                ("targeted a global audience. The network targeted Latino-Americans, African-Americans, and African "
+                 "audiences.", ([], "targeted a global audience"))):
+            tg, _, wording = tiktok._target(desc)
+            self.assertEqual((tg, wording), want, desc)
+
     def test_eeas_register_and_page(self):
         reg = eeas.load_registers()[0]
         self.assertEqual(len(reg["operations"]), 9)
