@@ -314,7 +314,7 @@
     document.getElementById("events").innerHTML = (S.events || []).map(function (e) { return "<li>" + esc(e.date) + ": " + esc(e.title) + "</li>"; }).join("");
   }
 
-  // Baseline per layer (baseline.json, Tom 19 Nov 2026): described, never rated. Dismantled, Ongoing, technique mix,
+  // Baseline per layer (baseline.json, 19 Nov 2026): described, never rated. Dismantled, Ongoing, technique mix,
   // and the name-match pairs ("reported before this takedown"), which are listed, never scored.
   function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
   function topOrigins(o) {
@@ -354,7 +354,7 @@
           var t = r.trailing || {};
           var vs = !r.ready ? "not rated" : r.outside === "above" ? "above" : r.outside === "below" ? "below" : "inside";
           if (r.ready && r.closed === false) { vs += ' <span class="small muted">(still being filled)</span>'; }
-          return "<tr><td>" + esc(r.period) + "</td><td>" + r.items + "</td><td>" + esc(topOrigins(r.origin)) + "</td><td>" +
+          return "<tr><td>" + esc(r.period) + "</td><td>" + r.items + "</td><td>" + (r.source === "no posts" ? '<span class="small muted">no influence-operation posts</span>' : esc(topOrigins(r.origin))) + "</td><td>" +
             (t.periods ? esc(t.min + " / " + t.max + " / " + t.mean) + ' <span class="small muted">(' + plural(t.periods, "period") + ")</span>" : "none yet") + "</td><td>" + (r.ready ? "yes" : "no") + "</td><td>" + vs + "</td></tr>";
         }).join("") + "</tbody></table></div>";
       if (d.rated) {

@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 from tic_doctrine import CONTRACT, __version__ as KIT_VERSION, geo  # noqa: E402
 
-from . import activity, disarm, eventtime, listings, targets, text  # noqa: E402
+from . import activity, disarm, eventtime, listings, openai_rss, targets, text  # noqa: E402
 
 SITE = "https://undertow.theintelligence.company"
 METHOD = "undertow-1.0"
@@ -372,9 +372,15 @@ def enforcement_features(base: dict, records: list[dict], generated: str) -> lis
                 continue
             recs = [r for r in records if r.get("publisher") == pub and r.get("lane") == pub
                     and (baseline._period(r) or (None,))[0] == p["key"]]
-            if not recs:
+            if recs:
+                last = max(recs, key=lambda r: r.get("disclosed_at") or "")
+            elif p.get("source") == baseline.NO_POSTS:
+                # A quarter with no posts: the feed that was read is the source.
+                feed_ref = {"id": f"{pub}:news-rss", "title": f"{SOURCES[pub]['publisher']} news RSS feed",
+                            "url": openai_rss.RSS_URL}
+                last = {"disclosure": feed_ref, "url": feed_ref["url"]}
+            else:
                 continue    # a period read only from the counts register has no disclosure to cite
-            last = max(recs, key=lambda r: r.get("disclosed_at") or "")
             t = p["trailing"]
             word = "more" if p["outside"] == "above" else "fewer"
             name = SOURCES[pub]["publisher"]
