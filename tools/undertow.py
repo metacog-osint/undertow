@@ -229,6 +229,12 @@ def _today(snap: dict):
     return datetime.fromisoformat(snap["generated_at"].replace("Z", "+00:00")).date()
 
 
+def _read_on(snap: dict) -> dict:
+    """The day each lane's source was last read (its fetched_at, kept on a last good copy), for the baseline."""
+    return {lane: datetime.fromisoformat(st["fetched_at"].replace("Z", "+00:00")).date()
+            for lane, st in (snap.get("lanes") or {}).items() if st.get("fetched_at")}
+
+
 def all_records(snap: dict) -> list[dict]:
     """Disclosures as collected, plus reported-activity records: the reporter lanes' report records grouped by
     (reporter, operation), and the watch register's rows. State (active or quiet) is as of the collect."""
@@ -292,7 +298,7 @@ def build_site(root: Path = ROOT, snapshot: dict | None = None) -> dict[str, str
     snap = snapshot
     records = all_records(snap)
     today = _today(snap)
-    base = baseline.build(records, today)
+    base = baseline.build(records, today, read_on=_read_on(snap))
     feed_doc = feed.build_feed(records, snap["generated_at"], feed.health(snap.get("lanes") or {}, records, snap["generated_at"]),
                                extra=feed.enforcement_features(base, records, snap["generated_at"]))
     bundle = stix.build_bundle(records, snap["generated_at"])

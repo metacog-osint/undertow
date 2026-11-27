@@ -73,14 +73,62 @@ def _origin(label_or_desc: str) -> list[str]:
 # A diaspora is an audience defined by where its members come from, not a place targeted ("targeted the Pakistani and
 # Indian diasporas globally"): its countries are named, not targets, and the wording is kept as the audience.
 DIASPORA_RE = re.compile(r"\bdiasporas?\b", re.I)
+# The diaspora phrase itself: the run of capitalised words, commas, "and" and "or" just before "diaspora(s)", with
+# a "the" in front. Only the countries that run names by a demonym are the diaspora's; any other country in the
+# wording ("audiences in Germany and the Turkish diaspora") stays a stated target.
+DIASPORA_PHRASE_RE = re.compile(r"(?:\bthe\s+)?(?P<run>(?:[A-Z][\w-]*(?:\s*,\s*(?:and\s+|or\s+)?|\s+(?:and|or)\s+|\s+))*"
+                                r"[A-Z][\w-]*)\s+diasporas?\b")
+
+
+def _diaspora_split(where: str, targets: list[str]) -> tuple[list[str], list[str], str] | None:
+    """(targets kept, countries named as the diaspora's, audience) for wording that names a diaspora, else None.
+    When every target is the diaspora's, the audience is the whole wording after the verb, as before."""
+    if not DIASPORA_RE.search(where):
+        return None
+    diaspora: list[str] = []
+    phrases = []
+    for m in DIASPORA_PHRASE_RE.finditer(where):
+        run = m.group("run")
+        names = set(text.countries_in(run, demonyms=False))
+        diaspora += [c for c in text.countries_in(run) if c not in names and c not in diaspora]
+        phrases.append(m.group(0))
+    kept = [c for c in targets if c not in diaspora]
+    named = [c for c in targets if c in diaspora]
+    if not kept or not phrases:
+        return [], list(targets), where.split(" ", 1)[1] if " " in where else where
+    return kept, named, "; ".join(phrases)
+
+
+TARGET_RE = re.compile(r"target(?:ed|ing) (?P<t>(?:an? |the )?[^.(]+?)(?: audiences?)?(?:\s*\(|\.|,|$)")
+# A comma ends the wording unless what follows goes on with a list of countries ("targeted audiences in Russia,
+# Georgia, Croatia, and Belarus"): each further part, with "and" or "or" allowed in front, must be country names only.
+LIST_PART_RE = re.compile(r",\s*(?P<part>[^,.(]+)")
+
+
+def _only_countries(part: str) -> bool:
+    names = re.split(r"\s+(?:and|or)\s+", re.sub(r"^(?:and|or)\s+", "", part.strip()))
+    return all(text.country_code(n) for n in names)
+
+
+def _list_end(desc: str, comma: int) -> int:
+    """Where a list of countries that goes on past the comma at `comma` ends (`comma` itself if it does not)."""
+    end = comma
+    while (m := LIST_PART_RE.match(desc, end)) and _only_countries(m.group("part")):
+        end = m.end("part")
+    return end
 
 
 def _target(desc: str) -> tuple[list[str], list[str], str | None]:
-    m = re.search(r"target(?:ed|ing) (?P<t>(?:an? |the )?[^.(]+?)(?: audiences?)?(?:\s*\(|\.|,|$)", desc)
+    m = TARGET_RE.search(desc)
     if not m:
         return [], [], None
-    t = re.sub(r"\b[\w-]+-speaking\b", "", m.group("t"))
-    return text.countries_in(t), text.regions_in(t), m.group(0).rstrip(".,( ")
+    t, wording = m.group("t"), m.group(0)
+    if wording.endswith(","):
+        end = _list_end(desc, m.end() - 1)
+        if end > m.end() - 1:
+            t, wording = desc[m.start("t"):end], desc[m.start():end]
+    t = re.sub(r"\b[\w-]+-speaking\b", "", t)
+    return text.countries_in(t), text.regions_in(t), wording.rstrip(".,( ")
 
 
 def parse_report(doc: dict) -> dict:
@@ -172,8 +220,9 @@ def build_records(reports: list[dict]) -> list[dict]:
                      + (f" operated from {origin_name}" if origin_name else "")
                      + (f" that {where}" if where else ""))
             tg, named, audience = list(e["targets"]), [], None
-            if where and DIASPORA_RE.search(where):
-                tg, named, audience = [], tg, where.split(" ", 1)[1] if " " in where else where
+            split = _diaspora_split(where, tg) if where else None
+            if split:
+                tg, named, audience = split
             wording = None
             for d in descs:
                 m = re.search(r"(?:We )?assess(?:ed)? that this network operated from [^.]+?(?= and target|\.)", d)

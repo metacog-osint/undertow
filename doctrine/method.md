@@ -65,6 +65,18 @@ Name-matched lead time was measured on 16 Nov 2026 and set aside. Over
 left-censored, because platforms coin most operation names in the disclosure itself. Such pairs are shown as facts,
 never rated.
 
+**Unusual enforcement (Dismantled baseline).** Each platform's takedowns are counted per period at its own grain
+(Google per quarterly bulletin, Meta and TikTok per report, OpenAI per calendar quarter of its posts) against that
+publisher's own previous 8 periods, publishers kept apart. A period with 8 earlier periods whose count is above
+their maximum or below their minimum is marked outside its record and gets one `UT-ENFORCEMENT-*` item. That item is
+tier anomaly ("unusual enforcement against the publisher's own record", never a reading of activity) only while the
+rule marks no more than 5% of that publisher's rated periods, the feed contract's cap for a series
+(`baseline_ref.flag_rate`); otherwise it is routine and says so. A range rule over 8 earlier periods marks about 2
+periods in 9 when nothing has changed, so at least 20 rated periods are needed before one mark can stay within 5%.
+A period still being filled is never marked below its range: a Google bulletin until its quarter has ended and the
+page's own update date reaches the quarter's last day, an OpenAI quarter until it has ended, a Meta or TikTok
+report until a later report exists. A count only grows, so "above" is marked on an open period too.
+
 `python tools/undertow.py closing` (laptop only) lists, for each open watch row, the disclosures from its first
 report up to 12 months later that share a country with it or name its tracked operation. It shows each one's
 period, because a quarterly bulletin published after the report may cover action taken before it. A candidate is a

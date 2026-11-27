@@ -287,7 +287,7 @@
     document.getElementById("disarm-v").textContent = S.disarm_version;
     document.getElementById("rules-status").textContent = S.disarm_rules_status === "reviewed" ?
       "The rule table is reviewed. A technique is still Undertow's reading of the publisher's words, not the publisher's claim." :
-      "The rule table is proposed and not yet reviewed by Tom: read every technique here as provisional.";
+      "The rule table is proposed and not yet reviewed by an analyst: read every technique here as provisional.";
     var used = {};
     S.items.forEach(function (it) { (it.disarm || []).forEach(function (d) { used[d.rule] = (used[d.rule] || 0) + 1; }); });
     document.getElementById("rules").innerHTML = "<thead><tr><th scope=\"col\">Rule</th><th scope=\"col\">Technique</th><th scope=\"col\">Reads</th><th scope=\"col\">Items</th></tr></thead><tbody>" +
@@ -306,7 +306,7 @@
       }
       if (k === "tiktok" && ex.reports) { note += ". Reports read: " + ex.reports.map(function (r) { return r.name + " (" + r.networks + " networks)"; }).join(", "); }
       if (k === "eeas" && ex.page) { note += ". 4th report still listed: " + (ex.page.listed ? "yes" : "no") + (ex.page.newer_report ? "; a newer report (" + ex.page.newer_report + "th) is listed: its register needs extracting" : "; no newer report listed"); }
-      if (k === "watch") { note = ok ? (ex.rows || 0) + " rows, entered by hand after Tom's review" : note; }
+      if (k === "watch") { note = ok ? (ex.rows || 0) + " rows, entered by hand after an analyst's review" : note; }
       if ((k === "dfrlab" || k === "checkfirst" || k === "correctiv") && ex.items_read) { note += ". " + ex.items_read + " feed items read this run (" + ex.pages_read + (ex.pages_read === 1 ? " page" : " pages") + "); only articles naming a tracked operation are kept"; }
       if (k === "openai" && ex.roundups) { note += ". " + ex.roundups.length + " report round-ups kept as disclosures, not operations"; }
       return '<p class="small"><strong>' + esc(labels[k]) + '</strong> <span class="badge' + (ok ? "" : " badge-warn") + '">' + (ok ? "current" : "not current") + "</span><br>" + esc(note) + "</p>";
@@ -314,7 +314,7 @@
     document.getElementById("events").innerHTML = (S.events || []).map(function (e) { return "<li>" + esc(e.date) + ": " + esc(e.title) + "</li>"; }).join("");
   }
 
-  // Baseline per layer (baseline.json, Tom 19 Nov 2026): described, never rated. Dismantled, Ongoing, technique mix,
+  // Baseline per layer (baseline.json, 19 Nov 2026): described, never rated. Dismantled, Ongoing, technique mix,
   // and the name-match pairs ("reported before this takedown"), which are listed, never scored.
   function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
   function topOrigins(o) {
@@ -349,12 +349,19 @@
       var d = (B.dismantled || {})[p];
       if (!d) { return; }
       html += '<h5><span class="pub pub-' + p + '">' + esc(PUB[p]) + '</span> <span class="small muted">per ' + esc(d.grain) + "</span></h5>";
-      html += '<div class="scroll" tabindex="0" role="region" aria-label="' + esc(PUB[p]) + ' takedowns per period"><table class="plain"><thead><tr><th scope="col">Period</th><th scope="col">Items</th><th scope="col">Top origins</th><th scope="col">Trailing 8: min / max / mean</th><th scope="col">8 earlier periods</th></tr></thead><tbody>' +
+      html += '<div class="scroll" tabindex="0" role="region" aria-label="' + esc(PUB[p]) + ' takedowns per period"><table class="plain"><thead><tr><th scope="col">Period</th><th scope="col">Items</th><th scope="col">Top origins</th><th scope="col">Trailing 8: min / max / mean</th><th scope="col">8 earlier periods</th><th scope="col">Against that range</th></tr></thead><tbody>' +
         d.periods.slice().reverse().map(function (r) {
           var t = r.trailing || {};
-          return "<tr><td>" + esc(r.period) + "</td><td>" + r.items + "</td><td>" + esc(topOrigins(r.origin)) + "</td><td>" +
-            (t.periods ? esc(t.min + " / " + t.max + " / " + t.mean) + ' <span class="small muted">(' + plural(t.periods, "period") + ")</span>" : "none yet") + "</td><td>" + (r.ready ? "yes" : "no") + "</td></tr>";
+          var vs = !r.ready ? "not rated" : r.outside === "above" ? "above" : r.outside === "below" ? "below" : "inside";
+          if (r.ready && r.closed === false) { vs += ' <span class="small muted">(still being filled)</span>'; }
+          return "<tr><td>" + esc(r.period) + "</td><td>" + r.items + "</td><td>" + (r.source === "no posts" ? '<span class="small muted">no influence-operation posts</span>' : esc(topOrigins(r.origin))) + "</td><td>" +
+            (t.periods ? esc(t.min + " / " + t.max + " / " + t.mean) + ' <span class="small muted">(' + plural(t.periods, "period") + ")</span>" : "none yet") + "</td><td>" + (r.ready ? "yes" : "no") + "</td><td>" + vs + "</td></tr>";
         }).join("") + "</tbody></table></div>";
+      if (d.rated) {
+        html += '<p class="small muted">The rule marks ' + d.outside + " of " + plural(d.rated, "rated period") + " (" + Math.round(d.flag_rate * 100) + "%). " +
+          (d.rated_unusual ? "That is within 5%, so a marked period is rated unusual enforcement against " + esc(PUB[p]) + "’s own record." :
+            "A marked period is rated unusual only while that share is 5% or less, so none is rated unusual.") + "</p>";
+      }
     });
     html += '<p class="small muted">Google’s 2024 and 2025 bulletins come from a counts-only register (the bulletin’s month, linked-to country and asset counts; no bulletin text). Counts of what the publisher chose to disclose, not of activity.</p>';
     var ops = (B.ongoing || {}).operations || [];

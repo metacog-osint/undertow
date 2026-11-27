@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "doctrine" / "kit" / "python"))
 from tic_doctrine import CONTRACT, __version__ as KIT_VERSION, geo  # noqa: E402
 
-from . import activity, disarm, eventtime, listings, text  # noqa: E402
+from . import activity, disarm, eventtime, listings, openai_rss, targets, text  # noqa: E402
 
 SITE = "https://undertow.theintelligence.company"
 METHOD = "undertow-1.0"
@@ -50,7 +50,7 @@ SOURCES = {
              "licence": "EEAS: reuse authorised provided the source is acknowledged", "independence_group": "eu-eeas",
              "source_type": "official report",
              "descriptor": "The EEAS annual report on foreign information manipulation and interference threats; the "
-                           "Information Manipulation Sets it names, entered once by hand with page numbers."},
+                           "Information Manipulation Sets it names, read once from the report's text with page numbers."},
     "dfrlab": {"id": "dfrlab-rss", "publisher": "DFRLab (Atlantic Council)", "grade": "B2",
                "licence": ("Atlantic Council (DFRLab): noncommercial use with credit; operation names, dates and links "
                            "only, no DFRLab text republished"),
@@ -77,7 +77,7 @@ SOURCES = {
               "independence_group": "watch", "source_type": "independent research",
               "descriptor": "Reported activity a reporter lane does not match by title (unnamed, or naming tracked operations only "
                             "in the report's text), entered by hand from the reporter's "
-                            "own publication after Tom's review."},
+                            "own publication after an analyst's review."},
 }
 REQUIREMENT = {"meta": ["UT-PIR-1", "UT-PIR-2"], "google": ["UT-PIR-1"], "openai": ["UT-PIR-1", "UT-PIR-3"],
                "tiktok": ["UT-PIR-1", "UT-PIR-2"], "eeas": ["UT-PIR-1", "UT-PIR-2", "UT-PIR-3"],
@@ -154,8 +154,11 @@ def summary(r: dict) -> str:
                 bits.append("Countries and regions named in the reporter's feed descriptions: "
                             + ", ".join(_names(named) + ([] if read else rg)) + ".")
             if read and (r.get("targets") or rg):
-                bits.append(("Targets as the reports state them, read from each report: " if read == a["reports"] else
-                             f"Targets as {read} of the {a['reports']} reports state them, read from the report, and for "
+                who_read = activity.by_machine(read, a.get("reports_checked") or 0)
+                bits.append((f"Targets as the reports state them, read from each report{who_read}: "
+                             if read == a["reports"] else
+                             f"Targets as {read} of the {a['reports']} reports state them, read from the "
+                             f"report{who_read}, and for "
                              "the others countries named that a platform's or the EEAS's disclosure of this operation "
                              "records as targets: ")
                             + ", ".join(_names(r.get("targets") or []) + rg) + ".")
@@ -253,7 +256,7 @@ def feature(r: dict, generated: str) -> dict:
         "tier": "routine",
         "status": "actual",
         "msg_type": "new",
-        "human_review": "none" if r["publisher"] != "eeas" else "full",
+        "human_review": targets.human_review(r),
         "us_person_data": "organizations" if r.get("orgs") else "none",
         "status_class": "reported",
         "product_category": "current",
@@ -354,22 +357,30 @@ def health(lanes: dict, records: list[dict], generated: str | None = None) -> di
 
 
 def enforcement_features(base: dict, records: list[dict], generated: str) -> list[dict]:
-    """One item per Dismantled period outside its publisher's trailing 8-period range (baseline.RULE): tier
-    "anomaly", worded as unusual enforcement against the publisher's own record, never as activity. Its time and
-    source are the period's own disclosure; it has no place, since an enforcement record is not a target."""
+    """One item per Dismantled period outside its publisher's trailing 8-period range (baseline.RULE). It is tier
+    "anomaly", worded as unusual enforcement against the publisher's own record, never as activity, only while the
+    publisher's flag rate is within the feed contract's 5% cap for a series (layer `rated_unusual`); otherwise it
+    is routine and says why it is not rated unusual. Its time and source are the period's own disclosure; it has no
+    place, since an enforcement record is not a target."""
     from undertow import baseline
     out = []
     for pub, layer in (base.get("dismantled") or {}).items():
-        ready = [x for x in layer["periods"] if x.get("ready")]
-        rate = round(sum(1 for x in ready if x.get("outside")) / len(ready), 3) if ready else None
+        rate = layer.get("flag_rate")
+        unusual = bool(layer.get("rated_unusual"))
         for p in layer["periods"]:
             if not p.get("outside"):
                 continue
             recs = [r for r in records if r.get("publisher") == pub and r.get("lane") == pub
                     and (baseline._period(r) or (None,))[0] == p["key"]]
-            if not recs:
+            if recs:
+                last = max(recs, key=lambda r: r.get("disclosed_at") or "")
+            elif p.get("source") == baseline.NO_POSTS:
+                # A quarter with no posts: the feed that was read is the source.
+                feed_ref = {"id": f"{pub}:news-rss", "title": f"{SOURCES[pub]['publisher']} news RSS feed",
+                            "url": openai_rss.RSS_URL}
+                last = {"disclosure": feed_ref, "url": feed_ref["url"]}
+            else:
                 continue    # a period read only from the counts register has no disclosure to cite
-            last = max(recs, key=lambda r: r.get("disclosed_at") or "")
             t = p["trailing"]
             word = "more" if p["outside"] == "above" else "fewer"
             name = SOURCES[pub]["publisher"]
@@ -380,17 +391,25 @@ def enforcement_features(base: dict, records: list[dict], generated: str) -> lis
             if last.get("disclosed_at"):
                 src["published_at"] = last["disclosed_at"]
             origins = [c for c in p["origin"] if c != "none"]
+            measured = (f"{name} disclosed {p['items']} takedowns in its {p['period']}, against {t['min']} to "
+                        f"{t['max']} (mean {t['mean']}) in its previous {t['periods']} periods ({layer['grain']}).")
+            if unusual:
+                lead = f"Unusual enforcement against {name}'s own record: {measured}"
+            else:
+                lead = (f"Outside {name}'s own record, not rated unusual: {measured} The rule puts "
+                        f"{layer['outside']} of {name}'s {layer['rated']} rated periods outside their range "
+                        f"({rate:.0%}); a period is rated unusual only while the rule puts no more than "
+                        f"{baseline.FLAG_RATE_CAP:.0%} of them outside, so this item is routine.")
             props = {
                 "contract": CONTRACT, "id": item_id(key), "subject_id": item_id(key), "program": "undertow",
                 "title": (f"{name}, {p['period']}: {p['items']} takedowns, {word} than in any of its previous 8 "
                           f"periods ({t['min']} to {t['max']})"),
-                "summary": (f"Unusual enforcement against {name}'s own record: {name} disclosed {p['items']} takedowns "
-                            f"in its {p['period']}, against {t['min']} to {t['max']} (mean {t['mean']}) in its "
-                            f"previous {t['periods']} periods ({layer['grain']}). This counts what {name} chose to "
-                            "disclose, not how much influence activity there was. Rule: " + baseline.RULE
+                "summary": (lead + f" This counts what {name} chose to disclose, not how much influence activity "
+                            "there was. Rule: " + baseline.RULE
                             + f" The origins counted are where the operators were, as {name} states them; an origin "
                             "is never a finding of who directed it."),
-                "kind": "observation", "tier": "anomaly", "status": "actual", "msg_type": "new",
+                "kind": "observation", "tier": "anomaly" if unusual else "routine", "status": "actual",
+                "msg_type": "new",
                 "human_review": "none", "us_person_data": "none", "status_class": "reported",
                 "product_category": "current",
                 "data_as_of": last.get("disclosed_at") or generated, "published_at": generated,
@@ -415,7 +434,9 @@ def enforcement_features(base: dict, records: list[dict], generated: str) -> lis
                                  "window": f"trailing {t['periods']} periods ({layer['grain']})",
                                  **({"flag_rate": rate} if rate is not None else {})},
                 "baseline": {"layer": "dismantled", "publisher": pub, "period": p["key"], "period_label": p["period"],
-                             "items": p["items"], "trailing": t, "outside": p["outside"], "origin": p["origin"],
+                             "items": p["items"], "trailing": t, "outside": p["outside"], "closed": p["closed"],
+                             "origin": p["origin"], "rated_periods": layer["rated"],
+                             "outside_periods": layer["outside"], "flag_rate_cap": baseline.FLAG_RATE_CAP,
                              "rule": baseline.RULE},
             }
             out.append({"type": "Feature", "geometry": None, "properties": props})

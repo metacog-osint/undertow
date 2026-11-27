@@ -1,12 +1,20 @@
-"""Baseline per layer (Tom, 19 Nov 2026, ideas#16; default accepted the same day). Described, never rated.
+"""Baseline per layer (19 Nov 2026). Described, never rated.
 
 1. Dismantled (platform takedowns): items per period by publisher and stated origin, each publisher against its own
    trailing 8 periods, publishers kept apart. Each publisher at its own grain: Google per quarterly bulletin, Meta
-   and TikTok per report (about half-yearly), OpenAI per calendar quarter of its posts. This is the only layer that
+   and TikTok per report (about half-yearly), OpenAI per calendar quarter of its posts. OpenAI's lane reads its whole
+   news feed (back to 2015), so a calendar quarter with no influence-operation post is a count of 0, not a gap: its
+   series has every quarter from its first post to the last quarter that ended before the feed was last read, zeros
+   marked `source` "no posts" (NO_POSTS). Google, Meta and TikTok get no zeros: a period exists only where a
+   bulletin or report was published (a Google bulletin not yet out is not a count of 0). This is the only layer that
    may later carry tier "anomaly", worded as unusual enforcement against that publisher's own record, never as
    activity level. Rule (RULE): a period with 8 earlier periods (`ready`) whose count is outside the range of those
-   8 (`outside`: "above" or "below") is unusual enforcement; feed.enforcement_features makes one item per such
-   period, tier "anomaly". The takedown items themselves stay routine.
+   8 (`outside`: "above" or "below") is outside the publisher's own record; feed.enforcement_features makes one item
+   per such period. The item is tier "anomaly" only while the rule puts no more than 5% of that publisher's rated
+   periods outside (`flag_rate`, the feed contract's cap for a series); otherwise it is routine. With 8 exchangeable
+   earlier periods a range rule puts about 2 in 9 periods outside with no change at all, so it takes at least 20
+   rated periods before a single flag can stay within 5%. A period still being filled (`closed` false) is never
+   rated "below", since its count can still grow; "above" can only stay true. The takedown items stay routine.
 2. Ongoing (named operations): persistence per operation: distinct disclosures and reports, publishers acting,
    last sighting, months since; state "active" or "quiet" at a fixed 6-month window, never "ended".
 3. Emerging: the watch register's closing (UT-IND-3, UT-IND-4) stays in analysis/activity; nothing here.
@@ -33,6 +41,8 @@ TRAILING = 8
 QUIET_MONTHS = 6
 PLATFORMS = ("meta", "google", "openai", "tiktok")
 GRAIN = {"google": "bulletin (quarter)", "meta": "report", "tiktok": "report", "openai": "calendar quarter"}
+ZERO_FILL = ("openai",)   # a calendar quarter of a feed read whole: a quarter with no posts counts 0
+NO_POSTS = "no posts"
 ENTRY_FIELDS = {"key", "month", "origin", "assets", "ongoing"}
 PAGE_FIELDS = {"year", "quarter", "url", "updated", "updated_note", "sha256", "entries", "unparsed"}
 MODIFIED_RE = re.compile(r'"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})')
@@ -105,18 +115,54 @@ def _period(r: dict) -> tuple[str, str] | None:
     return None
 
 
-RULE = ("a publisher's period whose count is outside the range of its own trailing 8 periods is unusual "
-        "enforcement against that publisher's own record (tier anomaly), never a reading of activity level.")
+FLAG_RATE_CAP = 0.05   # the feed contract's cap for a series (tic_doctrine.contract.FLAG_RATE_CAP; a test holds it)
+RULE = ("a publisher's period whose count is outside the range of its own trailing 8 periods is outside that "
+        "publisher's own record, never a reading of activity level. It is rated unusual enforcement (tier anomaly) "
+        "only while the rule puts no more than 5% of that publisher's rated periods outside their range; otherwise "
+        "the item is routine. A period still being filled is never rated below its range.")
 
 
-def dismantled(records: list[dict], reg: dict) -> dict:
+def _quarter_end(key: str) -> date | None:
+    m = re.match(r"(\d{4})-Q([1-4])$", key)
+    if not m:
+        return None
+    return date(int(m.group(1)), *{"1": (3, 31), "2": (6, 30), "3": (9, 30), "4": (12, 31)}[m.group(2)])
+
+
+def _closed(pub: str, key: str, updated: str | None, later: bool, today: date) -> bool:
+    """Whether a period can no longer gain items. A later period closes any period. Without one: an OpenAI calendar
+    quarter is closed once it has ended; a Google bulletin once its quarter has ended and the page's own update date
+    is on or after the quarter's last day (Google adds entries to a bulletin through the quarter); a Meta or TikTok
+    report only when a later report exists (Meta adds network files to a report through its period)."""
+    if later:
+        return True
+    end = _quarter_end(key) if pub in ("google", "openai") else None
+    if end is None or today <= end:
+        return False
+    return pub == "openai" or bool(updated and updated[:10] >= end.isoformat())
+
+
+def _next_quarter(key: str) -> str:
+    y, q = int(key[:4]), int(key[-1])
+    return f"{y + 1}-Q1" if q == 4 else f"{y}-Q{q + 1}"
+
+
+def dismantled(records: list[dict], reg: dict, today: date | None = None,
+               read_on: dict[str, date] | None = None) -> dict:
+    """`read_on`: the day each lane's source was last read (snapshot lanes' fetched_at; default today). A ZERO_FILL
+    publisher's quarters with no posts count 0 only up to the last quarter that ended before that day, so a lane
+    showing its last good copy never turns quarters it has not read into zeros."""
+    today = today or date.today()
     rows: dict[str, dict[str, dict]] = {p: {} for p in PLATFORMS}
 
-    def add(pub, key, label, origin, source):
-        b = rows[pub].setdefault(key, {"period": label, "items": 0, "origin": Counter(), "source": source})
+    def add(pub, key, label, origin, source, updated):
+        b = rows[pub].setdefault(key, {"period": label, "items": 0, "origin": Counter(), "source": source,
+                                       "updated": None})
         b["items"] += 1
         for c in origin or ["none"]:
             b["origin"][c] += 1
+        if updated and (b["updated"] is None or updated > b["updated"]):
+            b["updated"] = updated
 
     live_google = {(r.get("disclosure") or {}).get("id") for r in records if r.get("publisher") == "google"}
     for pg in reg.get("pages") or []:
@@ -124,13 +170,21 @@ def dismantled(records: list[dict], reg: dict) -> dict:
             continue    # the lane's own reading wins where both exist
         for e in pg["entries"]:
             add("google", f"{pg['year']}-Q{pg['quarter']}", f"Q{pg['quarter']} {pg['year']} bulletin", e["origin"],
-                "TAG register (counts)")
+                "TAG register (counts)", pg.get("updated"))
     for r in records:
         if r.get("publisher") not in PLATFORMS or r.get("lane") != r.get("publisher"):
             continue
         p = _period(r)
         if p:
-            add(r["publisher"], p[0], p[1], r.get("origin"), "lane")
+            add(r["publisher"], p[0], p[1], r.get("origin"), "lane", r.get("disclosed_at"))
+    for pub in ZERO_FILL:
+        if not rows[pub]:
+            continue
+        through = min(today, (read_on or {}).get(pub) or today)
+        k = min(rows[pub])
+        while _quarter_end(k) < through:
+            rows[pub].setdefault(k, {"period": k, "items": 0, "origin": Counter(), "source": NO_POSTS, "updated": None})
+            k = _next_quarter(k)
     out = {}
     for pub in PLATFORMS:
         keys = sorted(rows[pub])
@@ -138,16 +192,27 @@ def dismantled(records: list[dict], reg: dict) -> dict:
         for i, k in enumerate(keys):
             b = rows[pub][k]
             prior = [rows[pub][x]["items"] for x in keys[max(0, i - TRAILING):i]]
+            ready = len(prior) >= TRAILING
+            closed = _closed(pub, k, b["updated"], i < len(keys) - 1, today)
+            outside = None
+            if ready and b["items"] > max(prior):
+                outside = "above"           # a count only grows, so "above" holds on an open period too
+            elif ready and closed and b["items"] < min(prior):
+                outside = "below"
             series.append({"key": k, "period": b["period"], "items": b["items"],
                            "origin": dict(sorted(b["origin"].items(), key=lambda kv: (-kv[1], kv[0]))),
                            "source": b["source"],
                            "trailing": {"periods": len(prior), "min": min(prior) if prior else None,
                                         "max": max(prior) if prior else None,
                                         "mean": round(sum(prior) / len(prior), 1) if prior else None},
-                           "ready": len(prior) >= TRAILING,
-                           "outside": (("above" if b["items"] > max(prior) else "below" if b["items"] < min(prior)
-                                        else None) if len(prior) >= TRAILING else None)})
-        out[pub] = {"grain": GRAIN[pub], "periods": series}
+                           "ready": ready, "closed": closed, "outside": outside})
+        # Rated: a ready period that is closed, or open and already above its range.
+        rated = [x for x in series if x["ready"] and (x["closed"] or x["outside"])]
+        flagged = sum(1 for x in rated if x["outside"])
+        rate = round(flagged / len(rated), 3) if rated else None
+        out[pub] = {"grain": GRAIN[pub], "periods": series, "rated": len(rated), "outside": flagged,
+                    "flag_rate": rate, "flag_rate_cap": FLAG_RATE_CAP,
+                    "rated_unusual": rate is not None and flagged > 0 and rate <= FLAG_RATE_CAP}
     return out
 
 
@@ -212,14 +277,14 @@ def technique_mix(records: list[dict]) -> list[dict]:
             for k, v in sorted(by.items())]
 
 
-def build(records: list[dict], today: date, reg: dict | None = None) -> dict:
+def build(records: list[dict], today: date, reg: dict | None = None, read_on: dict[str, date] | None = None) -> dict:
     reg = load_register() if reg is None else reg
     return {
-        "source": "undertow", "method": "baseline per layer (Tom, 19 Nov 2026)",
+        "source": "undertow", "method": "baseline per layer (19 Nov 2026)",
         "note": ("Counts are of what each publisher chose to disclose (its enforcement record), not of influence "
                  "activity. Dismantled only: " + RULE + " No warning tier."),
         "rule": RULE,
-        "dismantled": dismantled(records, reg),
+        "dismantled": dismantled(records, reg, today, read_on),
         "ongoing": {"quiet_after_months": QUIET_MONTHS, "operations": ongoing(records, today)},
         "technique_mix": technique_mix(records),
         "google_tag_register": [{"year": p["year"], "quarter": p["quarter"], "url": p["url"], "updated": p["updated"],
