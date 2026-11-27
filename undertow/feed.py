@@ -7,8 +7,8 @@ Two units, kept apart (decision 1, Tom, 16 Nov 2026), both kind "observation", t
   reported the operation while it runs, with the first and last report and a state of active or quiet (grade B2 or
   B3, by reporter). It adds no origin unless it is a watch row Tom checked whose reporter shows its own evidence.
 Undertow states no probability. Geometry
-is on the target countries the publisher names (Google and OpenAI name none: there it is the countries named in
-the stance or summary, marked as such), or null with a link to the page.
+is on the target countries the publisher names (Google names none, and OpenAI's feed summary seldom states one:
+countries only named in a stance or summary are listed as such, not mapped), or null with a link to the page.
 """
 from __future__ import annotations
 
